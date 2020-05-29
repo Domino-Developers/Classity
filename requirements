@@ -1,0 +1,24 @@
+Backend Functionalities
+
+login
+check assignment
+
+
+Student :- 
+	- add / remove pins
+	- course progress tracker
+		- test number 
+		- percent tracker
+	- add course rating
+	
+Intructor :- 
+	- add course
+		- add topic
+			- add video
+			- add assignment / test
+
+			
+	
+
+
+
