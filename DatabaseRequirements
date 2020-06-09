@@ -1,7 +1,7 @@
 User: {
 _id,
 name,
-courses: [ {courseId, courseName, percentageCompleted, courseProgressId}, ... ]
+courses: [ {courseId, courseProgressId}, ... ]
 }
 
 Course: {
@@ -13,6 +13,7 @@ lastModified,
 students: [ studentId, ... ],
 topics: [ topicId, ... ],
 reviews: [ reviewId, ... ],
+avgRating	// should not be rounded
 }
 
 topic: {
@@ -56,7 +57,7 @@ courseProgress: {
 _id,
 userId,
 courseId,
-completed,
+percentageCompleted,
 badges: [],
 lastStudied,
 streak,
