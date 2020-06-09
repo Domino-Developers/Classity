@@ -1,0 +1,55 @@
+User: {
+_id,
+name,
+courses: [ {courseId, courseName, percentageCompleted, courseProgressId}, ... ]
+}
+
+Course: {
+_id,
+name,
+createrName,
+createrId,
+createdDate,
+lastModified,
+students: [ studentId, ... ],
+topics: [ {topicId, topicName}, ... ],
+ratings: [ {userId, rating} , ... ],
+reviews: [ reviewId, ... ],
+}
+
+topic: {
+_id,
+courseId,
+name,
+doubts: [doubtId, ...],
+resources: [resourceId, ...],
+components: [ { type, component }, ... ],	// type will be video, resource, test; component will be testId in case of text
+}
+
+doubts (or resource or review): {
+_id,
+userId,
+xId,		// x = review ? course : topic
+userName,
+text,
+likes: [userId, ...],
+date
+}
+
+test: {
+_id,
+topicId,
+questions: [ {question, answers:[]}, ... ]	// assuming no programming que for now
+}
+
+courseProgress: {
+_id,
+userId,
+courseId,
+completed,
+badges: [],
+lastStudied,
+streak,
+topicScore: [ {topicId, score}, ... ],
+testScore: [ {testId, score, lastAttemptDate} , ... ]
+}
