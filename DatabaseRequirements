@@ -7,13 +7,11 @@ courses: [ {courseId, courseName, percentageCompleted, courseProgressId}, ... ]
 Course: {
 _id,
 name,
-createrName,
 createrId,
 createdDate,
 lastModified,
 students: [ studentId, ... ],
-topics: [ {topicId, topicName}, ... ],
-ratings: [ {userId, rating} , ... ],
+topics: [ topicId, ... ],
 reviews: [ reviewId, ... ],
 }
 
@@ -26,13 +24,25 @@ resources: [resourceId, ...],
 components: [ { type, component }, ... ],	// type will be video, resource, test; component will be testId in case of text
 }
 
-doubts (or resource or review): {
+doubts (or resource): {
 _id,
 userId,
 xId,		// x = review ? course : topic
-userName,
 text,
 likes: [userId, ...],
+date,
+reply: [replyId, ...]
+}
+
+review: {
+...doubts,
+rating
+}
+
+reply: {
+_id,
+userId,
+parentPostId,
 date
 }
 
