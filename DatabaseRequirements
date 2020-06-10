@@ -10,10 +10,12 @@ name,
 createrId,
 createdDate,
 lastModified,
-students: [ studentId, ... ],
+description,
+students: [ studentId, ... ], // do we really need this ?
 topics: [ topicId, ... ],
-reviews: [ reviewId, ... ],
+reviews: [ {userID, rating, text, date}],
 avgRating	// should not be rounded
+tags: []
 }
 
 topic: {
@@ -21,31 +23,21 @@ _id,
 courseId,
 name,
 doubts: [doubtId, ...],
-resources: [resourceId, ...],
-components: [ { type, component }, ... ],	// type will be video, resource, test; component will be testId in case of text
+core-resources: [{type, payload}, ...],  // This will be in order
+resource-dump: [resourceId, ...],
+
 }
 
-doubts (or resource): {
+doubts / dump-resource : {
 _id,
 userId,
-xId,		// x = review ? course : topic
+topicID,	
 text,
 likes: [userId, ...],
 date,
-reply: [replyId, ...]
+reply: [{userID,text,date}]
 }
 
-review: {
-...doubts,
-rating
-}
-
-reply: {
-_id,
-userId,
-parentPostId,
-date
-}
 
 test: {
 _id,
