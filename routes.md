@@ -8,9 +8,7 @@ All routes start with /api
 
 ## Course
 
-- `[GET] /course/names_tag` <br/> get course names and tags
-
-- `[GET] /course/min` <br /> Get all course name, avg_ratings and instructor
+- `[GET] /course` <br/> get all course name, tags, avg rating and instructor
 
 - `?* [GET] /course/:courseID` <br/> Get course content
 
