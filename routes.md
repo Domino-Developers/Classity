@@ -16,7 +16,7 @@ All routes start with /api
 
 - `* [Post] /course` <br/> Add course data
 
-- `* [PUT] /course/:courseID` <br /> update course
+- `* [PATCH] /course/:courseID` <br /> update course
 
 - `* [DEL] /course/:courseID` <br/> Delete a course
 
@@ -53,7 +53,7 @@ All routes start with /api
 ];
 ```
 
-- `* [DEL] /topic/:topicID/core_resource/:resID` Delete resource
+- `* [DEL] /topic/core_resource/:resID` Delete resource
 
 - `* [PUT] /topic/:topicID/resource_dump` Add a resource
 
