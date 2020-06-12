@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    courses: {
+    coursesEnrolled: {
         type: [
             {
                 courseId: {
@@ -28,6 +28,15 @@ const UserSchema = new mongoose.Schema({
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'courseProgress'
                 }
+            }
+        ],
+        default: []
+    },
+    coursesCreated: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'course'
             }
         ],
         default: []

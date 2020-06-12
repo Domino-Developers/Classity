@@ -8,6 +8,7 @@ const auth = require('../../middleware/auth');
 
 // Models
 const Course = require('../../models/Course');
+const User = require('../../models/User');
 
 // Initialize router
 const router = express.Router();
@@ -15,8 +16,8 @@ const router = express.Router();
 // ----------------------------------- Routes ------------------------------------------
 
 /**
- * @route		POST api/auth
- * @description Login user to get the token
+ * @route		POST api/course
+ * @description Add course
  * @access		private
  */
 router.post(
@@ -37,10 +38,22 @@ router.post(
         try {
             const courseData = {
                 ...req.body,
-                createrId: req.user.id
+                instructor: req.user.id
             };
             const course = new Course(courseData);
             await course.save();
+            await User.findOneAndUpdate(
+                { _id: req.user.id },
+                {
+                    $push: {
+                        coursesCreated: {
+                            $each: [course.id],
+                            $position: 0
+                        }
+                    }
+                }
+            );
+
             res.json(course);
         } catch (err) {
             console.error(err.message);
@@ -48,5 +61,22 @@ router.post(
         }
     }
 );
+
+/**
+ * @route		GET api/course
+ * @description Get course names, instructor, tags, avgRating
+ * @access		private
+ */
+
+router.get('/', async (req, res) => {
+    try {
+        const courses = await Course.find()
+            .populate('instructor', ['name'])
+            .select(['name', 'instructor', 'tags', 'avgRating']);
+        res.json(courses);
+    } catch (err) {
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
 
 module.exports = router;
