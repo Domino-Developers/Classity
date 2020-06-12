@@ -1,9 +1,17 @@
 const express = require('express');
-const connectDB = require('./config/db');
+const connectDB = require('./utils/db_loader');
 
 const app = express();
 
+// Connecting to DB
 connectDB();
+
+// Applying global middleware
+app.use(express.json());
+
+// Connecting routers
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
 
 const PORT = process.env.PORT || 5000;
 
