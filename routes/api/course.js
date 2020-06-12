@@ -37,7 +37,7 @@ router.post(
         try {
             const courseData = {
                 ...req.body,
-                createrId: req.user.id
+                instructor: req.user.id
             };
             const course = new Course(courseData);
             await course.save();
@@ -58,8 +58,8 @@ router.post(
 router.get('/', async (req, res) => {
     try {
         const courses = await Course.find()
-            .populate('creatorId', ['name'])
-            .select(['name', 'creatorId', 'tags', 'avgRating']);
+            .populate('instructor', ['name'])
+            .select(['name', 'instructor', 'tags', 'avgRating']);
         res.json(courses);
     } catch (err) {
         res.status(500).json({ msg: 'Server Error' });
