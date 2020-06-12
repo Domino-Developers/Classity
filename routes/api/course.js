@@ -8,6 +8,7 @@ const auth = require('../../middleware/auth');
 
 // Models
 const Course = require('../../models/Course');
+const User = require('../../models/User');
 
 // Initialize router
 const router = express.Router();
@@ -41,6 +42,18 @@ router.post(
             };
             const course = new Course(courseData);
             await course.save();
+            await User.findOneAndUpdate(
+                { _id: req.user.id },
+                {
+                    $push: {
+                        coursesCreated: {
+                            $each: [course.id],
+                            $position: 0
+                        }
+                    }
+                }
+            );
+
             res.json(course);
         } catch (err) {
             console.error(err.message);
