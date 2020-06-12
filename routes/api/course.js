@@ -15,8 +15,8 @@ const router = express.Router();
 // ----------------------------------- Routes ------------------------------------------
 
 /**
- * @route		POST api/auth
- * @description Login user to get the token
+ * @route		POST api/course
+ * @description Add course
  * @access		private
  */
 router.post(
@@ -48,5 +48,22 @@ router.post(
         }
     }
 );
+
+/**
+ * @route		GET api/course
+ * @description Get course names, instructor, tags, avgRating
+ * @access		private
+ */
+
+router.get('/', async (req, res) => {
+    try {
+        const courses = await Course.find()
+            .populate('creatorId', ['name'])
+            .select(['name', 'creatorId', 'tags', 'avgRating']);
+        res.json(courses);
+    } catch (err) {
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
 
 module.exports = router;
