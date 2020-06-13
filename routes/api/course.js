@@ -102,7 +102,7 @@ router.put(
 
             const topicData = {
                 name: req.body.name,
-                courseId
+                course: courseId
             };
             const topic = new Topic(topicData);
             await topic.save();
