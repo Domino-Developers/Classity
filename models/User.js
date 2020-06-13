@@ -17,30 +17,24 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    coursesEnrolled: {
-        type: [
-            {
-                courseId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'course'
-                },
-                courseProgressId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'courseProgress'
-                }
-            }
-        ],
-        default: []
-    },
-    coursesCreated: {
-        type: [
-            {
+    coursesEnrolled: [
+        {
+            courseId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'course'
+            },
+            courseProgressId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'courseProgress'
             }
-        ],
-        default: []
-    }
+        }
+    ],
+    coursesCreated: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'course'
+        }
+    ]
 });
 
 module.exports = mongoose.model('user', UserSchema);

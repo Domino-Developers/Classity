@@ -21,41 +21,34 @@ const CourseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    students: {
-        type: [
-            {
+    students: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user'
+        }
+    ],
+
+    topics: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'topic'
+        }
+    ],
+    reviews: [
+        {
+            userId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'user'
+            },
+            rating: { type: Number },
+            text: { type: String },
+            date: {
+                type: Date,
+                default: Date.now
             }
-        ],
-        default: []
-    },
-    topics: {
-        type: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'topic'
-            }
-        ],
-        default: []
-    },
-    reviews: {
-        type: [
-            {
-                userId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'user'
-                },
-                rating: { type: Number },
-                text: { type: String },
-                date: {
-                    type: Date,
-                    default: Date.now
-                }
-            }
-        ],
-        default: []
-    },
+        }
+    ],
+
     avgRating: {
         type: Number,
         default: 0

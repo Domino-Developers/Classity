@@ -71,7 +71,7 @@ router.post(
 router.get('/', async (req, res) => {
     try {
         const courses = await Course.find()
-            .populate('instructor', ['name'])
+            .populate('instructor', 'name -_id')
             .select(['name', 'instructor', 'tags', 'avgRating']);
         res.json(courses);
     } catch (err) {
@@ -121,4 +121,22 @@ router.put(
     }
 );
 
+/**
+ * @route		GET api/course/:course_id
+ * @description Get all course data with course ID
+ * @access		public
+ */
+
+router.get('/:course_id', async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.course_id)
+            .populate('instructor', 'name -_id')
+            .populate('topics', 'name -_id')
+            .select('-students');
+        res.json(course);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
 module.exports = router;
