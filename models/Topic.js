@@ -10,7 +10,7 @@ const TopicSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    courseId: {
+    course: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
         required: true
