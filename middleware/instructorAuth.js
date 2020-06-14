@@ -27,7 +27,7 @@ const instructorAuth = async (req, res, next) => {
         if (!course) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'Course Id not found' }] });
+                .json({ errors: [{ msg: 'Course not found' }] });
         }
         if (course.instructor.toString() !== req.user.id) {
             return res
@@ -40,9 +40,9 @@ const instructorAuth = async (req, res, next) => {
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'Incorrect Course Id' }] });
+                .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
-        return res.status(500).json({ msg: 'Server error' });
+        return res.status(500).json({ msg: 'Server Error' });
     }
 };
 
