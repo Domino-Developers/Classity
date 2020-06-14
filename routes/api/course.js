@@ -1,5 +1,5 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check, oneOf, validationResult } = require('express-validator');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -117,7 +117,8 @@ router.put(
                             $each: [topic.id],
                             $position: position
                         }
-                    }
+                    },
+                    modifiedDate: Date.now()
                 }
             );
 
@@ -264,4 +265,60 @@ router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
     }
 });
 
+/**
+ * @route		POST api/course/:courseId/
+ * @description Update course desc, tags,name
+ * @access		private + instructorOnly
+ */
+router.post(
+    '/:courseId',
+    [
+        auth,
+        instructorAuth,
+        [
+            oneOf([
+                check('name').not().isEmpty(),
+                check('description').not().isEmpty(),
+                check('tags').not().isEmpty()
+            ])
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: {
+                    msg:
+                        'Please supply alteast one of:- name , description, tags'
+                }
+            });
+        }
+        const body = {};
+        for (let key of ['name', 'description', 'tags']) {
+            if (req.body[key]) body[key] = req.body[key];
+        }
+
+        try {
+            const courseId = req.params.courseId;
+
+            const newCourse = await Course.findOneAndUpdate(
+                { _id: courseId },
+                {
+                    ...body,
+                    modifiedDate: Date.now()
+                },
+                { new: true }
+            );
+            res.json(newCourse);
+        } catch (err) {
+            if (err.kind === 'ObjectId') {
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Invalid courseId' }] });
+            }
+            console.error(err.message);
+            res.status(500).json({ msg: 'ServerError' });
+        }
+    }
+);
 module.exports = router;
