@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 // middlewares
 const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
+const studentAuth = require('../../middleware/studentAuth');
 
 // Models
 const Course = require('../../models/Course');
@@ -231,6 +232,35 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         }
         console.error(err.message);
         res.status(500).json({ msg: 'ServerError' });
+    }
+});
+
+/**
+ * @route		PUT api/course/:course_id/lastStudied
+ * @description Update lastStudied
+ * @access		private + studentAuth
+ */
+
+router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+        let coursesEnrolled = await User.findById(req.user.id)
+            .lean()
+            .select('coursesEnrolled -_id');
+        coursesEnrolled = coursesEnrolled['coursesEnrolled'];
+        const courseProgressId = String(coursesEnrolled[courseId]);
+
+        // update course progress
+        await CourseProgress.findOneAndUpdate(
+            { _id: courseProgressId },
+            {
+                $set: { lastStudied: Date.now() }
+            }
+        );
+        res.json(courseProgressId);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
 });
 
