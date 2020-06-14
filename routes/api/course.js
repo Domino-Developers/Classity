@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 // middlewares
 const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
+const studentAuth = require('../../middleware/studentAuth');
 
 // Models
 const Course = require('../../models/Course');
@@ -171,8 +172,9 @@ router.get('/:courseId', async (req, res) => {
  */
 router.put('/:courseId/enroll', auth, async (req, res) => {
     try {
+        const courseId = req.params.courseId;
         // get the course
-        const course = await Course.findById(req.params.course_id);
+        const course = await Course.findById(courseId);
 
         // Checking if course is there
         if (!course) {
@@ -210,20 +212,13 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 
         await course.save();
         await courseProgress.save();
+
         // Add course to user enrolled courses
         await User.findOneAndUpdate(
             { _id: req.user.id },
             {
-                $push: {
-                    coursesEnrolled: {
-                        $each: [
-                            {
-                                courseId: course.id,
-                                courseProgressId: courseProgress.id
-                            }
-                        ],
-                        $position: 0
-                    }
+                coursesEnrolled: {
+                    [courseId]: courseProgress.id
                 }
             }
         );
@@ -237,6 +232,35 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         }
         console.error(err.message);
         res.status(500).json({ msg: 'ServerError' });
+    }
+});
+
+/**
+ * @route		PUT api/course/:course_id/lastStudied
+ * @description Update lastStudied
+ * @access		private + studentAuth
+ */
+
+router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+        let coursesEnrolled = await User.findById(req.user.id)
+            .lean()
+            .select('coursesEnrolled -_id');
+        coursesEnrolled = coursesEnrolled['coursesEnrolled'];
+        const courseProgressId = String(coursesEnrolled[courseId]);
+
+        // update course progress
+        await CourseProgress.findOneAndUpdate(
+            { _id: courseProgressId },
+            {
+                $set: { lastStudied: Date.now() }
+            }
+        );
+        res.json(courseProgressId);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
 });
 

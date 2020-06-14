@@ -17,18 +17,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    coursesEnrolled: [
-        {
-            courseId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'course'
-            },
-            courseProgressId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'courseProgress'
-            }
-        }
-    ],
+    coursesEnrolled: {
+        type: Map,
+        of: mongoose.Schema.Types.ObjectId,
+        default: {}
+    },
     coursesCreated: [
         {
             type: mongoose.Schema.Types.ObjectId,
