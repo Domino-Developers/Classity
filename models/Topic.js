@@ -21,6 +21,12 @@ const TopicSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'resource'
         }
+    ],
+    doubts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'doubt'
+        }
     ]
 });
 TopicSchema.path('coreResources').discriminator(

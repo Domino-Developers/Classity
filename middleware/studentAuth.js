@@ -1,4 +1,5 @@
 const Course = require('../models/Course');
+const Topic = require('../models/Topic');
 
 /**
  *
@@ -37,6 +38,7 @@ const studentAuth = async (req, res, next) => {
 
         next();
     } catch (err) {
+        console.log(err);
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
