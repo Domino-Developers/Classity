@@ -24,7 +24,11 @@ const instructorAuth = async (req, res, next) => {
         }
 
         const course = await Course.findById(courseId).select('instructor');
-
+        if (!course) {
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Course Id not found' }] });
+        }
         if (course.instructor.toString() !== req.user.id) {
             return res
                 .status(401)
@@ -33,6 +37,11 @@ const instructorAuth = async (req, res, next) => {
 
         next();
     } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Incorrect Course Id' }] });
+        }
         return res.status(500).json({ msg: 'Server error' });
     }
 };
