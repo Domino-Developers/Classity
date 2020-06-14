@@ -128,7 +128,7 @@ router.put(
             if (err.kind === 'ObjectId') {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: 'incorrect course_id' }] });
+                    .json({ errors: [{ msg: 'Invalid Course Id' }] });
             }
             console.log(err.message);
             res.status(500).json({ msg: 'Server Error' });
@@ -137,7 +137,7 @@ router.put(
 );
 
 /**
- * @route		GET api/course/:course_id
+ * @route		GET api/course/:courseId
  * @description Get all course data with course ID
  * @access		public
  */
@@ -151,14 +151,14 @@ router.get('/:courseId', async (req, res) => {
         if (!course) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'course_id not found' }] });
+                .json({ errors: [{ msg: 'Course not found' }] });
         }
         res.json(course);
     } catch (err) {
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'incorrect course_id' }] });
+                .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
@@ -166,8 +166,8 @@ router.get('/:courseId', async (req, res) => {
 });
 
 /**
- * @route		PUT api/course/:course_id/enroll
- * @description Enroll current user to course_id
+ * @route		PUT api/course/:courseId/enroll
+ * @description Enroll current user to courseId
  * @access		private
  */
 router.put('/:courseId/enroll', auth, async (req, res) => {
@@ -180,7 +180,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         if (!course) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'course_id not found' }] });
+                .json({ errors: [{ msg: 'Course not found' }] });
         }
 
         // instructor can't enroll !
@@ -228,7 +228,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'incorrect course_id' }] });
+                .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ msg: 'ServerError' });
@@ -236,9 +236,9 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 });
 
 /**
- * @route		PUT api/course/:course_id/lastStudied
+ * @route		PUT api/course/:courseId/lastStudied
  * @description Update lastStudied
- * @access		private + studentAuth
+ * @access		private + studentOnly
  */
 
 router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
@@ -258,6 +258,48 @@ router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
             }
         );
         res.json(courseProgressId);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route		PUT api/course/:courseId/review
+ * @description Add/update review to course
+ * @access		private + studentOnly
+ */
+
+router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
+    try {
+        const { text, rating } = req.body;
+        const courseId = req.params.courseId;
+
+        if (!text && isNaN(rating)) {
+            return res.status(400).json({ msg: 'Bad Request' });
+        }
+
+        const course = await Course.findById(courseId);
+        let totalRating = course.avgRating * course.reviews.length;
+
+        const index = course.reviews.findIndex(
+            review => String(review.userId) === req.user.id
+        );
+
+        if (index === -1) {
+            course.reviews.push({ userId: req.user.id, text, rating });
+        } else {
+            totalRating -= course.reviews[index].rating
+                ? course.reviews[index].rating
+                : 0;
+            course.reviews[index] = { userId: req.user.id, text, rating };
+        }
+
+        totalRating += rating ? rating : 0;
+        course.avgRating = totalRating / course.reviews.length;
+
+        await course.save();
+        res.json(course.reviews);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
