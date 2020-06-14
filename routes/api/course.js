@@ -141,7 +141,7 @@ router.put(
  * @access		public
  */
 
-router.get('/:course_id', async (req, res) => {
+router.get('/:courseId', async (req, res) => {
     try {
         const course = await Course.findById(req.params.course_id)
             .populate('instructor', 'name -_id')
@@ -169,7 +169,7 @@ router.get('/:course_id', async (req, res) => {
  * @description Enroll current user to course_id
  * @access		private
  */
-router.put('/:course_id/enroll', auth, async (req, res) => {
+router.put('/:courseId/enroll', auth, async (req, res) => {
     try {
         // get the course
         const course = await Course.findById(req.params.course_id);
