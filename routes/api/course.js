@@ -151,14 +151,14 @@ router.get('/:courseId', async (req, res) => {
         if (!course) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'course_id not found' }] });
+                .json({ errors: [{ msg: 'Course not found' }] });
         }
         res.json(course);
     } catch (err) {
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'incorrect course_id' }] });
+                .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
@@ -180,7 +180,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         if (!course) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'course_id not found' }] });
+                .json({ errors: [{ msg: 'Course not found' }] });
         }
 
         // instructor can't enroll !
@@ -228,10 +228,10 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         if (err.kind === 'ObjectId') {
             return res
                 .status(400)
-                .json({ errors: [{ msg: 'incorrect course_id' }] });
+                .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'ServerError' });
+        res.status(500).json({ msg: 'Server Error' });
     }
 });
 
