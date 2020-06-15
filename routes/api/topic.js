@@ -60,7 +60,7 @@ router.put(
 
 /**
  * @route		PUT api/topic/:topicId/comment/:type(resourceDump|doubt)
- * @description Add/Update user's resource/doubt
+ * @description Add student's resource/doubt
  * @access		private + studentOnly
  */
 
