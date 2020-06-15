@@ -93,4 +93,47 @@ router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
     }
 });
 
+/**
+ * @route		DELETE api/comment/:commentId/reply/:replyId
+ * @description Delete a reply
+ * @access		private + classroomOnly
+ */
+
+router.delete(
+    '/:commentId/reply/:replyId',
+    [auth, classroomAuth],
+    async (req, res) => {
+        try {
+            const { commentId, replyId } = req.params;
+
+            const comment = await Comment.findById(commentId).select('reply');
+            const replyArr = comment.reply;
+
+            const index = replyArr.findIndex(
+                reply => String(reply.id) === replyId
+            );
+
+            if (index === -1) {
+                return res.status(400).json({ msg: 'Reply not found' });
+            }
+
+            if (String(replyArr[index].userId) !== req.user.id) {
+                return res
+                    .status(401)
+                    .json({ msg: 'Not authorized to delete reply' });
+            }
+
+            replyArr.splice(index, 1);
+
+            comment.reply = replyArr;
+            await comment.save();
+
+            res.json(replyArr);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+);
+
 module.exports = router;
