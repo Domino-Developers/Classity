@@ -19,13 +19,13 @@ const TopicSchema = new mongoose.Schema({
     resourceDump: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'resource'
+            ref: 'comment'
         }
     ],
-    doubts: [
+    doubt: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'doubt'
+            ref: 'comment'
         }
     ]
 });

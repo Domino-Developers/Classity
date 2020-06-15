@@ -59,49 +59,53 @@ router.put(
 );
 
 /**
- * @route		PUT api/topic/:topicId/resourceDump + PUT api/topic/:topicId/doubt
+ * @route		PUT api/topic/:topicId/comment/:kind(resourceDump|doubt)
  * @description Add/Update user's resource/doubt
  * @access		private + studentOnly
  */
 
-const addComment = async (type, user, topicId, text) => {
-    const arrObj = await Topic.findById(topicId)
-        .populate({ path: type })
-        .select(type);
+router.put(
+    '/:topicId/comment/:kind(doubt|resourceDump)',
+    [auth, studentAuth],
+    async (req, res) => {
+        try {
+            const { kind, topicId } = req.params;
+            const user = req.user.id;
+            const text = req.body.text;
 
-    const arr = arrObj[type];
-    const index = arr.findIndex(e => String(e.user) === user);
+            if (!text) {
+                return res.status(400).json({ msg: 'Bad Request' });
+            }
 
-    if (index === -1) {
-        const comment = new Comment[type]({ user, text });
-        await comment.save();
-        arr.push(comment.id);
-        await Topic.findOneAndUpdate({ _id: topicId }, { [type]: arr });
-    } else {
-        arr[index].text = text;
-        await Comment[type].findOneAndUpdate({ _id: arr[index].id }, { text });
-    }
+            const arrObj = await Topic.findById(topicId)
+                .populate({ path: kind })
+                .select(kind);
+            const arr = arrObj[kind];
+            const index = arr.findIndex(e => String(e.user) === user);
 
-    return arr;
-};
+            if (index === -1) {
+                const comment = new Comment({ user, topic: topicId, text });
+                await comment.save();
+                arr.push(comment.id);
+                const newTopic = await Topic.findOneAndUpdate(
+                    { _id: topicId },
+                    { [kind]: arr },
+                    { new: true }
+                );
+                arr = newTopic[kind];
+            } else {
+                arr[index].text = text;
+                await Comment.findOneAndUpdate(
+                    { _id: arr[index].id },
+                    { text }
+                );
+            }
 
-router.put('/:topicId/doubt', [auth, studentAuth], async (req, res) => {
-    try {
-        const arr = await addComment(
-            'doubts',
-            req.user.id,
-            req.params.topicId,
-            'hello'
-        );
-        console.log(arr);
-
-        res.send(arr);
-    } catch (err) {
-        if (err.message === 'Bad Request') {
-            return res.status(400).json({ msg: err.message });
+            res.send(arr);
+        } catch (err) {
+            res.status(500).json({ msg: 'Server Error' });
         }
-        res.status(500).json({ msg: 'Server Error' });
     }
-});
+);
 
 module.exports = router;
