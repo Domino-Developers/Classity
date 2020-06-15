@@ -1,5 +1,5 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check, oneOf, validationResult } = require('express-validator');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -117,7 +117,8 @@ router.put(
                             $each: [topic.id],
                             $position: position
                         }
-                    }
+                    },
+                    modifiedDate: Date.now()
                 }
             );
 
@@ -128,7 +129,7 @@ router.put(
             if (err.kind === 'ObjectId') {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: 'incorrect course_id' }] });
+                    .json({ errors: [{ msg: 'Invalid Course Id' }] });
             }
             console.log(err.message);
             res.status(500).json({ msg: 'Server Error' });
@@ -137,7 +138,7 @@ router.put(
 );
 
 /**
- * @route		GET api/course/:course_id
+ * @route		GET api/course/:courseId
  * @description Get all course data with course ID
  * @access		public
  */
@@ -166,8 +167,8 @@ router.get('/:courseId', async (req, res) => {
 });
 
 /**
- * @route		PUT api/course/:course_id/enroll
- * @description Enroll current user to course_id
+ * @route		PUT api/course/:courseId/enroll
+ * @description Enroll current user to courseId
  * @access		private
  */
 router.put('/:courseId/enroll', auth, async (req, res) => {
@@ -236,9 +237,9 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 });
 
 /**
- * @route		PUT api/course/:course_id/lastStudied
+ * @route		PUT api/course/:courseId/lastStudied
  * @description Update lastStudied
- * @access		private + studentAuth
+ * @access		private + studentOnly
  */
 
 router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
@@ -263,5 +264,102 @@ router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
         res.status(500).json({ msg: 'Server Error' });
     }
 });
+
+/**
+ * @route		PUT api/course/:courseId/review
+ * @description Add/update review to course
+ * @access		private + studentOnly
+ */
+
+router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
+    try {
+        const { text, rating } = req.body;
+        const courseId = req.params.courseId;
+
+        if (isNaN(rating)) {
+            return res.status(400).json({ msg: 'Bad Request' });
+        }
+
+        const course = await Course.findById(courseId);
+        let totalRating = course.avgRating * course.reviews.length;
+
+        const index = course.reviews.findIndex(
+            review => String(review.userId) === req.user.id
+        );
+
+        if (index === -1) {
+            course.reviews.push({ userId: req.user.id, text, rating });
+        } else {
+            totalRating -= course.reviews[index].rating;
+            course.reviews[index] = { userId: req.user.id, text, rating };
+        }
+
+        totalRating += rating;
+        course.avgRating = totalRating / course.reviews.length;
+
+        await course.save();
+        res.json(course.reviews);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route		POST api/course/:courseId/
+ * @description Update course desc, tags,name
+ * @access		private + instructorOnly
+ */
+router.post(
+    '/:courseId',
+    [
+        auth,
+        instructorAuth,
+        [
+            oneOf([
+                check('name').not().isEmpty(),
+                check('description').not().isEmpty(),
+                check('tags').not().isEmpty()
+            ])
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: {
+                    msg:
+                        'Please supply alteast one of:- name , description, tags'
+                }
+            });
+        }
+        const body = {};
+        for (let key of ['name', 'description', 'tags']) {
+            if (req.body[key]) body[key] = req.body[key];
+        }
+
+        try {
+            const courseId = req.params.courseId;
+
+            const newCourse = await Course.findOneAndUpdate(
+                { _id: courseId },
+                {
+                    ...body,
+                    modifiedDate: Date.now()
+                },
+                { new: true }
+            );
+            res.json(newCourse);
+        } catch (err) {
+            if (err.kind === 'ObjectId') {
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Invalid courseId' }] });
+            }
+            console.error(err.message);
+            res.status(500).json({ msg: 'ServerError' });
+        }
+    }
+);
 
 module.exports = router;
