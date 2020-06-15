@@ -94,4 +94,47 @@ router.put(
     }
 );
 
+/**
+ * @route		DELETE api/topic/:topicId/comment/:commentId
+ * @description Delete a comment
+ * @access		private + studentOnly
+ */
+
+router.delete(
+    '/:topicId/comment/:commentId',
+    [auth, studentAuth],
+    async (req, res) => {
+        try {
+            const { topicId, commentId } = req.params;
+
+            const comment = await Comment.findById(commentId).select('user');
+
+            if (!comment) {
+                return res.status(400).json({ msg: 'Comment not found' });
+            }
+
+            if (String(comment.user) !== req.user.id) {
+                return res
+                    .status(401)
+                    .json({ msg: 'Not authorized to delete comment' });
+            }
+
+            await Comment.findOneAndDelete({ _id: commentId });
+
+            const newTopic = await Topic.findOneAndUpdate(
+                { _id: topicId },
+                { $pull: { doubt: commentId, resourceDump: commentId } },
+                { new: true }
+            );
+
+            res.json({
+                doubt: newTopic.doubt,
+                resourceDump: newTopic.resourceDump
+            });
+        } catch (err) {
+            res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+);
+
 module.exports = router;
