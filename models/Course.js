@@ -40,7 +40,10 @@ const CourseSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'user'
             },
-            rating: { type: Number },
+            rating: {
+                type: Number,
+                required: true
+            },
             text: { type: String },
             date: {
                 type: Date,
