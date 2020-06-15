@@ -12,7 +12,7 @@ const TopicSchema = new mongoose.Schema({
     },
     course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'course',
         required: true
     },
     coreResources: [coreResourceSchema],
