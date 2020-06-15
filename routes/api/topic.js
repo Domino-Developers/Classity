@@ -4,11 +4,12 @@ const { check, validationResult } = require('express-validator');
 // middlewares
 const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
+const studentAuth = require('../../middleware/studentAuth');
 
 // Models
-const Course = require('../../models/Course');
 const User = require('../../models/User');
 const Topic = require('../../models/Topic');
+const Comment = require('../../models/Comment');
 
 // Initialize router
 const router = express.Router();
@@ -47,11 +48,47 @@ router.put(
                 { new: true }
             );
 
-            res.send(topic.coreResources);
+            res.json(topic.coreResources);
         } catch (err) {
             if (err.message === 'Bad Request') {
                 return res.status(400).json({ msg: err.message });
             }
+            res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+);
+
+/**
+ * @route		PUT api/topic/:topicId/comment/:type(resourceDump|doubt)
+ * @description Add/Update user's resource/doubt
+ * @access		private + studentOnly
+ */
+
+router.put(
+    '/:topicId/comment/:type(doubt|resourceDump)',
+    [auth, studentAuth],
+    async (req, res) => {
+        try {
+            const { type, topicId } = req.params;
+            const user = req.user.id;
+            const text = req.body.text;
+
+            if (!text) {
+                return res.status(400).json({ msg: 'Bad Request' });
+            }
+
+            const comment = new Comment({ user, topic: topicId, text });
+            await comment.save();
+
+            const newTopic = await Topic.findOneAndUpdate(
+                { _id: topicId },
+                { $push: { [type]: comment.id } },
+                { new: true }
+            ).populate(type);
+
+            res.json(newTopic[type]);
+        } catch (err) {
+            console.error(err);
             res.status(500).json({ msg: 'Server Error' });
         }
     }

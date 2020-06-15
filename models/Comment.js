@@ -41,5 +41,4 @@ const CommentSchema = new mongoose.Schema({
     ]
 });
 
-module.exports.doubt = mongoose.model('doubt', CommentSchema);
-module.exports.resourceDump = mongoose.model('resourceDump', CommentSchema);
+module.exports = mongoose.model('comment', CommentSchema);
