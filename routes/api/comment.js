@@ -1,0 +1,42 @@
+const express = require('express');
+
+// middlewares
+const auth = require('../../middleware/auth');
+const classroomAuth = require('../../middleware/classroomAuth');
+
+// Models
+const Comment = require('../../models/Comment');
+
+// Initialize router
+const router = express.Router();
+
+// ----------------------------------- Routes ------------------------------------------
+
+/**
+ * @route		DELETE api/comment/:commentId/like
+ * @description Unlike a comment
+ * @access		private + classroomOnly
+ */
+
+router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+        const index = comment.likes.findIndex(
+            user => String(user) === req.user.id
+        );
+
+        if (index !== -1) {
+            comment.likes.splice(index, 1);
+
+            await comment.save();
+
+            res.json(comment.likes);
+        } else {
+            res.status(400).json({ msg: 'Comment not liked' });
+        }
+    } catch (err) {
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
+
+module.exports = router;
