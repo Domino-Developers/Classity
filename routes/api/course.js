@@ -275,7 +275,7 @@ router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
         const { text, rating } = req.body;
         const courseId = req.params.courseId;
 
-        if (!text && isNaN(rating)) {
+        if (isNaN(rating)) {
             return res.status(400).json({ msg: 'Bad Request' });
         }
 
@@ -289,13 +289,11 @@ router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
         if (index === -1) {
             course.reviews.push({ userId: req.user.id, text, rating });
         } else {
-            totalRating -= course.reviews[index].rating
-                ? course.reviews[index].rating
-                : 0;
+            totalRating -= course.reviews[index].rating;
             course.reviews[index] = { userId: req.user.id, text, rating };
         }
 
-        totalRating += rating ? rating : 0;
+        totalRating += rating;
         course.avgRating = totalRating / course.reviews.length;
 
         await course.save();
