@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const Test = require('../models/Test');
 
 /**
  *
@@ -8,28 +9,37 @@ const Comment = require('../models/Comment');
  * @description middleware to check if the user is either a student or instructor
  */
 const classroomAuth = async (req, res, next) => {
-    const { commentId } = req.params;
+    const { commentId, testId } = req.params;
 
-    if (!commentId) {
+    if (!commentId && !testId) {
         return res.status(400).json({
-            msg: 'Comment Id not found'
+            msg: 'Comment Id or Test Id not found'
         });
     }
 
     try {
-        const topicObj = await Comment.findById(commentId)
-            .populate('topic', 'course')
-            .populate({
-                path: 'topic',
-                select: 'course',
-                populate: { path: 'course', select: 'students instructor' }
-            })
-            .select('topic');
-
+        let topicObj = {};
+        if (commentId) {
+            topicObj = await Comment.findById(commentId)
+                .populate('topic', 'course')
+                .populate({
+                    path: 'topic',
+                    select: 'course',
+                    populate: { path: 'course', select: 'students instructor' }
+                })
+                .select('topic');
+        } else {
+            topicObj = await Test.findById(testId)
+                .populate('topic', 'course')
+                .populate({
+                    path: 'topic',
+                    select: 'course',
+                    populate: { path: 'course', select: 'students instructor' }
+                })
+                .select('topic');
+        }
         if (!topicObj) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Course not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid Id' }] });
         }
 
         const { students, instructor } = topicObj.topic.course;
@@ -42,12 +52,10 @@ const classroomAuth = async (req, res, next) => {
 
         next();
     } catch (err) {
-        console.log(err);
         if (err.kind === 'ObjectId') {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Course Id' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid Id' }] });
         }
+        console.error(err);
         return res.status(500).json({ msg: 'Server Error' });
     }
 };
