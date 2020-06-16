@@ -1,6 +1,5 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -40,7 +39,7 @@ router.put(
                     kind: resource.kind,
                     text: resource.payload,
                     url: resource.payload,
-                    testId: mongoose.Types.ObjectId(resource.payload)
+                    testId: resource.payload
                 };
             });
 
@@ -180,6 +179,47 @@ router.delete(
                 resourceDump: newTopic.resourceDump
             });
         } catch (err) {
+            res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+);
+
+/**
+ * @route		DELETE api/topic/:topicId/coreResource/:resourceId
+ * @description Delete a core resource
+ * @access		private + instructorOnly
+ */
+
+router.delete(
+    '/:topicId/coreResource/:resourceId',
+    [auth, instructorAuth],
+    async (req, res) => {
+        try {
+            const { topicId, resourceId } = req.params;
+
+            const topic = await Topic.findById(topicId).select('coreResources');
+            const coreResources = topic.coreResources;
+
+            const index = coreResources.findIndex(
+                resource => String(resource.id) === resourceId
+            );
+
+            if (index === -1) {
+                return res.status(400).json({ msg: 'Core resource not found' });
+            }
+
+            if (coreResources[index].kind === 'test') {
+                await Test.findOneAndDelete({ _id: coreResources[i].testId });
+            }
+
+            coreResources.splice(index, 1);
+
+            topic.coreResources = coreResources;
+            await topic.save();
+
+            res.json({ coreResources });
+        } catch (err) {
+            console.error(err);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
