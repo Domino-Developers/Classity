@@ -362,4 +362,34 @@ router.post(
     }
 );
 
+/**
+ * @route		DELETE api/course/:courseId
+ * @description Delete course
+ * @access		private + instructorOnly
+ */
+
+router.delete('/:courseId', [auth, instructorAuth], async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+
+        const course = await Course.findById(courseId);
+        await course.remove();
+
+        // Unenroll students
+        for (let studentId of course.students) {
+            const student = await User.findOneAndUpdate(
+                { _id: studentId },
+                { $unset: { [`coursesEnrolled.${courseId}`]: '' } }
+            ).select('coursesEnrolled');
+
+            const progressId = String(student.coursesEnrolled.get(courseId));
+            await CourseProgress.findOneAndDelete({ _id: progressId });
+        }
+
+        res.json(course);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
 module.exports = router;
