@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const Comment = require('./Comment');
+const Test = require('./Test');
+
 const coreResourceSchema = new mongoose.Schema(
     {},
     { discriminatorKey: 'kind' }
@@ -47,5 +50,27 @@ TopicSchema.path('coreResources').discriminator(
         }
     })
 );
+
+TopicSchema.pre('remove', async function (next) {
+    const commentIds = [].concat(this.doubt, this.resourceDump);
+
+    const comments = await Comment.find({ _id: { $in: commentIds } });
+
+    for (let comment of comments) {
+        await comment.remove();
+    }
+
+    const testIds = this.coreResources.filter(
+        resource => resource.kind === 'test'
+    );
+
+    const tests = await Test.find({ _id: { $in: testIds } });
+
+    for (let test of tests) {
+        await test.remove();
+    }
+
+    next();
+});
 
 module.exports = mongoose.model('topic', TopicSchema);
