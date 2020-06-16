@@ -145,7 +145,7 @@ router.put(
 
 router.get('/:courseId', async (req, res) => {
     try {
-        const course = await Course.findById(req.params.course_id)
+        const course = await Course.findById(req.params.courseId)
             .populate('instructor', 'name -_id')
             .populate('topics', 'name -_id')
             .select('-students');
