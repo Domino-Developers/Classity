@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const Topic = require('./Topic');
+
 const CourseSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -60,6 +62,16 @@ const CourseSchema = new mongoose.Schema({
         type: [String],
         default: []
     }
+});
+
+CourseSchema.pre('remove', async function (next) {
+    const topics = await Topic.find({ _id: { $in: this.topics } });
+
+    for (let topic of topics) {
+        await topic.remove();
+    }
+
+    next();
 });
 
 module.exports = mongoose.model('course', CourseSchema);
