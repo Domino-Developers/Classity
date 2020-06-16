@@ -21,24 +21,17 @@ const CourseProgressSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    topicScores: [
-        {
-            type: Map,
-            of: Number
-        }
-    ],
-    testScores: [
-        {
-            type: Map,
-            of: {
-                score: Number,
-                lastAttemptDate: {
-                    type: Date,
-                    default: Date.now
-                }
+    testScores: {
+        type: Map,
+        of: {
+            score: Number,
+            lastAttemptDate: {
+                type: Date,
+                default: Date.now
             }
-        }
-    ]
+        },
+        default: {}
+    }
 });
 
 module.exports = CourseProgress = mongoose.model(
