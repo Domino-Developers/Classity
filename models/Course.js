@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Topic = require('./Topic');
+const Topic = mongoose.model('topic');
 
 const CourseSchema = new mongoose.Schema({
     name: {

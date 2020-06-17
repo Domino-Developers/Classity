@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-// models
-const CourseProgress = require('./CourseProgress');
+const CourseProgress = mongoose.model('courseProgress');
 
 const questionSchema = new mongoose.Schema(
     {
@@ -111,4 +110,5 @@ TestSchema.pre('remove', async function (next) {
         next(err);
     }
 });
+
 module.exports = mongoose.model('test', TestSchema);
