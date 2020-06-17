@@ -100,10 +100,15 @@ TestSchema.path('questions').discriminator(
 TestSchema.pre('remove', async function (next) {
     const { id: courseId, students } = this.topic.course;
     // Remove from tracking
-    await CourseProgress.updateMany(
-        { user: { $in: students }, course: courseId },
-        { $unset: { [`testScores.${this.id}`]: '' } },
-        { new: true }
-    );
+    try {
+        await CourseProgress.updateMany(
+            { user: { $in: students }, course: courseId },
+            { $unset: { [`testScores.${this.id}`]: '' } },
+            { new: true }
+        );
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 module.exports = mongoose.model('test', TestSchema);

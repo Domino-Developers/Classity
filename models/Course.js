@@ -65,13 +65,17 @@ const CourseSchema = new mongoose.Schema({
 });
 
 CourseSchema.pre('remove', async function (next) {
-    const topics = await Topic.find({ _id: { $in: this.topics } });
+    try {
+        const topics = await Topic.find({ _id: { $in: this.topics } });
 
-    for (let topic of topics) {
-        await topic.remove();
+        for (let topic of topics) {
+            await topic.remove();
+        }
+
+        next();
+    } catch (err) {
+        next(err);
     }
-
-    next();
 });
 
 module.exports = mongoose.model('course', CourseSchema);
