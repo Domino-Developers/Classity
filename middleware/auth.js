@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 /**
- *
  * @param {*} req
  * @param {*} res
  * @param {*} next
