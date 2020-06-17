@@ -96,19 +96,32 @@ TestSchema.path('questions').discriminator(
     })
 );
 
-TestSchema.pre('remove', async function (next) {
-    const { id: courseId, students } = this.topic.course;
-    // Remove from tracking
+const removeTracking = async (test, next) => {
     try {
+        // populate to get students
+        await test.execPopulate({
+            path: 'topic',
+            select: 'course',
+            populate: {
+                path: 'course',
+                select: 'students'
+            }
+        });
+
+        // get courseId and students id
+        const { id: courseId, students } = test.topic.course;
         await CourseProgress.updateMany(
             { user: { $in: students }, course: courseId },
-            { $unset: { [`testScores.${this.id}`]: '' } },
+            { $unset: { [`testScores.${test.id}`]: '' } },
             { new: true }
         );
         next();
     } catch (err) {
         next(err);
     }
-});
+};
 
+TestSchema.post('remove', removeTracking);
+
+TestSchema.post('findOneAndDelete', removeTracking);
 module.exports = mongoose.model('test', TestSchema);
