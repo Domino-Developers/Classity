@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Comment = require('./Comment');
 const Test = require('./Test');
+const Course = mongoose.model('course');
 
 const coreResourceSchema = new mongoose.Schema(
     {},
@@ -65,14 +66,8 @@ TopicSchema.pre('remove', async function (next) {
             resource => resource.kind === 'test'
         );
 
-        // get tests with students
-        const tests = await Test.find({ _id: { $in: testIds } })
-            .populate({ path: 'topic', select: 'course' })
-            .populate({
-                path: 'topic',
-                select: 'course',
-                populate: { path: 'course', select: 'students' }
-            });
+        // get tests
+        const tests = await Test.find({ _id: { $in: testIds } });
 
         for (let test of tests) {
             await test.remove();
@@ -83,5 +78,23 @@ TopicSchema.pre('remove', async function (next) {
         next(err);
     }
 });
+
+async function updateCourse(topic, next) {
+    try {
+        await Course.findOneAndUpdate(
+            { _id: topic.course },
+            {
+                modifiedDate: Date.now()
+            }
+        );
+        next();
+    } catch (err) {
+        next(err);
+    }
+}
+
+TopicSchema.post('save', updateCourse);
+
+TopicSchema.post('findOneAndUpdate', updateCourse);
 
 module.exports = mongoose.model('topic', TopicSchema);

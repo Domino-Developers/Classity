@@ -133,27 +133,4 @@ router.put(
     }
 );
 
-/**
- * @route		DELETE api/test/:testId
- * @description Delete a test
- * @access		private + instructorOnly
- */
-router.delete('/:testId', [auth, instructorAuth], async (req, res) => {
-    try {
-        // Get test to delete, need student's so as to remove them from course progress
-        const test = await Test.findById(req.params.testId)
-            .populate({ path: 'topic', select: 'course' })
-            .populate({
-                path: 'topic',
-                select: 'course',
-                populate: { path: 'course', select: 'students' }
-            });
-
-        await test.remove();
-        return res.json({ msg: 'success' });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
-    }
-});
 module.exports = router;
