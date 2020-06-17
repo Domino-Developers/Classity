@@ -392,4 +392,41 @@ router.delete('/:courseId', [auth, instructorAuth], async (req, res) => {
         res.status(500).json({ msg: 'Server Error' });
     }
 });
+
+/**
+ * @route		DELETE api/course/:courseId/topic/:topicId
+ * @description Delete topic from course
+ * @access		private + instructorOnly
+ */
+
+router.delete(
+    '/:courseId/topic/:topicId',
+    [auth, instructorAuth],
+    async (req, res) => {
+        try {
+            const { courseId, topicId } = req.params;
+
+            const topic = await Topic.findById(topicId);
+            await topic.remove();
+
+            const newCourse = await Course.findOneAndUpdate(
+                { _id: courseId },
+                { $pull: { topics: topicId } },
+                { new: true }
+            )
+                .select('topics')
+                .populate('topics', 'name');
+
+            res.json(newCourse.topics);
+        } catch (err) {
+            if (err.kind === 'ObjectId') {
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Invalid Id' }] });
+            }
+            res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+);
+
 module.exports = router;
