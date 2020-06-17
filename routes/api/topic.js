@@ -115,6 +115,11 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
         try {
+            const pos = req.body.position;
+
+            // now remove the postion
+            delete req.body.position;
+
             // Create test object
             const test = new Test({
                 ...req.body,
@@ -133,6 +138,24 @@ router.post(
 
             // save the test
             await test.save();
+
+            // add test to topic
+            await Topic.findOneAndUpdate(
+                { _id: req.params.topicId },
+                {
+                    $push: {
+                        coreResources: {
+                            $each: [
+                                {
+                                    kind: 'test',
+                                    testId: test.id
+                                }
+                            ],
+                            $position: pos
+                        }
+                    }
+                }
+            );
             res.json(test);
         } catch (err) {
             console.error(err.message);
@@ -179,6 +202,7 @@ router.delete(
                 resourceDump: newTopic.resourceDump
             });
         } catch (err) {
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
@@ -197,7 +221,9 @@ router.delete(
         try {
             const { topicId, resourceId } = req.params;
 
-            const topic = await Topic.findById(topicId).select('coreResources');
+            const topic = await Topic.findById(topicId).select(
+                'course coreResources'
+            );
             const coreResources = topic.coreResources;
 
             const index = coreResources.findIndex(
@@ -209,7 +235,9 @@ router.delete(
             }
 
             if (coreResources[index].kind === 'test') {
-                await Test.findOneAndDelete({ _id: coreResources[i].testId });
+                await Test.findOneAndDelete({
+                    _id: coreResources[index].testId
+                });
             }
 
             coreResources.splice(index, 1);
