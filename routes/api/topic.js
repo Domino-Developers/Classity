@@ -54,6 +54,7 @@ router.put(
             if (err.message === 'Bad Request' || err.kind === 'ObjectId') {
                 return res.status(400).json({ msg: 'Invalid data' });
             }
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
@@ -89,7 +90,7 @@ router.put(
 
             res.json(newTopic[type]);
         } catch (err) {
-            console.error(err);
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
@@ -179,6 +180,7 @@ router.delete(
                 resourceDump: newTopic.resourceDump
             });
         } catch (err) {
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
@@ -219,7 +221,7 @@ router.delete(
 
             res.json({ coreResources });
         } catch (err) {
-            console.error(err);
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
