@@ -64,7 +64,14 @@ TopicSchema.pre('remove', async function (next) {
         resource => resource.kind === 'test'
     );
 
-    const tests = await Test.find({ _id: { $in: testIds } });
+    // get tests with students
+    const tests = await Test.find({ _id: { $in: testIds } })
+        .populate({ path: 'topic', select: 'course' })
+        .populate({
+            path: 'topic',
+            select: 'course',
+            populate: { path: 'course', select: 'students' }
+        });
 
     for (let test of tests) {
         await test.remove();

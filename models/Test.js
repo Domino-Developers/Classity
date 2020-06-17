@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// models
+const CourseProgress = require('./CourseProgress');
+
 const questionSchema = new mongoose.Schema(
     {
         kind: {
@@ -94,4 +97,13 @@ TestSchema.path('questions').discriminator(
     })
 );
 
+TestSchema.pre('remove', async function (next) {
+    const { id: courseId, students } = this.topic.course;
+    // Remove from tracking
+    await CourseProgress.updateMany(
+        { user: { $in: students }, course: courseId },
+        { $unset: { [`testScores.${this.id}`]: '' } },
+        { new: true }
+    );
+});
 module.exports = mongoose.model('test', TestSchema);
