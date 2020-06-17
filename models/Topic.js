@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const Comment = require('./Comment');
-const Test = require('./Test');
+const Comment = mongoose.model('comment');
+const Test = mongoose.model('test');
 const Course = mongoose.model('course');
 
 const coreResourceSchema = new mongoose.Schema(

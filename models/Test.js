@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-// models
-const CourseProgress = require('./CourseProgress');
+const CourseProgress = mongoose.model('courseProgress');
 
 const questionSchema = new mongoose.Schema(
     {
