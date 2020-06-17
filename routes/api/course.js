@@ -77,6 +77,7 @@ router.get('/', async (req, res) => {
             .select(['name', 'instructor', 'tags', 'avgRating']);
         res.json(courses);
     } catch (err) {
+        console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
     }
 });
@@ -131,7 +132,7 @@ router.put(
                     .status(400)
                     .json({ errors: [{ msg: 'Invalid Course Id' }] });
             }
-            console.log(err.message);
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
@@ -355,7 +356,7 @@ router.post(
                     .json({ errors: [{ msg: 'Invalid courseId' }] });
             }
             console.error(err.message);
-            res.status(500).json({ msg: 'ServerError' });
+            res.status(500).json({ msg: 'Server Error' });
         }
     }
 );
@@ -386,7 +387,7 @@ router.delete('/:courseId', [auth, instructorAuth], async (req, res) => {
 
         res.json(course);
     } catch (err) {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
     }
 });
@@ -422,6 +423,7 @@ router.delete(
                     .status(400)
                     .json({ errors: [{ msg: 'Invalid Id' }] });
             }
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }

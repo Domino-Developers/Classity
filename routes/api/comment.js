@@ -34,6 +34,7 @@ router.put('/:commentId/like', [auth, classroomAuth], async (req, res) => {
             res.status(400).json({ msg: 'Comment already liked' });
         }
     } catch (err) {
+        console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
     }
 });
@@ -61,6 +62,7 @@ router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
             res.status(400).json({ msg: 'Comment not liked' });
         }
     } catch (err) {
+        console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
     }
 });
@@ -88,7 +90,7 @@ router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
 
         res.json(newComment.reply);
     } catch (err) {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({ msg: 'Server Error' });
     }
 });
@@ -130,7 +132,7 @@ router.delete(
 
             res.json(replyArr);
         } catch (err) {
-            console.error(err);
+            console.error(err.message);
             res.status(500).json({ msg: 'Server Error' });
         }
     }
