@@ -218,9 +218,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         await User.findOneAndUpdate(
             { _id: req.user.id },
             {
-                coursesEnrolled: {
-                    [courseId]: courseProgress.id
-                }
+                [`coursesEnrolled.${courseId}`]: courseProgress.id
             }
         );
 
