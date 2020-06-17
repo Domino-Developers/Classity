@@ -1,36 +1,20 @@
 const mongoose = require('mongoose');
+const { course, text } = require('./common');
 
 const Course = mongoose.model('course');
 const CourseProgress = mongoose.model('courseProgress');
 
 const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    avatar: {
-        type: String,
-        required: true
-    },
+    name: text,
+    password: text,
+    email: text,
+    avatar: text,
     coursesEnrolled: {
         type: Map,
         of: mongoose.Schema.Types.ObjectId,
         default: {}
     },
-    coursesCreated: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'course'
-        }
-    ]
+    coursesCreated: [course]
 });
 
 UserSchema.pre('remove', async function (next) {

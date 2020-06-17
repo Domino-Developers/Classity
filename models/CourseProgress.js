@@ -1,34 +1,17 @@
 const mongoose = require('mongoose');
+const { user, course, date, number } = require('./common');
 
 const CourseProgressSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-    },
-    course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'course'
-    },
-    precentageCompleted: {
-        type: Number,
-        default: 0
-    },
-    lastStudied: {
-        type: Date,
-        default: Date.now
-    },
-    streak: {
-        type: Number,
-        default: 0
-    },
+    user,
+    course,
+    precentageCompleted: number,
+    lastStudied: date,
+    streak: number,
     testScores: {
         type: Map,
         of: {
             score: Number,
-            lastAttemptDate: {
-                type: Date,
-                default: Date.now
-            }
+            lastAttemptDate: date
         },
         default: {}
     }

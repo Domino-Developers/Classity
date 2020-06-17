@@ -76,7 +76,7 @@ router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
 router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
     try {
         const text = req.body.text;
-        const userId = req.user.id;
+        const user = req.user.id;
 
         if (!text) {
             return res.status(400).json({ msg: 'Bad Request' });
@@ -84,7 +84,7 @@ router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
 
         const newComment = await Comment.findOneAndUpdate(
             { _id: req.params.commentId },
-            { $push: { reply: { userId, text } } },
+            { $push: { reply: { user, text } } },
             { new: true }
         );
 
@@ -119,7 +119,7 @@ router.delete(
                 return res.status(400).json({ msg: 'Reply not found' });
             }
 
-            if (String(replyArr[index].userId) !== req.user.id) {
+            if (String(replyArr[index].user) !== req.user.id) {
                 return res
                     .status(401)
                     .json({ msg: 'Not authorized to delete reply' });

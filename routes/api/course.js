@@ -283,14 +283,14 @@ router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
         let totalRating = course.avgRating * course.reviews.length;
 
         const index = course.reviews.findIndex(
-            review => String(review.userId) === req.user.id
+            review => String(review.user) === req.user.id
         );
 
         if (index === -1) {
-            course.reviews.push({ userId: req.user.id, text, rating });
+            course.reviews.push({ user: req.user.id, text, rating });
         } else {
             totalRating -= course.reviews[index].rating;
-            course.reviews[index] = { userId: req.user.id, text, rating };
+            course.reviews[index] = { user: req.user.id, text, rating };
         }
 
         totalRating += rating;
