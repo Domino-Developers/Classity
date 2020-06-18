@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { course, comment, text } = require('./common');
 
 const Comment = mongoose.model('comment');
 const Test = mongoose.model('test');
@@ -10,28 +11,11 @@ const coreResourceSchema = new mongoose.Schema(
 );
 
 const TopicSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'course',
-        required: true
-    },
+    name: text,
+    course,
     coreResources: [coreResourceSchema],
-    resourceDump: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'comment'
-        }
-    ],
-    doubt: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'comment'
-        }
-    ]
+    resourceDump: [comment],
+    doubt: [comment]
 });
 TopicSchema.path('coreResources').discriminator(
     'text',

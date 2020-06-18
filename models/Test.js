@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { topic } = require('./common');
 
 const CourseProgress = mongoose.model('courseProgress');
 
@@ -18,10 +19,7 @@ const questionSchema = new mongoose.Schema(
 );
 
 const TestSchema = new mongoose.Schema({
-    topic: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'topic'
-    },
+    topic,
     name: {
         type: String,
         required: [true, "Name can't be empty"]
