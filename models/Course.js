@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { user, topic, text, date, number } = require('./common');
 
-const Topic = mongoose.model('topic');
+const Topic = require('./Topic');
 
 const CourseSchema = new mongoose.Schema({
     name: text,

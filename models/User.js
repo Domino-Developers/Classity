@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const { course, text } = require('./common');
 
-const Course = mongoose.model('course');
-const CourseProgress = mongoose.model('courseProgress');
+const Course = require('./Course');
+const CourseProgress = require('./CourseProgress');
 
 const UserSchema = new mongoose.Schema({
     name: text,
