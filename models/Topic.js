@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const { course, comment, text } = require('./common');
 
-const Comment = mongoose.model('comment');
-const Test = mongoose.model('test');
-const Course = mongoose.model('course');
+const Comment = require('./Comment');
+const Test = require('./Test');
 
 const coreResourceSchema = new mongoose.Schema(
     {},
@@ -65,7 +64,7 @@ TopicSchema.pre('remove', async function (next) {
 
 async function updateCourse(topic, next) {
     try {
-        await Course.findOneAndUpdate(
+        await mongoose.model('course').findOneAndUpdate(
             { _id: topic.course },
             {
                 modifiedDate: Date.now()
