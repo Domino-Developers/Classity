@@ -1,0 +1,22 @@
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 0.7rem 2rem;
+    z-index: 100;
+    opacity: 0.9;
+    color: #fff;
+}
+
+.navbar ul {
+    display: flex;
+}
+
+.navbar li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
