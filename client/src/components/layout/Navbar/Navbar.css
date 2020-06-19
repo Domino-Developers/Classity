@@ -10,10 +10,6 @@
     background-color: var(--light-color);
 }
 
-.navbar *:not(.btn) {
-    color: var(--dark-color);
-}
-
 .navbar ul {
     display: flex;
     list-style: none;
