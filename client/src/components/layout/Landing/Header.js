@@ -1,12 +1,10 @@
 import React from 'react';
 import Button from '../Button';
 
-import './Header.css';
-
 const Header = () => (
     <header>
         <div className='hero-box'>
-            <h1 class='hero-text'>
+            <h1 className='hero-text'>
                 Better Platform
                 <br />
                 for Better Future!

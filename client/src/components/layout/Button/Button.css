@@ -12,6 +12,7 @@
 
 .btn-full {
     background-color: var(--primary-color);
+    color: var(--light-color);
 }
 
 .btn-ghost {

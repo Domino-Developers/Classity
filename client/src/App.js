@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Navbar from './components/layout/Navbar';
-import Header from './components/layout/Header';
+import Landing from './components/layout/Landing';
 
 import './App.css';
 
@@ -9,7 +9,7 @@ function App() {
         <Fragment>
             <Navbar />
             <div className='main'>
-                <Header />
+                <Landing />
             </div>
         </Fragment>
     );
