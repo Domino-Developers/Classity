@@ -7,12 +7,11 @@ const Header = () => (
     <header>
         <div className='hero-box'>
             <h1 class='hero-text'>
-                Best Courses for
+                Better Platform
                 <br />
-                your Better Future!
+                for Better Future!
             </h1>
             <Button text='Join for Free' full />
-            <Button text='Explore' />
         </div>
     </header>
 );

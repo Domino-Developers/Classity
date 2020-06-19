@@ -5,8 +5,13 @@
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 2rem 10%;
+    padding: 1rem 10%;
     z-index: 100;
+    background-color: var(--light-color);
+}
+
+.navbar *:not(.btn) {
+    color: var(--dark-color);
 }
 
 .navbar ul {
