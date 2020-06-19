@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400&display=swap');
+
 :root {
-    --primary-color: #6a17b8;
+    --primary-color: #7619cc;
     --dark-color: #252227;
     --light-color: #f4f4f4;
     --danger-color: #dc3545;
@@ -10,29 +12,25 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Lato', 'Arial', sans-serif;
+    font-weight: 400;
+    color: var(--light-color);
+}
+
+html {
+    font-size: 20px;
+    text-rendering: optimizeLegibility;
 }
 
 body {
-    font-family: 'Raleway', sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;
-    background-color: #fff;
+    background-color: var(--light-color);
 }
 
-ul {
-    list-style: none;
+.main {
+    margin-top: 3.8rem;
 }
 
 a {
+    cursor: pointer;
     text-decoration: none;
-}
-
-.bg-dark {
-    background-color: var(--dark-color);
-    color: #fff;
-}
-
-.bg-primary {
-    background-color: var(--primary-color);
-    color: #fff;
 }

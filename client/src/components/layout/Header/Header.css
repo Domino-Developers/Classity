@@ -1,0 +1,33 @@
+header {
+    height: 50vh;
+    background-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.5) 49%,
+            rgba(0, 0, 0, 0.8) 100%
+        ),
+        url('./header-bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.hero-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding-left: 10%;
+}
+
+.hero-text {
+    color: var(--light-color);
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    word-spacing: 4px;
+    letter-spacing: 1px;
+}

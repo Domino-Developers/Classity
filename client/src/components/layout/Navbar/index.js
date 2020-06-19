@@ -1,17 +1,23 @@
 import React from 'react';
+import Button from '../Button';
+
 import './Navbar.css';
 
-const Navbar = () => {
-    return (
-        <nav className='navbar bg-dark'>
-            <h1> Study Tube </h1>
-            <ul>
-                <li>Explore!</li>
-                <li>Log in</li>
-                <li className='bg-primary'>Join for free</li>
-            </ul>
-        </nav>
-    );
-};
+const Navbar = () => (
+    <nav className='navbar bg-dark'>
+        <h1> Study Tube </h1>
+        <ul>
+            <li>
+                <a href='#!'>Explore</a>
+            </li>
+            <li>
+                <a href='#!'>Log In</a>
+            </li>
+            <li className='bg-primary'>
+                <Button text='Join for Free' full />
+            </li>
+        </ul>
+    </nav>
+);
 
 export default Navbar;
