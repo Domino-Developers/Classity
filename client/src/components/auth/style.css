@@ -1,0 +1,19 @@
+.auth-card {
+    background-color: var(--light-color);
+    color: #000;
+    width: 100%;
+    height: 70vh;
+    margin: auto;
+    z-index: 110;
+    padding: 1rem 1rem;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 400px;
+    min-width: 300px;
+    margin: auto;
+    text-align: center;
+}
