@@ -16,8 +16,8 @@ header {
     width: 60%;
 }
 
-h1 {
-    color: white;
+.hero-text {
+    color: var(--light-color);
     font-size: 2.5rem;
     font-weight: 300;
     text-transform: uppercase;

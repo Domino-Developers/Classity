@@ -1,17 +1,17 @@
 import React from 'react';
-import Button from '../button';
+import Button from '../Button';
 
-import './style.css';
+import './Header.css';
 
 const Header = () => (
     <header>
         <div className='hero-box'>
-            <h1>
+            <h1 class='hero-text'>
                 Best Courses for
                 <br />
                 your Better Future!
             </h1>
-            <Button text='Register' full />
+            <Button text='Join for Free' full />
             <Button text='Explore' />
         </div>
     </header>

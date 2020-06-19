@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
-import Header from './components/layout/header';
+import Navbar from './components/layout/Navbar';
+import Header from './components/layout/Header';
 
-import './style.css';
+import './App.css';
 
 function App() {
     return (
         <Fragment>
-            <h1>Summer Up</h1>
+            <Navbar />
             <Header />
         </Fragment>
     );
