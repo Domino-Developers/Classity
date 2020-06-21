@@ -1,11 +1,21 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+
+// components
 import Button from '../Button';
-import Register from '../../auth/Register';
+import Auth from '../../auth/Auth';
 
 import './Navbar.css';
 
+// custom hook for query param
+function useQuery(location) {
+    return new URLSearchParams(location.search);
+}
+
 const Navbar = () => {
-    const [visible, setVisible] = useState(false);
+    let location = useLocation();
+    let query = useQuery(location);
+
     return (
         <Fragment>
             <nav className='navbar bg-dark'>
@@ -17,23 +27,16 @@ const Navbar = () => {
                     <li>
                         <a href='#!'>Log In</a>
                     </li>
-                    <li
-                        className='bg-primary'
-                        onClick={() => {
-                            setVisible(true);
-                        }}
-                    >
-                        <Button text='Join for Free' full />
+                    <li className='bg-primary'>
+                        <Link to={`${location.pathname}?authMode=register`}>
+                            <Button text='Join for Free' full />
+                        </Link>
                     </li>
                 </ul>
             </nav>
-            {visible ? (
-                <Register
-                    hide={() => {
-                        setVisible(false);
-                    }}
-                />
-            ) : null}
+            {query.get('authMode') && (
+                <Auth mode={query.get('authMode')} path={location.pathname} />
+            )}
         </Fragment>
     );
 };
