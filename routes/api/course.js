@@ -306,7 +306,7 @@ router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
 
 /**
  * @route		POST api/course/:courseId/
- * @description Update course desc, tags,name
+ * @description Update course desc, tags,name, url
  * @access		private + instructorOnly
  */
 router.post(
@@ -318,7 +318,8 @@ router.post(
             oneOf([
                 check('name').not().isEmpty(),
                 check('description').not().isEmpty(),
-                check('tags').not().isEmpty()
+                check('tags').not().isEmpty(),
+                check('imageURL').not().isEmpty()
             ])
         ]
     ],
@@ -333,7 +334,7 @@ router.post(
             });
         }
         const body = {};
-        for (let key of ['name', 'description', 'tags']) {
+        for (let key of ['name', 'description', 'tags', 'imageUrl']) {
             if (req.body[key]) body[key] = req.body[key];
         }
 
