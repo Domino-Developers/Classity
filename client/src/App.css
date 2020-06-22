@@ -12,13 +12,12 @@
     --dark-grey-color: #aaa;
 }
 
+/* Basics */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Lato', 'Arial', sans-serif;
-    font-weight: 400;
-    color: var(--dark-color);
 }
 
 html {
@@ -30,11 +29,39 @@ body {
     background-color: var(--light-color);
 }
 
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+ul {
+    list-style: none;
+}
+
+/* Text Styles */
+
+.text-light {
+    color: var(--light-color);
+}
+
+/* Custom */
 .main {
     margin-top: 3.8rem;
 }
 
-a {
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: var(--dark-color-7);
+    z-index: 105;
+}
+
+.overlay-close {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
     cursor: pointer;
     text-decoration: none;
     outline: none;
