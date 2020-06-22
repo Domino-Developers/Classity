@@ -105,13 +105,13 @@
 .feedback .bar {
     width: 100%;
     height: 1rem;
-    background-color: #eee;
+    background-color: var(--grey-color);
     border-radius: 5px;
 }
 
 .feedback .bar-filled {
     height: 100%;
-    background-color: #aaa;
+    background-color: var(--dark-grey-color);
     border-radius: 5px;
 }
 
