@@ -9,6 +9,7 @@ const CourseSchema = new mongoose.Schema({
     createdDate: date,
     modifiedDate: date,
     description: text,
+    imageURL: text,
     students: [user],
     topics: [topic],
     reviews: [
