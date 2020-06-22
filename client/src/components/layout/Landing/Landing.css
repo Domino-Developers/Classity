@@ -11,6 +11,7 @@ header {
     background-size: cover;
     background-attachment: fixed;
     position: relative;
+    margin-bottom: 4rem;
 }
 
 .hero-box {
@@ -32,27 +33,35 @@ header {
     letter-spacing: 1px;
 }
 
-.landing h2 {
+.Landing h2 {
     text-align: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
 }
 
-.landing .cards {
+.Landing .cards {
     display: flex;
     width: 60%;
     margin: 0 auto;
     justify-content: space-around;
 }
 
-.landing .card {
+.Landing .card {
     text-align: center;
     flex: 0 0 15%;
 }
 
-.landing .card img {
+.Landing .card img {
     width: 100px;
     height: auto;
 }
 
-.landing .card p {
+.Landing .card h3 {
+    margin: 1rem 0;
+    font-size: 1.25rem;
+}
+
+.Landing .card p {
     font-size: 0.8rem;
 }

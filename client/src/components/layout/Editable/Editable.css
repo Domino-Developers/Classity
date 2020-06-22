@@ -1,8 +1,0 @@
-[contenteditable='true'] {
-    outline: none;
-}
-
-[contenteditable='true']:focus,
-[contenteditable='true']:hover {
-    border: 1px solid var(--primary-color);
-}

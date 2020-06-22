@@ -1,12 +1,16 @@
 import React, { Fragment } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
+// components
 import Button from '../Button';
-import Auth from '../../Auth';
+import Auth from '../../auth/Auth';
 
 import './Navbar.css';
 
-const useQuery = location => new URLSearchParams(location.search);
+// custom hook for query param
+function useQuery(location) {
+    return new URLSearchParams(location.search);
+}
 
 const Navbar = () => {
     let location = useLocation();
@@ -24,11 +28,9 @@ const Navbar = () => {
                         <a href='#!'>Log In</a>
                     </li>
                     <li className='bg-primary'>
-                        <Button
-                            to={`${location.pathname}?authMode=register`}
-                            text='Join for Free'
-                            full
-                        />
+                        <Link to={`${location.pathname}?authMode=register`}>
+                            <Button text='Join for Free' full />
+                        </Link>
                     </li>
                 </ul>
             </nav>

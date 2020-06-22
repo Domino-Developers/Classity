@@ -12,6 +12,7 @@
 
 .navbar ul {
     display: flex;
+    list-style: none;
 }
 
 .navbar li {
