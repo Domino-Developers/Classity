@@ -3,7 +3,7 @@
 :root {
     --primary-color: #7619cc;
     --dark-color: #252227;
-    --light-color: #f4f4f4;
+    --light-color: #fcfcfc;
     --danger-color: #dc3545;
     --success-color: #28a745;
 }
@@ -33,4 +33,27 @@ body {
 a {
     cursor: pointer;
     text-decoration: none;
+}
+
+.main a:not(.btn) {
+    color: var(--primary-color);
+}
+
+ul {
+    list-style: none;
+}
+
+h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    margin: 1rem 0;
+    font-size: 1.25rem;
+}
+
+section {
+    margin-bottom: 4rem;
 }

@@ -5,7 +5,7 @@ import Goals from './Goals';
 import './Landing.css';
 
 const Landing = () => (
-    <div className='Landing'>
+    <div>
         <Header />
         <Goals />
     </div>

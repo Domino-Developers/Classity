@@ -1,0 +1,145 @@
+.course-page-content {
+    width: 60%;
+    margin: 4rem auto;
+}
+
+/* Header */
+
+.course-header {
+    padding: 4rem 20%;
+    display: grid;
+    grid-template-rows: repeat(4, min-content);
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    grid-row-gap: 1rem;
+    background-color: var(--dark-color);
+}
+
+.course-header * {
+    color: var(--light-color);
+}
+
+.header-title,
+.header-description {
+    grid-column: 1/-1;
+}
+
+.header-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.header-enroll {
+    grid-row: 3/5;
+    grid-column: 3/4;
+}
+
+/* Description */
+
+.course-page-description {
+    box-shadow: 0 0 10px var(--dark-color);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+/* Content */
+
+.course-topics > li > p {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.course-topics > li {
+    margin-bottom: 5px;
+}
+
+.course-topics p {
+    border: 1px solid #aaa;
+    padding: 0.5rem;
+}
+
+.course-topics ul p {
+    padding-left: 2.5rem;
+}
+
+.show-button,
+.hide-button {
+    display: inline-block;
+    width: 1rem;
+}
+
+.course-topics .hide .hide-button,
+.course-topics .show .show-button {
+    display: none;
+}
+
+.delete-btn {
+    color: var(--danger-color);
+    border: none;
+    padding-right: 5px;
+}
+
+/* Feeback */
+
+.feedback {
+    display: grid;
+    grid-template-rows: repeat(5, min-content);
+    grid-template-columns: 1fr 1.5fr 1fr;
+    grid-gap: 5px;
+    align-items: center;
+}
+
+.big-rating {
+    grid-row: 1/-1;
+    justify-self: center;
+    text-align: center;
+}
+
+.big-rating p {
+    font-size: 4rem;
+}
+
+.feedback .bar {
+    width: 100%;
+    height: 1rem;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+.feedback .bar-filled {
+    height: 100%;
+    background-color: #aaa;
+    border-radius: 5px;
+}
+
+.feedback .rating {
+    display: flex;
+    align-items: center;
+}
+
+/* Reviews */
+
+.reviews h3,
+.reviews li {
+    border-bottom: 1px solid #eee;
+}
+
+.reviews li:not(.more) {
+    padding: 2.5rem 0;
+    display: grid;
+    grid-template-rows: repeat(3, min-content);
+    grid-template-columns: 1fr 3fr;
+    grid-row-gap: 5px;
+}
+
+.reviews .date {
+    color: #aaa;
+}
+
+.reviews .more {
+    padding: 2.5rem;
+    text-align: center;
+}
