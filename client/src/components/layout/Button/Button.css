@@ -3,11 +3,12 @@
     border-radius: 200px;
     padding: 10px 30px;
     margin-right: 30px;
-    transition: opacity 0.2s, color 0.2s, background-color 0.2s;
+    transition: color 0.2s, background-color 0.2s;
 }
 
 .btn:hover {
-    opacity: 0.9;
+    background-color: var(--dark-primary-color);
+    border: 1px solid var(--dark-primary-color);
 }
 
 .btn-full {
@@ -21,5 +22,4 @@
 
 .btn-ghost:hover {
     color: var(--light-color);
-    background-color: var(--primary-color);
 }

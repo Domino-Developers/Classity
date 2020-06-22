@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Rating from '../layout/Rating';
 import Button from '../layout/Button';
 import FadeText from '../layout/FadeText';

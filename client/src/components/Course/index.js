@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+
 import Header from './Header';
 import Description from './Description';
 import Content from './Content';
@@ -9,7 +10,7 @@ import Review from './Review';
 import './Course.css';
 
 const Course = props => {
-    const [editing, edit] = useState(true);
+    const [editing, edit] = useState(false);
 
     return (
         <Fragment>

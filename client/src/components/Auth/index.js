@@ -2,11 +2,10 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import './Auth.css';
-
-// components
 import Register from './Register';
 import Login from './Login';
+
+import './Auth.css';
 
 const Auth = props => {
     const { path, mode } = props;

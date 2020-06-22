@@ -37,7 +37,7 @@ Editable.propTypes = {
     html: PropTypes.string,
     text: PropTypes.string,
     tagName: PropTypes.string,
-    onChange: PropTypes.bool,
+    onChange: PropTypes.func,
     disabled: PropTypes.bool
 };
 
