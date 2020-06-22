@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 const Goals = () => (
-    <Fragment>
+    <section className='landing'>
         <h2>Achieve your goals with Study Tube</h2>
         <div className='cards'>
             <div className='card'>
@@ -43,7 +43,7 @@ const Goals = () => (
                 </p>
             </div>
         </div>
-    </Fragment>
+    </section>
 );
 
 export default Goals;

@@ -1,22 +1,26 @@
-import React, { Fragment } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-
-// components
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
+import Course from './components/Course';
 
 import './App.css';
 
 function App() {
     return (
-        <Fragment>
-            <Router>
-                <Navbar />
-                <div className='main'>
-                    <Landing />
-                </div>
-            </Router>
-        </Fragment>
+        <Router>
+            <Navbar />
+            <div className='main'>
+                <Switch>
+                    <Route exact path='/' component={Landing} />
+                    <Route
+                        exact
+                        path='/course'
+                        render={() => <Course instructor />}
+                    />
+                </Switch>
+            </div>
+        </Router>
     );
 }
 

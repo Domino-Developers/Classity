@@ -2,19 +2,23 @@
 
 :root {
     --primary-color: #7619cc;
-    --dark-color: rgb(37, 34, 39);
-    --dark-color-7: rgba(37, 34, 39, 0.9);
-    --light-color: #f4f4f4;
+    --dark-primary-color: hsl(271, 78%, 30%);
+    --dark-color: #252227;
+    --dark-color-9: rgba(37, 34, 39, 0.9);
+    --light-color: #fcfcfc;
     --danger-color: #dc3545;
     --success-color: #28a745;
+    --grey-color: #eee;
+    --dark-grey-color: #aaa;
 }
 
-/* Basics */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Lato', 'Arial', sans-serif;
+    font-weight: 400;
+    color: var(--dark-color);
 }
 
 html {
@@ -26,23 +30,41 @@ body {
     background-color: var(--light-color);
 }
 
+.main {
+    margin-top: 3.8rem;
+}
+
 a {
     cursor: pointer;
     text-decoration: none;
+    outline: none;
 }
+
+.main a:not(.btn) {
+    color: var(--primary-color);
+}
+
 ul {
     list-style: none;
 }
-
-/* Text Styles */
 
 .text-light {
     color: var(--light-color);
 }
 
-/* Custom */
-.main {
-    margin-top: 3.8rem;
+h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    margin: 1rem 0;
+    font-size: 1.25rem;
+}
+
+section {
+    margin-bottom: 4rem;
 }
 
 .overlay {
@@ -50,7 +72,7 @@ ul {
     width: 100%;
     height: 100%;
     top: 0;
-    background-color: var(--dark-color-7);
+    background-color: var(--dark-color-9);
     z-index: 105;
 }
 
@@ -60,7 +82,6 @@ ul {
     right: 10px;
     font-size: 2rem;
     cursor: pointer;
-    color: var(--light-color);
     z-index: 111;
 }
 
@@ -71,5 +92,11 @@ ul {
     z-index: 110;
     top: 0;
     left: 0;
+}
+
+.overlay-close i,
+.overlay-container h1 {
     color: var(--light-color);
+    text-align: center;
+    margin-bottom: 4rem;
 }
