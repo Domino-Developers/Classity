@@ -40,7 +40,8 @@ a {
     outline: none;
 }
 
-.main a:not(.btn) {
+.main a:not(.btn),
+a * {
     color: var(--primary-color);
 }
 
@@ -99,4 +100,13 @@ section {
     color: var(--light-color);
     text-align: center;
     margin-bottom: 4rem;
+}
+
+.overlay-close i {
+    font-size: 2rem;
+}
+
+i {
+    margin-right: 5px;
+    font-size: 0.9rem;
 }

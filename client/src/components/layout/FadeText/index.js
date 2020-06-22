@@ -34,7 +34,15 @@ const FadeText = props => {
                 </div>
             </AnimateHeight>
             <a href='#!' onClick={() => toggle(!show)}>
-                {show ? '- See less' : '+ See more'}
+                {show ? (
+                    <span>
+                        <i className='fas fa-minus'></i>See less
+                    </span>
+                ) : (
+                    <span>
+                        <i className='fas fa-plus'></i>See more
+                    </span>
+                )}
             </a>
         </div>
     );

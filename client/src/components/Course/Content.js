@@ -37,13 +37,15 @@ const Content = props => {
             <ul className='course-topics'>
                 {editing && (
                     <li>
-                        <AddNew>+ Add new topic</AddNew>
+                        <AddNew>
+                            <i className='fas fa-plus'></i>Add new topic
+                        </AddNew>
                     </li>
                 )}
                 <li className='hide' id='topic1'>
                     {editing ? (
                         <p>
-                            <span className='delete-btn'>- </span>
+                            <i className='fas fa-minus delete-btn'></i>
                             <Editable
                                 text={names.topic1}
                                 onChange={e =>
@@ -58,8 +60,8 @@ const Content = props => {
                         </p>
                     ) : (
                         <p onClick={toggleShow}>
-                            <span className='show-button'>+</span>
-                            <span className='hide-button'>-</span>
+                            <i className='fas fa-plus show-button'></i>
+                            <i className='fas fa-minus hide-button'></i>
                             <span
                                 dangerouslySetInnerHTML={{
                                     __html: names.topic1
@@ -72,79 +74,33 @@ const Content = props => {
                         height={toShow === 'topic1' || editing ? 'auto' : 0}
                     >
                         <ul>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 1
-                                </p>
+                                <p>Video 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 2
-                                </p>
+                                <p>Video 2</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Resource 1
-                                </p>
+                                <p>Resource 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Test 1
-                                </p>
+                                <p>Test 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                         </ul>
                     </AnimateHeight>
-                    {editing && <AddNew>+ Add new topic</AddNew>}
+                    {editing && (
+                        <AddNew>
+                            <i className='fas fa-plus'></i>Add new topic
+                        </AddNew>
+                    )}
                 </li>
                 <li className='hide' id='topic2'>
                     {editing ? (
                         <p>
-                            <span className='delete-btn'>- </span>
+                            <i className='fas fa-minus delete-btn'></i>
                             <Editable
                                 text={names.topic2}
                                 onChange={e =>
@@ -159,8 +115,8 @@ const Content = props => {
                         </p>
                     ) : (
                         <p onClick={toggleShow}>
-                            <span className='show-button'>+</span>
-                            <span className='hide-button'>-</span>
+                            <i className='fas fa-plus show-button'></i>
+                            <i className='fas fa-minus hide-button'></i>
                             <span
                                 dangerouslySetInnerHTML={{
                                     __html: names.topic2
@@ -173,79 +129,33 @@ const Content = props => {
                         height={toShow === 'topic2' || editing ? 'auto' : 0}
                     >
                         <ul>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 1
-                                </p>
+                                <p>Video 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 2
-                                </p>
+                                <p>Video 2</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Resource 1
-                                </p>
+                                <p>Resource 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Test 1
-                                </p>
+                                <p>Test 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                         </ul>
                     </AnimateHeight>
-                    {editing && <AddNew>+ Add new topic</AddNew>}
+                    {editing && (
+                        <AddNew>
+                            <i className='fas fa-plus'></i>Add new topic
+                        </AddNew>
+                    )}
                 </li>
                 <li className='hide' id='topic3'>
                     {editing ? (
                         <p>
-                            <span className='delete-btn'>- </span>
+                            <i className='fas fa-minus delete-btn'></i>
                             <Editable
                                 text={names.topic3}
                                 onChange={e =>
@@ -260,8 +170,8 @@ const Content = props => {
                         </p>
                     ) : (
                         <p onClick={toggleShow}>
-                            <span className='show-button'>+</span>
-                            <span className='hide-button'>-</span>
+                            <i className='fas fa-plus show-button'></i>
+                            <i className='fas fa-minus hide-button'></i>
                             <span
                                 dangerouslySetInnerHTML={{
                                     __html: names.topic3
@@ -274,74 +184,28 @@ const Content = props => {
                         height={toShow === 'topic3' || editing ? 'auto' : 0}
                     >
                         <ul>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 1
-                                </p>
+                                <p>Video 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Video 2
-                                </p>
+                                <p>Video 2</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Resource 1
-                                </p>
+                                <p>Resource 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
+
                             <li>
-                                <p>
-                                    {editing && (
-                                        <button className='delete-btn'>
-                                            -
-                                        </button>
-                                    )}
-                                    Test 1
-                                </p>
+                                <p>Test 1</p>
                             </li>
-                            {editing && (
-                                <li>
-                                    <AddNew>+ Add new resource</AddNew>
-                                </li>
-                            )}
                         </ul>
                     </AnimateHeight>
-                    {editing && <AddNew>+ Add new topic</AddNew>}
+                    {editing && (
+                        <AddNew>
+                            <i className='fas fa-plus'></i>Add new topic
+                        </AddNew>
+                    )}
                 </li>
             </ul>
         </section>
