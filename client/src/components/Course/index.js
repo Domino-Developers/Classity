@@ -19,7 +19,7 @@ const Course = props => {
                 edit={edit}
                 editing={editing}
             />
-            <div className='course-page-content'>
+            <div className='container'>
                 <Description editing={editing} />
                 <Content editing={editing} />
                 {!editing && <Feedback />}
