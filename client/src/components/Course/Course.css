@@ -45,43 +45,6 @@
     border-radius: 10px;
 }
 
-/* Content */
-
-.course-topics > li > p {
-    background-color: #eee;
-    cursor: pointer;
-}
-
-.course-topics > li {
-    margin-bottom: 5px;
-}
-
-.course-topics p {
-    border: 1px solid #aaa;
-    padding: 0.5rem;
-}
-
-.course-topics ul p {
-    padding-left: 2.5rem;
-}
-
-.show-button,
-.hide-button {
-    display: inline-block;
-    width: 1rem;
-}
-
-.course-topics .hide .hide-button,
-.course-topics .show .show-button {
-    display: none;
-}
-
-.delete-btn {
-    color: var(--danger-color);
-    border: none;
-    padding-right: 5px;
-}
-
 /* Feeback */
 
 .feedback {
