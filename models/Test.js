@@ -25,7 +25,11 @@ const TestSchema = new mongoose.Schema({
         type: String,
         required: [true, "Name can't be empty"]
     },
-    questions: [questionSchema]
+    questions: [questionSchema],
+    passScore: {
+        type: Number,
+        required: true
+    }
 });
 
 TestSchema.path('questions').discriminator(
