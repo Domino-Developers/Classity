@@ -12,6 +12,7 @@
     --dark-grey-color: #aaa;
 }
 
+/* Basic */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -30,10 +31,6 @@ body {
     background-color: var(--light-color);
 }
 
-.main {
-    margin-top: 3.8rem;
-}
-
 a {
     cursor: pointer;
     text-decoration: none;
@@ -49,6 +46,7 @@ ul {
     list-style: none;
 }
 
+/* Text Styles */
 .text-light {
     color: var(--light-color);
 }
@@ -64,10 +62,21 @@ h3 {
     font-size: 1.25rem;
 }
 
+i {
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+/* Containers */
+
 section {
     margin-bottom: 4rem;
 }
 
+.main {
+    margin-top: 3.8rem;
+    width: 100%;
+}
 .overlay {
     position: fixed;
     width: 100%;
@@ -106,7 +115,7 @@ section {
     font-size: 2rem;
 }
 
-i {
-    margin-right: 5px;
-    font-size: 0.9rem;
+.container {
+    max-width: 1300px;
+    margin: 4rem auto;
 }
