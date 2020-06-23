@@ -1,0 +1,33 @@
+.tab-names {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.no-tab {
+    flex-grow: 1;
+}
+
+.tab-names li {
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--dark-grey-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: 0.2s border;
+}
+
+.tab-names button {
+    border: none;
+    background-color: transparent;
+    font-size: 1.25rem;
+    padding: 5px 1rem;
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+.tab-names .show {
+    border: 1px solid var(--dark-grey-color);
+    border-bottom: transparent;
+}
