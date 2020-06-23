@@ -16,8 +16,8 @@
     padding-left: 2.5rem;
 }
 
-.show-button,
-.hide-button {
+.course-topics .show-button,
+.course-topics .hide-button {
     display: inline-block;
     width: 1rem;
 }
@@ -27,7 +27,7 @@
     display: none;
 }
 
-.delete-btn {
+.course-topics .delete-btn {
     color: var(--danger-color);
     border: none;
     padding-right: 5px;
