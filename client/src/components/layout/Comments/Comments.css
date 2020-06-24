@@ -1,0 +1,125 @@
+/* Basic */
+
+.comments li:not(.is-reply) {
+    border-bottom: 1px solid var(--grey-color);
+    padding: 2.5rem 0;
+}
+
+.comments .more {
+    text-align: center;
+}
+
+.is-reply .comment {
+    width: 80%;
+}
+
+.comments h4 {
+    margin: 0.5rem 0;
+    text-decoration: underline;
+}
+
+.comment {
+    display: grid;
+    grid-template-rows: repeat(4, min-content);
+    grid-template-columns: 1fr 3fr min-content;
+    grid-row-gap: 5px;
+    grid-template-areas:
+        'date rating like'
+        'name text reply'
+        '.     add  .   ';
+}
+
+/* Positioning */
+
+.comment .date {
+    color: var(--dark-grey-color);
+    grid-area: date;
+}
+
+.comment .rating {
+    grid-area: rating;
+    display: none;
+}
+
+.is-review .comment .rating {
+    display: block;
+}
+
+.comment .like {
+    grid-area: like;
+}
+
+.comment .name {
+    grid-area: name;
+}
+
+.comment .text {
+    grid-area: text;
+    grid-row: span 2;
+}
+
+.is-review .comment .text {
+    grid-row: span 1;
+}
+
+.comment .reply {
+    grid-area: reply;
+}
+
+.comment .add {
+    grid-area: add;
+}
+
+.is-review .comment .reply,
+.is-review .comment .add,
+.is-reply .comment .add,
+.is-reply .comment .like,
+.is-reply .comment .reply {
+    display: none;
+}
+
+/* Icons */
+
+.comment i {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.comment .like,
+.comment .reply {
+    display: flex;
+    align-items: center;
+}
+
+.comment .icon .filled,
+.comment .icon.active .outline,
+.comment .icon:hover .outline {
+    display: none;
+}
+
+.comment .icon.active .filled,
+.comment .icon:hover .filled {
+    display: inline;
+}
+
+/* Input */
+.comment input {
+    font-size: 1rem;
+    border: 1px solid var(--dark-grey-color);
+    padding: 5px 0.5rem;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.comment input:focus {
+    border: 1px solid var(--primary-color);
+}
+
+.comment .add a {
+    display: none;
+    margin-left: 1rem;
+}
+
+.comment .add a.active {
+    display: inline;
+}
