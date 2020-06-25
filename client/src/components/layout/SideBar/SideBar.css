@@ -1,0 +1,27 @@
+.sidebar {
+    display: flex;
+    height: 100%;
+}
+.sidebar-close {
+    padding: 1rem 0.5rem;
+    background-color: var(--grey-color);
+    box-shadow: 1px 0px 10px 2px var(--dark-grey-color);
+}
+
+.sidebar-close > button {
+    cursor: pointer;
+    border: none;
+}
+.sidebar-close > button > i {
+    font-size: 1.5rem;
+}
+
+.sidebar-list {
+    width: 250px;
+    overflow-y: scroll;
+    transition: width 0.25s ease 0s;
+}
+
+.sidebar-list.collapsed {
+    width: 0;
+}

@@ -1,0 +1,7 @@
+.main-content-area {
+    position: fixed;
+    display: flex;
+    top: 80px;
+    width: 100%;
+    height: calc(100% - 80px);
+}

@@ -4,10 +4,12 @@
     align-items: center;
     position: fixed;
     top: 0;
+    height: 80px;
     width: 100%;
     padding: 1rem 10%;
     z-index: 100;
     background-color: var(--light-color);
+    border-bottom: 1.5px solid var(--dark-grey-color);
 }
 
 .navbar ul {
