@@ -1,0 +1,65 @@
+.breadcrumb {
+    display: flex;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--dark-grey-color);
+    width: 100%;
+    align-items: center;
+    height: 55px;
+}
+
+.breadcrumb-progress {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb li a.bread-link {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    margin-right: 0.75rem;
+    padding: 0 10px;
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+}
+
+a.bread-link::before,
+a.bread-link::after {
+    content: '';
+    position: absolute;
+    border-color: var(--primary-color);
+    border-style: solid;
+    border-width: 15px 10px;
+}
+
+a.bread-link::before {
+    left: -10px;
+    border-left-color: transparent;
+}
+
+a.bread-link::after {
+    left: 100%;
+    border-color: transparent;
+    border-left-color: var(--primary-color);
+}
+
+.breadcrumb li:nth-last-of-type(3) a.bread-link {
+    cursor: default;
+}
+
+.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover {
+    background-color: var(--dark-primary-color);
+}
+
+.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover::before {
+    border-color: var(--dark-primary-color);
+    border-left-color: transparent;
+}
+
+.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover::after {
+    border-left-color: var(--dark-primary-color);
+}
+
+.breadcrumb li:last-of-type {
+    margin-left: auto;
+}
