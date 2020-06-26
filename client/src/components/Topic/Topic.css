@@ -5,3 +5,77 @@
     width: 100%;
     height: calc(100% - 135px);
 }
+
+.main-content-area .main-content {
+    margin-top: 2rem;
+    overflow-y: scroll;
+    padding: 0 15%;
+    flex-grow: 1;
+}
+
+.main-content p {
+    margin-bottom: 2rem;
+}
+
+.topic-content a {
+    display: inline-block;
+    padding: 1rem;
+    width: 100%;
+}
+
+.topic-content a * {
+    color: var(--dark-color);
+}
+
+.topic-content * {
+    font-size: 1.2rem;
+}
+
+.topic-content li:hover {
+    background-color: var(--grey-color);
+}
+
+/* Type of material */
+
+.topic-content span::before {
+    font-weight: 700;
+}
+
+.topic-content .video span::before {
+    content: 'Video: ';
+}
+
+.topic-content .text span::before {
+    content: 'Reading: ';
+}
+
+.topic-content .test span::before {
+    content: 'Test: ';
+}
+
+/* Icons */
+
+.main-content li.video .video {
+    display: inline-block;
+}
+
+.main-content li.text .text {
+    display: inline-block;
+}
+
+.main-content li.test .test {
+    display: inline-block;
+}
+
+.main-content li.completed .completed {
+    color: var(--primary-color);
+    display: inline-block;
+}
+
+.main-content li i,
+.main-content li.completed .video,
+.main-content li.completed .text,
+.main-content li.completed .test {
+    display: none;
+    width: 2rem;
+}

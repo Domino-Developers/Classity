@@ -32,7 +32,6 @@ const Description = props => {
                 <Editable
                     html={description}
                     onChange={e => changeDescription(e.target.value)}
-                    disabled={!editing}
                 />
             ) : (
                 <FadeText html>{description}</FadeText>
