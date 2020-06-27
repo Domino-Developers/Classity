@@ -4,7 +4,7 @@ import Header from './Header';
 import Goals from './Goals';
 
 import './Landing.css';
-import CardsContainer from '../CardsContainer';
+import CardsContainer from '../../features/CardsContainer';
 
 const Landing = () => (
     <div>
