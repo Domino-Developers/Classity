@@ -3,7 +3,18 @@
     margin-right: 5px;
 }
 
-.star-rating img {
-    width: 1.5rem;
-    height: auto;
+.star-rating-full,
+.star-rating-empty {
+    height: 1.5rem;
+}
+
+.star-rating-full {
+    background: url('../../img/5star-full.png');
+    background-size: 7.5rem 1.5rem;
+}
+
+.star-rating-empty {
+    background: url('../../img/5star-empty.png');
+    background-size: 7.5rem 1.5rem;
+    background-position: right;
 }
