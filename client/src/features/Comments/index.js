@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Comment from './Comment';
-import Button from '../Button';
+import Button from '../../components/Button';
 
 import './Comments.css';
 

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import AnimateHeight from 'react-animate-height';
 
-import FadeText from '../FadeText';
-import Rating from '../Rating';
+import FadeText from '../../components/FadeText';
+import Rating from '../../components/Rating';
 
 const Comment = props => {
     const { review, reply, replies } = props;

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import Navbar from '../components/Navbar';
+import Navbar from '../features/Navbar';
 import Landing from '../components/Landing';
 import Course from '../features/Course';
 import Topic from '../features/Topic';
