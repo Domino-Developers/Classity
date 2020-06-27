@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '../layout/Button';
-import Rating from '../layout/Rating';
-import Editable from '../layout/Editable';
+import Button from '../../components/Button';
+import Rating from '../../components/Rating';
+import Editable from '../../components/Editable';
 
 const Header = props => {
     const { instructor, edit, editing } = props;

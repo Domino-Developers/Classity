@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import SideBar from '../layout/SideBar';
-import Breadcrumb from '../layout/Breadcrumb';
-import Editable from '../layout/Editable';
-import Tabs from '../layout/Tabs';
-import FadeText from '../layout/FadeText';
+import SideBar from '../../components/SideBar';
+import Breadcrumb from '../../components/Breadcrumb';
+import Editable from '../../components/Editable';
+import Tabs from '../../components/Tabs';
+import FadeText from '../../components/FadeText';
 
 import './Topic.css';
 

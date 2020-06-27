@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import FadeText from '../layout/FadeText';
-import Editable from '../layout/Editable';
+import FadeText from '../../components/FadeText';
+import Editable from '../../components/Editable';
 
 const Description = props => {
     const { editing } = props;

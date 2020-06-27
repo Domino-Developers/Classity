@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Comments from '../layout/Comments';
+import Comments from '../../components/Comments';
 
 const Review = () => (
     <section className='reviews'>
