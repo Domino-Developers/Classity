@@ -1,3 +1,7 @@
+.fade-text {
+    margin-bottom: 2rem;
+}
+
 .fade-text .content {
     overflow-y: hidden;
     position: relative;
