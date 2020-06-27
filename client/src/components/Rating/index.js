@@ -17,11 +17,11 @@ const Rating = props => {
 };
 
 const FullStar = () => (
-    <img src={require('../../../img/star-full.png')} alt='Full star' />
+    <img src={require('../../img/star-full.png')} alt='Full star' />
 );
 
 const EmptyStar = () => (
-    <img src={require('../../../img/star-empty.png')} alt='Empty star' />
+    <img src={require('../../img/star-empty.png')} alt='Empty star' />
 );
 
 Rating.propTypes = {

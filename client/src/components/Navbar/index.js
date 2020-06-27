@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import Button from '../Button';
-import Auth from '../../Auth';
+import Auth from '../../features/Auth';
 
 import './Navbar.css';
 

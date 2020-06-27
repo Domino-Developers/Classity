@@ -6,7 +6,7 @@ header {
             rgba(0, 0, 0, 0.5) 49%,
             rgba(0, 0, 0, 0.8) 100%
         ),
-        url('./img/header-bg.jpg');
+        url('../../img/header-bg.jpg');
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
