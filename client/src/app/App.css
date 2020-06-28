@@ -22,6 +22,11 @@
     color: var(--dark-color);
 }
 
+b,
+strong {
+    font-weight: 700;
+}
+
 html {
     font-size: 20px;
     text-rendering: optimizeLegibility;
