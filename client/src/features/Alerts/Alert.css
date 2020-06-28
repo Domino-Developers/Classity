@@ -1,0 +1,25 @@
+.alert-container {
+    position: fixed;
+    width: 100%;
+    padding: 0rem 1rem;
+    z-index: 120;
+    bottom: 0;
+    opacity: 0.8;
+}
+
+.alert {
+    margin: 1rem auto;
+    padding: 1rem;
+    color: var(--light-color);
+    border-radius: 1rem;
+    text-align: center;
+    max-width: 1124px;
+}
+
+.alert-danger {
+    background-color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: var(--success-color);
+}
