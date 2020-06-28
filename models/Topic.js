@@ -5,7 +5,7 @@ const Comment = require('./Comment');
 const Test = require('./Test');
 
 const coreResourceSchema = new mongoose.Schema(
-    {},
+    { name: text },
     { discriminatorKey: 'kind' }
 );
 

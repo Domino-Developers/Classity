@@ -21,10 +21,6 @@ const questionSchema = new mongoose.Schema(
 
 const TestSchema = new mongoose.Schema({
     topic,
-    name: {
-        type: String,
-        required: [true, "Name can't be empty"]
-    },
     questions: [questionSchema],
     passScore: {
         type: Number,
