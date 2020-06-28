@@ -17,6 +17,29 @@ const router = express.Router();
 // ----------------------------------- Routes ------------------------------------------
 
 /**
+ * @route		PATCH api/topic/:topicId
+ * @description Rename a topic
+ * @access		private + instructorOnly
+ */
+router.patch('/:topicId', [auth, instructorAuth], async (req, res) => {
+    try {
+        const topic = await Topic.findOneAndUpdate(
+            { _id: req.params.topicId },
+            { name: req.body.name },
+            { new: true }
+        );
+
+        res.json(topic);
+    } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ msg: 'Invalid data' });
+        }
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+});
+
+/**
  * @route		PUT api/topic/:topicId/coreResource
  * @description Add/Delete/Update core resource to topic
  * @access		private + instructorOnly
