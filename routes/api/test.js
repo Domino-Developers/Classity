@@ -1,6 +1,5 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -9,9 +8,6 @@ const studentAuth = require('../../middleware/studentAuth');
 const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
-const User = require('../../models/User');
-const Topic = require('../../models/Topic');
-const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');
 

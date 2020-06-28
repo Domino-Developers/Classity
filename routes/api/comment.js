@@ -17,7 +17,6 @@ const router = express.Router();
  * @description Like a comment
  * @access		private + classroomOnly
  */
-
 router.put('/:commentId/like', [auth, classroomAuth], async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
@@ -44,7 +43,6 @@ router.put('/:commentId/like', [auth, classroomAuth], async (req, res) => {
  * @description Unlike a comment
  * @access		private + classroomOnly
  */
-
 router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
@@ -72,7 +70,6 @@ router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
  * @description Reply to a comment
  * @access		private + classroomOnly
  */
-
 router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
     try {
         const text = req.body.text;
@@ -100,7 +97,6 @@ router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
  * @description Delete a reply
  * @access		private + classroomOnly
  */
-
 router.delete(
     '/:commentId/reply/:replyId',
     [auth, classroomAuth],

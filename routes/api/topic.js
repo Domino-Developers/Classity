@@ -7,7 +7,6 @@ const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
 
 // Models
-const User = require('../../models/User');
 const Topic = require('../../models/Topic');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
@@ -65,7 +64,6 @@ router.put(
  * @description Add student's resource/doubt
  * @access		private + studentOnly
  */
-
 router.put(
     '/:topicId/comment/:type(doubt|resourceDump)',
     [auth, studentAuth],
@@ -80,13 +78,18 @@ router.put(
             }
 
             const comment = new Comment({ user, topic: topicId, text });
-            await comment.save();
+            const commentPromise = comment.save();
 
-            const newTopic = await Topic.findOneAndUpdate(
+            const topicPromise = Topic.findOneAndUpdate(
                 { _id: topicId },
                 { $push: { [type]: comment.id } },
                 { new: true }
             ).populate(type);
+
+            const [newTopic] = await Promise.all([
+                topicPromise,
+                commentPromise
+            ]);
 
             res.json(newTopic[type]);
         } catch (err) {
@@ -95,7 +98,8 @@ router.put(
         }
     }
 );
-/*
+
+/**
  * @route		POST api/topic/:topicId/test
  * @description Add a test and get test-id
  * @access		private + instructorOnly
@@ -138,10 +142,10 @@ router.post(
             }
 
             // save the test
-            await test.save();
+            const testPromise = test.save();
 
             // add test to topic
-            await Topic.findOneAndUpdate(
+            const topicPromise = Topic.findOneAndUpdate(
                 { _id: req.params.topicId },
                 {
                     $push: {
@@ -157,6 +161,9 @@ router.post(
                     }
                 }
             );
+
+            await Promise.all([testPromise, topicPromise]);
+
             res.json(test);
         } catch (err) {
             console.error(err.message);
@@ -170,7 +177,6 @@ router.post(
  * @description Delete a comment
  * @access		private + studentOnly
  */
-
 router.delete(
     '/:topicId/comment/:commentId',
     [auth, studentAuth],
@@ -190,13 +196,15 @@ router.delete(
                     .json({ msg: 'Not authorized to delete comment' });
             }
 
-            await Comment.findOneAndDelete({ _id: commentId });
+            const commentPromise = Comment.findOneAndDelete({ _id: commentId });
 
-            const newTopic = await Topic.findOneAndUpdate(
+            const topicPromise = Topic.findOneAndUpdate(
                 { _id: topicId },
                 { $pull: { doubt: commentId, resourceDump: commentId } },
                 { new: true }
             );
+
+            const [newTopic] = Promise.all([topicPromise, commentPromise]);
 
             res.json({
                 doubt: newTopic.doubt,
@@ -214,7 +222,6 @@ router.delete(
  * @description Delete a core resource
  * @access		private + instructorOnly
  */
-
 router.delete(
     '/:topicId/coreResource/:resourceId',
     [auth, instructorAuth],
