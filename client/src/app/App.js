@@ -9,12 +9,14 @@ import Topic from '../features/Topic';
 import store from './store';
 
 import './App.css';
+import Alerts from '../features/Alerts';
 
 function App() {
     return (
         <Provider store={store}>
             <Router>
                 <Navbar />
+                <Alerts />
                 <div className='main'>
                     <Switch>
                         <Route exact path='/' component={Landing} />
