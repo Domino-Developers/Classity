@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken');
+const { verify } = require('./util');
+const User = require('../models/User');
 
 /**
  * @param {*} req
@@ -6,21 +7,24 @@ const jwt = require('jsonwebtoken');
  * @param {*} next
  * @description middleware to check token and protect private routes
  */
-const auth = (req, res, next) => {
-    const token = req.header('x-auth-token');
-
-    if (!token) {
-        return res.status(401).json({
-            msg: 'Token not found access denied'
-        });
-    }
-
+const auth = async (req, res, next) => {
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        req.user = decoded.user;
+        verify(req);
+
+        const user = await User.findById(req.user.id).select('_id');
+
+        if (!user) {
+            return res.status(401).json({ msg: 'Invalid token' });
+        }
+
         next();
     } catch (err) {
-        return res.status(401).json({ msg: 'Invalid token' });
+        if (err.kind === 'NotAuthorized') {
+            return res.status(401).json({ msg: err.message });
+        }
+
+        console.error(err.message);
+        return res.status(500).json({ msg: 'Server Error' });
     }
 };
 

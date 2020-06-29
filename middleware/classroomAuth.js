@@ -1,4 +1,4 @@
-const { isStudent, isInstructor } = require('./util');
+const { verify, isStudent, isInstructor } = require('./util');
 
 /**
  * @param {*} req request
@@ -8,6 +8,8 @@ const { isStudent, isInstructor } = require('./util');
  */
 const classroomAuth = async (req, res, next) => {
     try {
+        verify();
+
         if (!(await isStudent(req)) && !(await isInstructor(req))) {
             return res.status(401).json({ msg: 'Not authorised' });
         }
@@ -16,6 +18,10 @@ const classroomAuth = async (req, res, next) => {
     } catch (err) {
         if (err.kind === 'BadRequest') {
             return res.status(400).json({ msg: err.message });
+        }
+
+        if (err.kind === 'NotAuthorized') {
+            return res.status(401).json({ msg: err.message });
         }
 
         console.error(err.message);

@@ -1,4 +1,4 @@
-const { isStudent } = require('./util');
+const { verify, isStudent } = require('./util');
 
 /**
  * @param {*} req request
@@ -8,6 +8,8 @@ const { isStudent } = require('./util');
  */
 const studentAuth = async (req, res, next) => {
     try {
+        verify(req);
+
         if (!(await isStudent(req))) {
             return res.status(401).json({ msg: 'Not a student' });
         }
@@ -16,6 +18,10 @@ const studentAuth = async (req, res, next) => {
     } catch (err) {
         if (err.kind === 'BadRequest') {
             return res.status(400).json({ msg: err.message });
+        }
+
+        if (err.kind === 'NotAuthorized') {
+            return res.status(401).json({ msg: err.message });
         }
 
         console.error(err.message);

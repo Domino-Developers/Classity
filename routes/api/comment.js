@@ -1,7 +1,6 @@
 const express = require('express');
 
 // middlewares
-const auth = require('../../middleware/auth');
 const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
@@ -17,7 +16,7 @@ const router = express.Router();
  * @description Like a comment
  * @access		private + classroomOnly
  */
-router.put('/:commentId/like', [auth, classroomAuth], async (req, res) => {
+router.put('/:commentId/like', classroomAuth, async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
 
@@ -43,7 +42,7 @@ router.put('/:commentId/like', [auth, classroomAuth], async (req, res) => {
  * @description Unlike a comment
  * @access		private + classroomOnly
  */
-router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
+router.delete('/:commentId/like', classroomAuth, async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
         const index = comment.likes.findIndex(
@@ -70,7 +69,7 @@ router.delete('/:commentId/like', [auth, classroomAuth], async (req, res) => {
  * @description Reply to a comment
  * @access		private + classroomOnly
  */
-router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
+router.put('/:commentId/reply', classroomAuth, async (req, res) => {
     try {
         const text = req.body.text;
         const user = req.user.id;
@@ -97,41 +96,35 @@ router.put('/:commentId/reply', [auth, classroomAuth], async (req, res) => {
  * @description Delete a reply
  * @access		private + classroomOnly
  */
-router.delete(
-    '/:commentId/reply/:replyId',
-    [auth, classroomAuth],
-    async (req, res) => {
-        try {
-            const { commentId, replyId } = req.params;
+router.delete('/:commentId/reply/:replyId', classroomAuth, async (req, res) => {
+    try {
+        const { commentId, replyId } = req.params;
 
-            const comment = await Comment.findById(commentId).select('reply');
-            const replyArr = comment.reply;
+        const comment = await Comment.findById(commentId).select('reply');
+        const replyArr = comment.reply;
 
-            const index = replyArr.findIndex(
-                reply => String(reply.id) === replyId
-            );
+        const index = replyArr.findIndex(reply => String(reply.id) === replyId);
 
-            if (index === -1) {
-                return res.status(400).json({ msg: 'Reply not found' });
-            }
-
-            if (String(replyArr[index].user) !== req.user.id) {
-                return res
-                    .status(401)
-                    .json({ msg: 'Not authorized to delete reply' });
-            }
-
-            replyArr.splice(index, 1);
-
-            comment.reply = replyArr;
-            await comment.save();
-
-            res.json(replyArr);
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+        if (index === -1) {
+            return res.status(400).json({ msg: 'Reply not found' });
         }
+
+        if (String(replyArr[index].user) !== req.user.id) {
+            return res
+                .status(401)
+                .json({ msg: 'Not authorized to delete reply' });
+        }
+
+        replyArr.splice(index, 1);
+
+        comment.reply = replyArr;
+        await comment.save();
+
+        res.json(replyArr);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
-);
+});
 
 module.exports = router;
