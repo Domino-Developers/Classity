@@ -1,5 +1,6 @@
 const express = require('express');
 const { check, oneOf, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -28,7 +29,8 @@ router.post(
         auth,
         [
             check('name', "Course name can't be empty").not().isEmpty(),
-            check('description', "Description can't be empty").not().isEmpty()
+            check('description', "Description can't be empty").not().isEmpty(),
+            check('imageURL', 'imageURL is req').not().isEmpty()
         ]
     ],
     async (req, res) => {
@@ -149,14 +151,23 @@ router.put(
 router.get('/:courseId', async (req, res) => {
     try {
         const course = await Course.findById(req.params.courseId)
+            .lean()
             .populate('instructor', 'name -_id')
-            .populate('topics', 'name -_id')
-            .select('-students');
+            .populate({
+                path: 'topics',
+                select: 'name coreResources',
+                populate: { path: 'coreResources', select: 'name' }
+            });
         if (!course) {
             return res
                 .status(400)
                 .json({ errors: [{ msg: 'Course not found' }] });
         }
+
+        // We want no of students only
+        course.noOfStudents = course.students.length;
+        delete course.students;
+
         res.json(course);
     } catch (err) {
         if (err.kind === 'ObjectId') {

@@ -43,10 +43,7 @@ router.patch(
     [
         auth,
         instructorAuth,
-        [
-            check('name', "Can't be empty").not().isEmpty(),
-            check('questions', "questions can't be empty").not().isEmpty()
-        ]
+        check('questions', "questions can't be empty").not().isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);

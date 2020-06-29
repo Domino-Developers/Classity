@@ -52,13 +52,15 @@ router.put(
             req.body.forEach((resource, i, arr) => {
                 if (
                     !['text', 'video', 'test'].includes(resource.kind) ||
-                    !resource.payload
+                    !resource.payload ||
+                    !resource.name
                 ) {
                     throw new Error('Bad Request');
                 }
 
                 arr[i] = {
                     kind: resource.kind,
+                    name: resource.name,
                     text: resource.payload,
                     url: resource.payload,
                     testId: resource.payload
@@ -144,9 +146,10 @@ router.post(
         }
         try {
             const pos = req.body.position;
-
+            const name = req.body.name;
             // now remove the postion
             delete req.body.position;
+            delete req.body.name;
 
             // Create test object
             const test = new Test({
@@ -176,7 +179,8 @@ router.post(
                             $each: [
                                 {
                                     kind: 'test',
-                                    testId: test.id
+                                    testId: test.id,
+                                    name
                                 }
                             ],
                             $position: pos
