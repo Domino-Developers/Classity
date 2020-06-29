@@ -2,7 +2,6 @@ const express = require('express');
 const { check, validationResult } = require('express-validator');
 
 // middlewares
-const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
 const classroomAuth = require('../../middleware/classroomAuth');
@@ -21,7 +20,7 @@ const router = express.Router();
  * @description Get a test
  * @access		private + classroomOnly
  */
-router.get('/:testId', [auth, classroomAuth], async (req, res) => {
+router.get('/:testId', classroomAuth, async (req, res) => {
     try {
         const test = await Test.findById(req.params.testId)
             .lean()
@@ -41,7 +40,6 @@ router.get('/:testId', [auth, classroomAuth], async (req, res) => {
 router.patch(
     '/:testId',
     [
-        auth,
         instructorAuth,
         check('questions', "questions can't be empty").not().isEmpty()
     ],
@@ -88,11 +86,7 @@ router.patch(
  */
 router.put(
     '/:testId',
-    [
-        auth,
-        studentAuth,
-        check('score', 'Score must be a number').not().isEmpty()
-    ],
+    [studentAuth, check('score', 'Score must be a number').not().isEmpty()],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

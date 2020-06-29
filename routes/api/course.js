@@ -92,7 +92,6 @@ router.get('/', async (req, res) => {
  */
 router.put(
     '/:courseId/topic',
-    auth,
     instructorAuth,
     [check('name', "Topic name can't be empty").not().isEmpty()],
     async (req, res) => {
@@ -255,7 +254,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
  * @description Update lastStudied
  * @access		private + studentOnly
  */
-router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
+router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
         let coursesEnrolled = await User.findById(req.user.id)
@@ -283,7 +282,7 @@ router.put('/:courseId/lastStudied', [auth, studentAuth], async (req, res) => {
  * @description Add/update review to course
  * @access		private + studentOnly
  */
-router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
+router.put('/:courseId/review', studentAuth, async (req, res) => {
     try {
         const { text, rating } = req.body;
         const courseId = req.params.courseId;
@@ -325,7 +324,6 @@ router.put('/:courseId/review', [auth, studentAuth], async (req, res) => {
 router.post(
     '/:courseId',
     [
-        auth,
         instructorAuth,
         [
             oneOf([
@@ -380,7 +378,7 @@ router.post(
  * @description Delete course
  * @access		private + instructorOnly
  */
-router.delete('/:courseId', [auth, instructorAuth], async (req, res) => {
+router.delete('/:courseId', instructorAuth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
 
@@ -422,40 +420,31 @@ router.delete('/:courseId', [auth, instructorAuth], async (req, res) => {
  * @description Delete topic from course
  * @access		private + instructorOnly
  */
-router.delete(
-    '/:courseId/topic/:topicId',
-    [auth, instructorAuth],
-    async (req, res) => {
-        try {
-            const { courseId, topicId } = req.params;
+router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
+    try {
+        const { courseId, topicId } = req.params;
 
-            const topic = await Topic.findById(topicId);
-            const topicPromise = topic.remove();
+        const topic = await Topic.findById(topicId);
+        const topicPromise = topic.remove();
 
-            const coursePromise = Course.findOneAndUpdate(
-                { _id: courseId },
-                { $pull: { topics: topicId } },
-                { new: true }
-            )
-                .select('topics')
-                .populate('topics', 'name');
+        const coursePromise = Course.findOneAndUpdate(
+            { _id: courseId },
+            { $pull: { topics: topicId } },
+            { new: true }
+        )
+            .select('topics')
+            .populate('topics', 'name');
 
-            const [newCourse] = await Promise.all([
-                coursePromise,
-                topicPromise
-            ]);
+        const [newCourse] = await Promise.all([coursePromise, topicPromise]);
 
-            res.json(newCourse.topics);
-        } catch (err) {
-            if (err.kind === 'ObjectId') {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'Invalid Id' }] });
-            }
-            console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+        res.json(newCourse.topics);
+    } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ errors: [{ msg: 'Invalid Id' }] });
         }
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
-);
+});
 
 module.exports = router;

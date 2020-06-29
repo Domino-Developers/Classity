@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const Course = require('../models/Course');
 const Topic = require('../models/Topic');
 const Test = require('../models/Test');
@@ -80,4 +82,27 @@ const isInstructor = async req => {
     return String(instructor) === req.user.id;
 };
 
-module.exports = { isStudent, isInstructor };
+/**
+ * @param {*} req
+ * @description function to verify & attach token
+ */
+const verify = req => {
+    const token = req.header('x-auth-token');
+
+    if (!token) {
+        const e = new Error('Token not found');
+        e.kind = 'NotAuthorized';
+        throw e;
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        req.user = decoded.user;
+    } catch (err) {
+        const e = new Error('Invalid token');
+        e.kind = 'NotAuthorized';
+        throw e;
+    }
+};
+
+module.exports = { verify, isStudent, isInstructor };

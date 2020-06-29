@@ -1,4 +1,4 @@
-const { isInstructor } = require('./util');
+const { verify, isInstructor } = require('./util');
 
 /**
  * @param {*} req
@@ -8,6 +8,8 @@ const { isInstructor } = require('./util');
  */
 const instructorAuth = async (req, res, next) => {
     try {
+        verify(req);
+
         if (!(await isInstructor(req))) {
             return res
                 .status(401)
@@ -18,6 +20,10 @@ const instructorAuth = async (req, res, next) => {
     } catch (err) {
         if (err.kind === 'BadRequest') {
             return res.status(400).json({ msg: err.message });
+        }
+
+        if (err.kind === 'NotAuthorized') {
+            return res.status(401).json({ msg: err.message });
         }
 
         console.error(err.message);

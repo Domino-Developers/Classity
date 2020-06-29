@@ -2,7 +2,6 @@ const express = require('express');
 const { check, validationResult } = require('express-validator');
 
 // middlewares
-const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
 
@@ -21,7 +20,7 @@ const router = express.Router();
  * @description Rename a topic
  * @access		private + instructorOnly
  */
-router.patch('/:topicId', [auth, instructorAuth], async (req, res) => {
+router.patch('/:topicId', instructorAuth, async (req, res) => {
     try {
         const topic = await Topic.findOneAndUpdate(
             { _id: req.params.topicId },
@@ -44,45 +43,41 @@ router.patch('/:topicId', [auth, instructorAuth], async (req, res) => {
  * @description Add/Delete/Update core resource to topic
  * @access		private + instructorOnly
  */
-router.put(
-    '/:topicId/coreResource',
-    [auth, instructorAuth],
-    async (req, res) => {
-        try {
-            req.body.forEach((resource, i, arr) => {
-                if (
-                    !['text', 'video', 'test'].includes(resource.kind) ||
-                    !resource.payload ||
-                    !resource.name
-                ) {
-                    throw new Error('Bad Request');
-                }
-
-                arr[i] = {
-                    kind: resource.kind,
-                    name: resource.name,
-                    text: resource.payload,
-                    url: resource.payload,
-                    testId: resource.payload
-                };
-            });
-
-            const topic = await Topic.findOneAndUpdate(
-                { _id: req.params.topicId },
-                { coreResources: req.body },
-                { new: true }
-            );
-
-            res.json(topic.coreResources);
-        } catch (err) {
-            if (err.message === 'Bad Request' || err.kind === 'ObjectId') {
-                return res.status(400).json({ msg: 'Invalid data' });
+router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
+    try {
+        req.body.forEach((resource, i, arr) => {
+            if (
+                !['text', 'video', 'test'].includes(resource.kind) ||
+                !resource.payload ||
+                !resource.name
+            ) {
+                throw new Error('Bad Request');
             }
-            console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+
+            arr[i] = {
+                kind: resource.kind,
+                name: resource.name,
+                text: resource.payload,
+                url: resource.payload,
+                testId: resource.payload
+            };
+        });
+
+        const topic = await Topic.findOneAndUpdate(
+            { _id: req.params.topicId },
+            { coreResources: req.body },
+            { new: true }
+        );
+
+        res.json(topic.coreResources);
+    } catch (err) {
+        if (err.message === 'Bad Request' || err.kind === 'ObjectId') {
+            return res.status(400).json({ msg: 'Invalid data' });
         }
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
-);
+});
 
 /**
  * @route		PUT api/topic/:topicId/comment/:type(resourceDump|doubt)
@@ -91,7 +86,7 @@ router.put(
  */
 router.put(
     '/:topicId/comment/:type(doubt|resourceDump)',
-    [auth, studentAuth],
+    studentAuth,
     async (req, res) => {
         try {
             const { type, topicId } = req.params;
@@ -132,7 +127,6 @@ router.put(
 router.post(
     '/:topicId/test',
     [
-        auth,
         instructorAuth,
         [
             check('name', "Can't be empty").not().isEmpty(),
@@ -204,45 +198,41 @@ router.post(
  * @description Delete a comment
  * @access		private + studentOnly
  */
-router.delete(
-    '/:topicId/comment/:commentId',
-    [auth, studentAuth],
-    async (req, res) => {
-        try {
-            const { topicId, commentId } = req.params;
+router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
+    try {
+        const { topicId, commentId } = req.params;
 
-            const comment = await Comment.findById(commentId).select('user');
+        const comment = await Comment.findById(commentId).select('user');
 
-            if (!comment) {
-                return res.status(400).json({ msg: 'Comment not found' });
-            }
-
-            if (String(comment.user) !== req.user.id) {
-                return res
-                    .status(401)
-                    .json({ msg: 'Not authorized to delete comment' });
-            }
-
-            const commentPromise = Comment.findOneAndDelete({ _id: commentId });
-
-            const topicPromise = Topic.findOneAndUpdate(
-                { _id: topicId },
-                { $pull: { doubt: commentId, resourceDump: commentId } },
-                { new: true }
-            );
-
-            const [newTopic] = Promise.all([topicPromise, commentPromise]);
-
-            res.json({
-                doubt: newTopic.doubt,
-                resourceDump: newTopic.resourceDump
-            });
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+        if (!comment) {
+            return res.status(400).json({ msg: 'Comment not found' });
         }
+
+        if (String(comment.user) !== req.user.id) {
+            return res
+                .status(401)
+                .json({ msg: 'Not authorized to delete comment' });
+        }
+
+        const commentPromise = Comment.findOneAndDelete({ _id: commentId });
+
+        const topicPromise = Topic.findOneAndUpdate(
+            { _id: topicId },
+            { $pull: { doubt: commentId, resourceDump: commentId } },
+            { new: true }
+        );
+
+        const [newTopic] = Promise.all([topicPromise, commentPromise]);
+
+        res.json({
+            doubt: newTopic.doubt,
+            resourceDump: newTopic.resourceDump
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
     }
-);
+});
 
 /**
  * @route		DELETE api/topic/:topicId/coreResource/:resourceId
@@ -251,7 +241,7 @@ router.delete(
  */
 router.delete(
     '/:topicId/coreResource/:resourceId',
-    [auth, instructorAuth],
+    instructorAuth,
     async (req, res) => {
         try {
             const { topicId, resourceId } = req.params;
