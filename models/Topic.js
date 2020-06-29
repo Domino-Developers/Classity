@@ -38,23 +38,29 @@ TopicSchema.path('coreResources').discriminator(
 TopicSchema.pre('remove', async function (next) {
     try {
         const commentIds = [].concat(this.doubt, this.resourceDump);
-
-        const comments = await Comment.find({ _id: { $in: commentIds } });
-
-        for (let comment of comments) {
-            await comment.remove();
-        }
-
         const testIds = this.coreResources.filter(
             resource => resource.kind === 'test'
         );
 
-        // get tests
-        const tests = await Test.find({ _id: { $in: testIds } });
+        const commentPromise = Comment.find({ _id: { $in: commentIds } });
+        const testPromise = Test.find({ _id: { $in: testIds } });
 
-        for (let test of tests) {
-            await test.remove();
+        const [comments, tests] = await Promise.all([
+            commentPromise,
+            testPromise
+        ]);
+
+        const commentPromises = [];
+        for (let comment of comments) {
+            commentPromises.push(comment.remove());
         }
+
+        const testPromises = [];
+        for (let test of tests) {
+            testPromises.push(test.remove());
+        }
+
+        await Promise.all([].concat(commentPromises, testPromises));
 
         next();
     } catch (err) {
