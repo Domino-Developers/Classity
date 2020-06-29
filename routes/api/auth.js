@@ -39,13 +39,9 @@ router.post(
 
             // if there is no user
             if (!user) {
-                return res.status(401).json({
-                    errors: [
-                        {
-                            msg: 'Invalid Credentials'
-                        }
-                    ]
-                });
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
             // check the password
@@ -53,13 +49,9 @@ router.post(
 
             // if password doesnt match
             if (!isMatch) {
-                return res.status(401).json({
-                    errors: [
-                        {
-                            msg: 'Invalid Credentials'
-                        }
-                    ]
-                });
+                return res
+                    .status(401)
+                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
             // Send back token if credentials are correct
@@ -82,7 +74,7 @@ router.post(
             );
         } catch (err) {
             console.error(err.message);
-            res.status(500).send('Server Error');
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -97,16 +89,10 @@ router.get('/', auth, async (req, res) => {
         //get user form db
         const user = await User.findById(req.user.id).select('-password');
 
-        // if id is invalid
-        if (!user) {
-            return res.status(400).json({ msg: 'invalid token id' });
-        }
-
-        // if correct user
         res.json(user);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 

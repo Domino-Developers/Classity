@@ -31,10 +31,10 @@ router.patch('/:topicId', instructorAuth, async (req, res) => {
         res.json(topic);
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res.status(400).json({ msg: 'Invalid data' });
+            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -72,10 +72,10 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
         res.json(topic.coreResources);
     } catch (err) {
         if (err.message === 'Bad Request' || err.kind === 'ObjectId') {
-            return res.status(400).json({ msg: 'Invalid data' });
+            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -94,7 +94,9 @@ router.put(
             const text = req.body.text;
 
             if (!text) {
-                return res.status(400).json({ msg: 'Bad Request' });
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Text not found' }] });
             }
 
             const comment = new Comment({ user, topic: topicId, text });
@@ -114,7 +116,7 @@ router.put(
             res.json(newTopic[type]);
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -136,7 +138,7 @@ router.post(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json(errors);
         }
         try {
             const pos = req.body.position;
@@ -188,7 +190,7 @@ router.post(
             res.json(test);
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -205,13 +207,15 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
         const comment = await Comment.findById(commentId).select('user');
 
         if (!comment) {
-            return res.status(400).json({ msg: 'Comment not found' });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Comment not found' }] });
         }
 
         if (String(comment.user) !== req.user.id) {
-            return res
-                .status(401)
-                .json({ msg: 'Not authorized to delete comment' });
+            return res.status(401).json({
+                errors: [{ msg: 'Not authorized to delete comment' }]
+            });
         }
 
         const commentPromise = Comment.findOneAndDelete({ _id: commentId });
@@ -230,7 +234,7 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
         });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -256,7 +260,9 @@ router.delete(
             );
 
             if (index === -1) {
-                return res.status(400).json({ msg: 'Core resource not found' });
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Core resource not found' }] });
             }
 
             if (coreResources[index].kind === 'test') {
@@ -273,7 +279,7 @@ router.delete(
             res.json({ coreResources });
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );

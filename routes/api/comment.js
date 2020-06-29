@@ -29,11 +29,13 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
 
             res.json(comment.likes);
         } else {
-            res.status(400).json({ msg: 'Comment already liked' });
+            res.status(400).json({
+                errors: [{ msg: 'Comment already liked' }]
+            });
         }
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -56,11 +58,11 @@ router.delete('/:commentId/like', classroomAuth, async (req, res) => {
 
             res.json(comment.likes);
         } else {
-            res.status(400).json({ msg: 'Comment not liked' });
+            res.status(400).json({ errors: [{ msg: 'Comment not liked' }] });
         }
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -75,7 +77,7 @@ router.put('/:commentId/reply', classroomAuth, async (req, res) => {
         const user = req.user.id;
 
         if (!text) {
-            return res.status(400).json({ msg: 'Bad Request' });
+            return res.status(400).json({ errors: [{ msg: 'No text found' }] });
         }
 
         const newComment = await Comment.findOneAndUpdate(
@@ -87,7 +89,7 @@ router.put('/:commentId/reply', classroomAuth, async (req, res) => {
         res.json(newComment.reply);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -106,13 +108,15 @@ router.delete('/:commentId/reply/:replyId', classroomAuth, async (req, res) => {
         const index = replyArr.findIndex(reply => String(reply.id) === replyId);
 
         if (index === -1) {
-            return res.status(400).json({ msg: 'Reply not found' });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Reply not found' }] });
         }
 
         if (String(replyArr[index].user) !== req.user.id) {
             return res
                 .status(401)
-                .json({ msg: 'Not authorized to delete reply' });
+                .json({ errors: [{ msg: 'Not authorized to delete reply' }] });
         }
 
         replyArr.splice(index, 1);
@@ -123,7 +127,7 @@ router.delete('/:commentId/reply/:replyId', classroomAuth, async (req, res) => {
         res.json(replyArr);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
