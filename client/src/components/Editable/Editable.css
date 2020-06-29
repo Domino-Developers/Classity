@@ -6,3 +6,15 @@
 [contenteditable='true']:hover {
     border: 1px solid var(--primary-color);
 }
+
+.rich-buttons {
+    display: flex;
+}
+
+.rich-buttons .right {
+    margin-left: auto;
+}
+
+.rich-buttons a {
+    margin: 0 5px;
+}
