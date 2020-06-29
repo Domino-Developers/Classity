@@ -35,9 +35,12 @@ CourseSchema.pre('remove', async function (next) {
     try {
         const topics = await Topic.find({ _id: { $in: this.topics } });
 
+        const topicPromises = [];
         for (let topic of topics) {
-            await topic.remove();
+            topicPromises.push(topic.remove());
         }
+
+        await Promise.all(topicPromises);
 
         next();
     } catch (err) {
