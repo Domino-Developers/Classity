@@ -1,6 +1,5 @@
 const express = require('express');
 const { check, oneOf, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -36,7 +35,7 @@ router.post(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json(errors);
         }
 
         try {
@@ -63,7 +62,7 @@ router.post(
             res.json(course);
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -81,7 +80,7 @@ router.get('/', async (req, res) => {
         res.json(courses);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -97,7 +96,7 @@ router.put(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json(errors);
         }
 
         try {
@@ -137,7 +136,7 @@ router.put(
                     .json({ errors: [{ msg: 'Invalid Course Id' }] });
             }
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -175,7 +174,7 @@ router.get('/:courseId', async (req, res) => {
                 .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -245,7 +244,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
                 .json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -273,7 +272,7 @@ router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
         res.json(courseProgressId);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -288,7 +287,9 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         const courseId = req.params.courseId;
 
         if (isNaN(rating)) {
-            return res.status(400).json({ msg: 'Bad Request' });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Rating is not a number' }] });
         }
 
         const course = await Course.findById(courseId);
@@ -312,7 +313,7 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         res.json(course.reviews);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -338,10 +339,12 @@ router.post(
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
-                errors: {
-                    msg:
-                        'Please supply alteast one of:- name , description, tags'
-                }
+                errors: [
+                    {
+                        msg:
+                            'Please supply atleast one of: name, description, tags'
+                    }
+                ]
             });
         }
         const body = {};
@@ -368,7 +371,7 @@ router.post(
                     .json({ errors: [{ msg: 'Invalid courseId' }] });
             }
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -411,7 +414,7 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
         res.json(course);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -443,7 +446,7 @@ router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
             return res.status(400).json({ errors: [{ msg: 'Invalid Id' }] });
         }
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 

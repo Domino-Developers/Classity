@@ -28,7 +28,7 @@ router.get('/:testId', classroomAuth, async (req, res) => {
         res.json(test);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
@@ -46,7 +46,7 @@ router.patch(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json(errors);
         }
         try {
             // Create test object to validate for errors
@@ -74,7 +74,7 @@ router.patch(
             res.json(test);
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );
@@ -90,7 +90,7 @@ router.put(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json(errors);
         }
         try {
             const courseObj = await Test.findById(req.params.testId).populate(
@@ -115,7 +115,7 @@ router.put(
             res.json(newProgress);
         } catch (err) {
             console.error(err.message);
-            res.status(500).json({ msg: 'Server Error' });
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
     }
 );

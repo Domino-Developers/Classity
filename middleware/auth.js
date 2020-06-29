@@ -14,17 +14,17 @@ const auth = async (req, res, next) => {
         const user = await User.findById(req.user.id).select('_id');
 
         if (!user) {
-            return res.status(401).json({ msg: 'Invalid token' });
+            return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
         }
 
         next();
     } catch (err) {
         if (err.kind === 'NotAuthorized') {
-            return res.status(401).json({ msg: err.message });
+            return res.status(401).json({ errors: [{ msg: err.message }] });
         }
 
         console.error(err.message);
-        return res.status(500).json({ msg: 'Server Error' });
+        return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 };
 
