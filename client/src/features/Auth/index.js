@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 import Register from './Register';
 import Login from './Login';
@@ -9,6 +10,7 @@ import './Auth.css';
 
 const Auth = props => {
     const { path, mode } = props;
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
     return (
         <Fragment>
@@ -46,6 +48,7 @@ const Auth = props => {
                     </div>
                 </div>
             </div>
+            {isAuthenticated && <Redirect to={path} />}
         </Fragment>
     );
 };

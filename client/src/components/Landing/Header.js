@@ -1,5 +1,5 @@
 import React from 'react';
-import { alert } from '../../features/Alerts/alertSlice';
+import { setAlert } from '../../features/Alerts/alertSlice';
 
 import Button from '../Button';
 import { useDispatch } from 'react-redux';
@@ -20,7 +20,7 @@ const Header = () => {
                         text='Join for Free'
                         full
                         onClick={() => {
-                            dispatch(alert('test', 'success'));
+                            dispatch(setAlert('test', 'success'));
                         }}
                     />
                 </div>

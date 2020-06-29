@@ -23,7 +23,7 @@
     margin: 1.2rem 0;
 }
 
-.auth-form-group input:not([type='submit']) {
+.auth-form-group input:not([type='submit']):not([type='checkbox']) {
     width: 100%;
     padding: 8px;
     font-size: 1.2rem;

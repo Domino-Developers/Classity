@@ -21,7 +21,7 @@ const { addAlert, removeAlert } = alertSlice.actions;
 export default alertSlice.reducer;
 
 // Alert function for creating and removing alerts
-export const alert = (text, type, timeout = 5000) => dispatch => {
+export const setAlert = (text, type, timeout = 5000) => dispatch => {
     const id = alertId++;
     dispatch(addAlert({ id, text, type }));
     setTimeout(() => {

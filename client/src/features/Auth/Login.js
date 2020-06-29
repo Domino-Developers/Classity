@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { login } from './authSlice';
 
 const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        remember: false
     });
+    const dispatch = useDispatch();
+    const loading = useSelector(state => state.auth.loading);
 
     const onChange = e => {
         setFormData({
@@ -12,12 +18,18 @@ const Login = () => {
             [e.target.name]: e.target.value
         });
     };
-    const onSubmit = e => {
-        e.preventDefault();
-        console.log('SUCCESS');
+    const checkBoxChange = e => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.checked
+        });
     };
 
-    const { email, password } = formData;
+    const { email, password, remember } = formData;
+    const onSubmit = e => {
+        e.preventDefault();
+        dispatch(login(email, password, remember));
+    };
     return (
         <form className='auth-form' onSubmit={onSubmit}>
             <div className='auth-form-group'>
@@ -39,11 +51,29 @@ const Login = () => {
                     placeholder='Password'
                     onChange={onChange}
                     value={password}
+                    minLength='6'
                     required
                 />
             </div>
             <div className='auth-form-group'>
-                <input type='submit' value='Submit' className='btn btn-full' />
+                <input
+                    type='checkbox'
+                    name='remember'
+                    checked={remember}
+                    onChange={checkBoxChange}
+                />{' '}
+                Remember me
+            </div>
+            <div className='auth-form-group'>
+                {loading ? (
+                    'Loading ...'
+                ) : (
+                    <input
+                        type='submit'
+                        value='Submit'
+                        className='btn btn-full'
+                    />
+                )}
             </div>
         </form>
     );
