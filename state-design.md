@@ -1,16 +1,17 @@
 ### State Design
 
--   #### User
+-   #### Auth
 
     -   token
     -   isAuthenticated
     -   loading
-    -   id
-    -   name
-    -   avatar
-    -   email
-    -   coursesEnrolled
-    -   coursesCreated
+    -   userData
+        -   id
+        -   name
+        -   avatar
+        -   email
+        -   coursesEnrolled
+        -   coursesCreated
 
 -   #### Courses
 

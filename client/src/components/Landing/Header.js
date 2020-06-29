@@ -1,5 +1,5 @@
 import React from 'react';
-import { alert } from '../../features/Alerts/AlertSlice';
+import { alert } from '../../features/Alerts/alertSlice';
 
 import Button from '../Button';
 import { useDispatch } from 'react-redux';
