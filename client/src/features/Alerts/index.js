@@ -8,7 +8,7 @@ const Alerts = () => {
     return (
         <div className='alert-container'>
             {alerts.map(alert => (
-                <Alert type={alert.type} text={alert.text} />
+                <Alert key={alert.id} type={alert.type} text={alert.text} />
             ))}
         </div>
     );
