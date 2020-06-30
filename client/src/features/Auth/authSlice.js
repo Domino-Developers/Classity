@@ -30,7 +30,7 @@ const authSlice = createSlice({
             state.isAuthenticated = true;
             state.loading = false;
         },
-        authFailed: (state, action) => {
+        authRejected: (state, action) => {
             localStorage.removeItem('gtstudytoken');
 
             // remove token from axios
@@ -61,12 +61,15 @@ const authSlice = createSlice({
 });
 
 const {
-    authFailed,
+    authRejected,
     authStart,
     authSuccess,
     fetchUserStart,
     fetchUserSuccess
 } = authSlice.actions;
+
+// exporting for logout
+export { authRejected };
 
 export default authSlice.reducer;
 
@@ -81,7 +84,7 @@ const fetchUser = () => async dispatch => {
     } catch (err) {
         const errors = err.errors;
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        dispatch(authFailed());
+        dispatch(authRejected());
         console.error(err);
     }
 };
@@ -115,7 +118,7 @@ export const login = (email, password, remember) => async dispatch => {
     } catch (err) {
         const errors = err.errors;
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        dispatch(authFailed());
+        dispatch(authRejected());
         console.error(err);
     }
 };
@@ -140,7 +143,7 @@ export const register = (name, email, password) => async dispatch => {
         errors.forEach(error => {
             dispatch(setAlert(error.msg, 'danger'));
         });
-        dispatch(authFailed());
+        dispatch(authRejected());
         console.error(err);
     }
 };
