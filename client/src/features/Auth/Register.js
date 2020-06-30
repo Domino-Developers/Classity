@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { setAlert } from '../Alerts/alertSlice';
 import { register } from './authSlice';
+import Button from '../../components/Button';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -87,15 +88,7 @@ const Register = () => {
                 />
             </div>
             <div className='auth-form-group'>
-                {loading ? (
-                    'Loading ...'
-                ) : (
-                    <input
-                        type='submit'
-                        value='Submit'
-                        className='btn btn-full'
-                    />
-                )}
+                <Button value='Submit' loading={loading && 'Loading'} />
             </div>
         </form>
     );
