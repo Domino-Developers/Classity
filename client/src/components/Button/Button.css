@@ -7,7 +7,7 @@
     display: inline-block;
 }
 
-.btn:hover {
+.btn:not(.btn-disabled):hover {
     background-color: var(--dark-primary-color);
     border: 1px solid var(--dark-primary-color);
 }
@@ -23,4 +23,61 @@
 
 .btn-ghost:hover {
     color: var(--light-color);
+}
+
+/* Loading state */
+
+.btn-disabled {
+    position: relative;
+    background-color: var(--dark-grey-color);
+    border: 1px solid var(--dark-grey-color);
+    cursor: progress;
+}
+
+.btn-disabled .show {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    transform: translateY(-50%);
+    display: flex;
+    opacity: 0.5;
+}
+
+.btn-disabled .hide {
+    opacity: 0;
+}
+
+/* .btn-disabled .text {
+    font-size: 0.9rem;
+} */
+
+.btn-disabled .dots {
+    display: inline-block;
+    white-space: nowrap;
+    animation: loading 2s infinite;
+    overflow-x: hidden;
+}
+
+@keyframes loading {
+    0% {
+        width: 0;
+    }
+    24% {
+        width: 0;
+    }
+    25% {
+        width: 0.5rem;
+    }
+    49% {
+        width: 0.5rem;
+    }
+    50% {
+        width: 1rem;
+    }
+    74% {
+        width: 1rem;
+    }
+    75% {
+        width: 1.5rem;
+    }
 }

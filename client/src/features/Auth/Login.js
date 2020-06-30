@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { login } from './authSlice';
+import Button from '../../components/Button';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -65,15 +66,7 @@ const Login = () => {
                 Remember me
             </div>
             <div className='auth-form-group'>
-                {loading ? (
-                    'Loading ...'
-                ) : (
-                    <input
-                        type='submit'
-                        value='Submit'
-                        className='btn btn-full'
-                    />
-                )}
+                <Button value='Submit' loading={loading && 'Loading'} />
             </div>
         </form>
     );

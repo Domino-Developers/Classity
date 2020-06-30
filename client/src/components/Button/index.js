@@ -5,8 +5,18 @@ import { Link } from 'react-router-dom';
 import './Button.css';
 
 const Button = props => {
-    const { full, text, onClick, to } = props;
-    return (
+    const { full, text, onClick, to, loading, value } = props;
+    return loading ? (
+        <div className='btn btn-disabled'>
+            <div className='show'>
+                <span className='text'>{loading}</span>
+                <span className='dots'>&nbsp;. . .</span>
+            </div>
+            <span className='hide'>{text || value}</span>
+        </div>
+    ) : value ? (
+        <input type='submit' value={value} className='btn btn-full' />
+    ) : (
         <Link
             className={full ? 'btn btn-full' : 'btn btn-ghost'}
             onClick={onClick}
