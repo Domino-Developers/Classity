@@ -30,9 +30,6 @@ router.patch('/:topicId', instructorAuth, async (req, res) => {
 
         res.json(topic);
     } catch (err) {
-        if (err.kind === 'ObjectId') {
-            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
-        }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
@@ -71,7 +68,7 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
 
         res.json(topic.coreResources);
     } catch (err) {
-        if (err.message === 'Bad Request' || err.kind === 'ObjectId') {
+        if (err.message === 'Bad Request') {
             return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
         }
         console.error(err.message);
@@ -233,6 +230,9 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
             resourceDump: newTopic.resourceDump
         });
     } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+        }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
