@@ -130,11 +130,6 @@ router.put(
 
             res.json(topic);
         } catch (err) {
-            if (err.kind === 'ObjectId') {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'Invalid Course Id' }] });
-            }
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
@@ -365,11 +360,6 @@ router.post(
             );
             res.json(newCourse);
         } catch (err) {
-            if (err.kind === 'ObjectId') {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'Invalid courseId' }] });
-            }
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
@@ -443,7 +433,7 @@ router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
         res.json(newCourse.topics);
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res.status(400).json({ errors: [{ msg: 'Invalid Id' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
         }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
