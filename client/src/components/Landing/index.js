@@ -1,17 +1,17 @@
 import React from 'react';
-
-import Header from './Header';
+import loadable from '@loadable/component';
 import Goals from './Goals';
-
+import Header from './Header';
 import './Landing.css';
-import CardsContainer from '../../features/CardsContainer';
+
+const CardsContainer = loadable(() => import('../../features/CardsContainer'));
 
 const Landing = () => (
     <div>
         <Header />
         <Goals />
         <div className='container'>
-            <CardsContainer />
+            <CardsContainer fallback={<div> Loading ... </div>} />
         </div>
     </div>
 );
