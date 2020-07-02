@@ -22,9 +22,9 @@ const Course = () => {
         userData: { id }
     } = useSelector(state => state.auth);
 
-    const { data, error } = useSWR(`get-course-${courseId}`, () => {
-        return course.get(courseId).then(res => res);
-    });
+    const { data, error } = useSWR(`get-course-${courseId}`, () =>
+        course.get(courseId)
+    );
     const [editing, edit] = useState(false);
 
     const isInstructor =
