@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import loadable from '@loadable/component';
 
 import Navbar from '../features/Navbar';
 import Loading from '../components/Loading';
@@ -8,8 +9,8 @@ import Topic from '../features/Topic';
 import store from './store';
 import './App.css';
 import Alerts from '../features/Alerts';
-import { loadUser } from '../features/Auth/authSlice';
-import loadable from '@loadable/component';
+import { loadUser, authRejected } from '../features/Auth/authSlice';
+import { initTokenCom } from '../utils/storageCom';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -21,7 +22,14 @@ const Landing = loadable(() => import('../components/Landing'), {
 
 function App() {
     useEffect(() => {
-        store.dispatch(loadUser());
+        initTokenCom(
+            () => {
+                store.dispatch(loadUser({ dontCommunicate: true }));
+            },
+            () => {
+                store.dispatch(authRejected({ dontComunicate: true }));
+            }
+        );
     }, []);
     return (
         <Provider store={store}>

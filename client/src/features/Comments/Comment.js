@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import AnimateHeight from 'react-animate-height';
-import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import FadeText from '../../components/FadeText';
 import Rating from '../../components/Rating';
