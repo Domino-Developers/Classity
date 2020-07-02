@@ -53,6 +53,6 @@
     font-weight: 600;
 }
 
-.card-rating > p:nth-child(3) {
+/* .card-rating > p:nth-child(3) {
     color: var(--dark-grey-color);
-}
+} */

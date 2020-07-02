@@ -47,18 +47,14 @@
     opacity: 0;
 }
 
-/* .btn-disabled .text {
-    font-size: 0.9rem;
-} */
-
 .btn-disabled .dots {
     display: inline-block;
     white-space: nowrap;
-    animation: loading 2s infinite;
+    animation: loading-dots 2s infinite;
     overflow-x: hidden;
 }
 
-@keyframes loading {
+@keyframes loading-dots {
     0% {
         width: 0;
     }
