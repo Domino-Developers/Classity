@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import AnimateHeight from 'react-animate-height';
-
+import loadable from '@loadable/component';
+import PropTypes from 'prop-types';
 import FadeText from '../../components/FadeText';
 import Rating from '../../components/Rating';
+import FromNow from '../../components/FromNow';
 
 const Comment = props => {
-    const { review, reply, replies } = props;
+    const { review, reply, replies, comment } = props;
 
     const [showReply, replyState] = useState(false);
     const [text, changeText] = useState('');
@@ -16,9 +17,11 @@ const Comment = props => {
     return (
         <li className={className}>
             <div className='comment'>
-                <p className='date'>10/06/2020</p>
+                <p className='date'>
+                    <FromNow date={comment.date} />
+                </p>
                 <div className='rating'>
-                    <Rating rating='2' />
+                    <Rating rating={comment.rating} />
                 </div>
                 <div className='like'>
                     <span className='icon active'>
@@ -39,9 +42,7 @@ const Comment = props => {
                 </div>
                 <p className='name'>Sanchit Arora</p>
                 <div className='text'>
-                    <FadeText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </FadeText>
+                    <FadeText>{comment.text}</FadeText>
                 </div>
                 <div className='add'>
                     <input

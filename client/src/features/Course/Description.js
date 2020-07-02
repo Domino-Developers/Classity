@@ -5,25 +5,8 @@ import FadeText from '../../components/FadeText';
 import Editable from '../../components/Editable';
 
 const Description = props => {
-    const { editing } = props;
-    const [description, changeDescription] = useState(
-        `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-        cursus odio vitae orci feugiat, id maximus elit mollis.
-        Phasellus venenatis tincidunt mauris, at commodo nunc
-        consectetur eget. Suspendisse potenti. Vivamus scelerisque nisl
-        et gravida consequat. Donec nibh mauris, condimentum id odio sit
-        amet, euismod dictum ante. Aenean faucibus rutrum vulputate. In
-        a dolor blandit, rutrum est eu, sagittis erat. Morbi fringilla
-        ligula in gravida pharetra. Pellentesque habitant morbi
-        tristique senectus et netus et malesuada fames ac turpis
-        egestas. Vestibulum aliquet, nunc nec tristique mollis, tortor
-        massa vulputate risus, eu volutpat nunc est eu elit. In a dolor
-        blandit, rutrum est eu, sagittis erat. Morbi fringilla ligula in
-        gravida pharetra. Pellentesque habitant morbi tristique senectus
-        et netus et malesuada fames ac turpis egestas. Vestibulum
-        aliquet, nunc nec tristique mollis, tortor massa vulputate
-        risus, eu volutpat nunc est eu elit.`
-    );
+    const { editing, desc } = props;
+    const [description, changeDescription] = useState(desc);
 
     return (
         <section className='course-page-description'>
@@ -42,7 +25,8 @@ const Description = props => {
 };
 
 Description.propTypes = {
-    editing: PropTypes.bool.isRequired
+    editing: PropTypes.bool.isRequired,
+    desc: PropTypes.string.isRequired
 };
 
 export default Description;

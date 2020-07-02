@@ -16,9 +16,9 @@ const Comments = props => {
 
     return (
         <ul className='comments'>
-            {comments.map((e, i) =>
+            {comments.map((com, i) =>
                 props.review ? (
-                    <Comment key={i} review />
+                    <Comment key={i} review comment={com} />
                 ) : (
                     <Comment key={i} replies={[1, 2, 3]} />
                 )

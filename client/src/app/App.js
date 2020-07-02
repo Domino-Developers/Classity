@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Navbar from '../features/Navbar';
+import Loading from '../components/Loading';
 import Topic from '../features/Topic';
 import store from './store';
 import './App.css';
@@ -11,9 +12,11 @@ import { loadUser } from '../features/Auth/authSlice';
 import loadable from '@loadable/component';
 
 // loadable components
-const Course = loadable(() => import('../features/Course'));
+const Course = loadable(() => import('../features/Course'), {
+    fallback: <Loading />
+});
 const Landing = loadable(() => import('../components/Landing'), {
-    fallback: <div> Loading .. </div>
+    fallback: <Loading />
 });
 
 function App() {
@@ -30,13 +33,8 @@ function App() {
                         <Route exact path='/' component={Landing} />
                         <Route
                             exact
-                            path='/course'
-                            render={() => (
-                                <Course
-                                    instructor
-                                    fallback={<div> Loading ... </div>}
-                                />
-                            )}
+                            path='/course/:courseId'
+                            component={Course}
                         />
                         <Route exact path='/topic' component={Topic} />
                     </Switch>
