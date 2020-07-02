@@ -69,8 +69,7 @@ const Editable = props => {
 };
 
 Editable.propTypes = {
-    html: PropTypes.string,
-    text: PropTypes.string,
+    html: PropTypes.string.isRequired,
     tagName: PropTypes.string,
     onChange: PropTypes.func,
     disabled: PropTypes.bool
