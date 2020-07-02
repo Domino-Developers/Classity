@@ -145,7 +145,7 @@ router.get('/:courseId', async (req, res) => {
     try {
         const course = await Course.findById(req.params.courseId)
             .lean()
-            .populate('instructor', 'name -_id')
+            .populate('instructor', 'name')
             .populate({
                 path: 'topics',
                 select: 'name coreResources',

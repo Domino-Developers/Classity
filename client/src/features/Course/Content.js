@@ -3,50 +3,37 @@ import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
 
 const Content = props => {
-    const { editing } = props;
-    const [names, changeNames] = useState({
-        topic1: 'Topic Name 1',
-        topic2: 'Topic Name 2',
-        topic3: 'Topic Name 3'
-    });
+    const { editing, course } = props;
+    const [names, changeNames] = useState([
+        ...course.topics.map(topic => topic.name)
+    ]);
 
     return (
         <section>
             <h2>Course Content</h2>
             <Collapse.Container editing={editing}>
-                <Collapse.Head>
-                    <Collapse.Item add>add</Collapse.Item>
-                </Collapse.Head>
-                <Collapse.Head
-                    text={names.topic1}
-                    onChange={e =>
-                        changeNames({
-                            ...names,
-                            topic1: e.target.value
-                        })
-                    }
-                >
-                    <Collapse.Item>Video 1</Collapse.Item>
-                    <Collapse.Item add>add me</Collapse.Item>
-                </Collapse.Head>
-                <Collapse.Head
-                    text={names.topic2}
-                    onChange={e =>
-                        changeNames({
-                            ...names,
-                            topic2: e.target.value
-                        })
-                    }
-                >
-                    <Collapse.Item>Video 2</Collapse.Item>
-                </Collapse.Head>
+                {names.map((topic, i) => (
+                    <Collapse.Head
+                        key={i}
+                        text={topic}
+                        onChange={e => {
+                            names.splice(i, 1, e.target.value);
+                            changeNames(names);
+                        }}
+                    >
+                        {course.topics[i].coreResources.map((res, i) => (
+                            <Collapse.Item key={i}> {res.name} </Collapse.Item>
+                        ))}
+                    </Collapse.Head>
+                ))}
             </Collapse.Container>
         </section>
     );
 };
 
 Content.propTypes = {
-    editing: PropTypes.bool.isRequired
+    editing: PropTypes.bool.isRequired,
+    course: PropTypes.object.isRequired
 };
 
 export default Content;

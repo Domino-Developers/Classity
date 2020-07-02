@@ -52,7 +52,9 @@ const Navbar = () => {
     return (
         <Fragment>
             <nav className='navbar bg-dark'>
-                <h1> Study Tube </h1>
+                <h1>
+                    <Link to={'/'}>Study Tube</Link>
+                </h1>
                 <ul>
                     <li>
                         <a href='#!'>Explore</a>

@@ -6,10 +6,8 @@ import Rating from '../../components/Rating';
 import Editable from '../../components/Editable';
 
 const Header = props => {
-    const { instructor, edit, editing } = props;
-    const [name, changeName] = useState(
-        'GitHub Ultimate: Master Git and GitHub - Beginner to Expert'
-    );
+    const { instructor, edit, editing, course } = props;
+    const [name, changeName] = useState(course.name);
 
     return (
         <div className='course-header'>
@@ -22,22 +20,22 @@ const Header = props => {
                 />
             </div>
             <div className='header-description'>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                    cursus odio vitae orci feugiat, id maximus elit mollis.
-                    Phasellus venenatis tincidunt mauris, at commodo nunc
-                    consectetur eget.
-                </p>
+                <p>{course.description}</p>
             </div>
             <div className='header-rating'>
-                <Rating rating='2' />
-                <p>2.0 (236 ratings)</p>
+                <Rating rating={course.avgRating} />
+                <p>
+                    {course.avgRating}({course.reviews.length} reviews)
+                </p>
             </div>
-            <div>1024 students enrolled</div>
+            <div>{course.noOfStudents} student(s) enrolled</div>
             <div>
-                Created by <em>Sanchit</em>
+                Created by <em>{course.instructor.name}</em>
             </div>
-            <div>Last update 06/2020</div>
+            <div>
+                Last updated:{' '}
+                {new Date(course.modifiedDate).toLocaleDateString()}{' '}
+            </div>
             <div className='header-enroll'>
                 {!instructor && <Button text='Enroll' full />}
                 {instructor && !editing && (
@@ -62,7 +60,8 @@ const Header = props => {
 Header.propTypes = {
     instructor: PropTypes.bool.isRequired,
     editing: PropTypes.bool.isRequired,
-    edit: PropTypes.func.isRequired
+    edit: PropTypes.func.isRequired,
+    course: PropTypes.object.isRequired
 };
 
 export default Header;
