@@ -30,7 +30,7 @@ const Course = () => {
     const isInstructor =
         !loading && isAuthenticated && data && data.instructor._id === id;
 
-    if (error) return <div> Opps... not found </div>;
+    if (error && navigator.onLine) return <div> Opps... not found </div>;
     if (!data) return <Loading />;
 
     console.log(data);

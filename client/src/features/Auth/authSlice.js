@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { sendFlushReq, sendTokenRes } from '../../utils/storageCom';
 
 import user from '../../api/user';
 import { setAlert } from '../Alerts/alertSlice';
@@ -21,7 +22,12 @@ const authSlice = createSlice({
         },
         authSuccess: (state, action) => {
             if (action.payload.remember)
-                localStorage.setItem('gtstudytoken', action.payload.token);
+                localStorage.setItem('GTS_TOKEN', action.payload.token);
+            sessionStorage.setItem('GTS_TOKEN', action.payload.token);
+
+            // send to other tabs if communicate
+            if (!action.payload.dontCommunicate)
+                sendTokenRes(action.payload.token);
 
             // Add auth header to axios
             setAuthToken(action.payload.token);
@@ -31,7 +37,11 @@ const authSlice = createSlice({
             state.loading = false;
         },
         authRejected: (state, action) => {
-            localStorage.removeItem('gtstudytoken');
+            localStorage.removeItem('GTS_TOKEN');
+            sessionStorage.removeItem('GTS_TOKEN');
+
+            // remove token from other tabs if comunicate
+            if (!action.payload) sendFlushReq();
 
             // remove token from axios
             removeAuthToken();
@@ -90,11 +100,11 @@ const fetchUser = () => async dispatch => {
 };
 
 // function to init user on start
-export const loadUser = () => dispatch => {
-    const token = localStorage.getItem('gtstudytoken');
+export const loadUser = ({ dontCommunicate }) => dispatch => {
+    const token = sessionStorage.getItem('GTS_TOKEN');
     if (token) {
         // auth success will be failed if token not valid later
-        dispatch(authSuccess({ token }));
+        dispatch(authSuccess({ token, dontCommunicate }));
 
         // fetch user
         dispatch(fetchUser());
