@@ -1,17 +1,40 @@
 import React from 'react';
-import CourseCard from './Card';
+import PropTypes from 'prop-types';
+import useSWR from 'swr';
+
+import Loading from '../../components/Loading';
+
+import course from '../../api/course';
+
+import Card from './Card';
 
 import './Card.css';
 
-const CardsContainer = () => {
-    let list = [1, 2, 3, 4, 5, 6];
+const CardsContainer = props => {
+    let key, getFunction;
+    switch (props.get) {
+        case 'all':
+            key = 'all-courses-min';
+            getFunction = course.getAllCoursesMin;
+            break;
+        default:
+    }
+
+    const { data } = useSWR(key, getFunction);
+
     return (
         <div className='cards-container'>
-            {list.map(i => (
-                <CourseCard key={i} />
-            ))}
+            {data ? (
+                data.map((course, i) => <Card course={course} key={i} />)
+            ) : (
+                <Loading />
+            )}
         </div>
     );
+};
+
+CardsContainer.propTypes = {
+    get: PropTypes.oneOf(['all'])
 };
 
 export default CardsContainer;
