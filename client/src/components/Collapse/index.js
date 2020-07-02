@@ -53,7 +53,7 @@ const Head = props => {
             {editing && editable ? (
                 <p>
                     <i className='fas fa-minus delete-btn'></i>
-                    <Editable text={text} onChange={onChange} tagName='span' />
+                    <Editable html={text} onChange={onChange} tagName='span' />
                 </p>
             ) : (
                 text && (
