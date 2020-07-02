@@ -3,14 +3,18 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Navbar from '../features/Navbar';
-import Landing from '../components/Landing';
-import Course from '../features/Course';
 import Topic from '../features/Topic';
 import store from './store';
-
 import './App.css';
 import Alerts from '../features/Alerts';
 import { loadUser } from '../features/Auth/authSlice';
+import loadable from '@loadable/component';
+
+// loadable components
+const Course = loadable(() => import('../features/Course'));
+const Landing = loadable(() => import('../components/Landing'), {
+    fallback: <div> Loading .. </div>
+});
 
 function App() {
     useEffect(() => {
@@ -27,7 +31,12 @@ function App() {
                         <Route
                             exact
                             path='/course'
-                            render={() => <Course instructor />}
+                            render={() => (
+                                <Course
+                                    instructor
+                                    fallback={<div> Loading ... </div>}
+                                />
+                            )}
                         />
                         <Route exact path='/topic' component={Topic} />
                     </Switch>
