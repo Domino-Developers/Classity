@@ -11,6 +11,7 @@ import './App.css';
 import Alerts from '../features/Alerts';
 import { loadUser, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
+import ClassroomRoute from '../features/ClassroomRoute';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -44,7 +45,7 @@ function App() {
                             path='/course/:courseId'
                             component={Course}
                         />
-                        <Route
+                        <ClassroomRoute
                             exact
                             path='/course/:courseId/topic/:topicId'
                             component={Topic}
