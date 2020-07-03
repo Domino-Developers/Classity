@@ -44,7 +44,11 @@ function App() {
                             path='/course/:courseId'
                             component={Course}
                         />
-                        <Route exact path='/topic' component={Topic} />
+                        <Route
+                            exact
+                            path='/course/:courseId/topic/:topicId'
+                            component={Topic}
+                        />
                     </Switch>
                 </div>
             </Router>

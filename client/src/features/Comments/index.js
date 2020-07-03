@@ -20,7 +20,12 @@ const Comments = props => {
                 props.review ? (
                     <Comment key={i} review comment={com} />
                 ) : (
-                    <Comment key={i} replies={[1, 2, 3]} />
+                    <Comment
+                        key={i}
+                        comment={com}
+                        replies={com.reply}
+                        user={props.user}
+                    />
                 )
             )}
             {toShow < props.comments.length && (

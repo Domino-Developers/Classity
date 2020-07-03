@@ -8,7 +8,7 @@ const { verify, isStudent, isInstructor } = require('./util');
  */
 const classroomAuth = async (req, res, next) => {
     try {
-        verify();
+        verify(req);
 
         if (!(await isStudent(req)) && !(await isInstructor(req))) {
             return res

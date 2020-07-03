@@ -157,10 +157,6 @@ router.get('/:courseId', async (req, res) => {
                 .json({ errors: [{ msg: 'Course not found' }] });
         }
 
-        // We want no of students only
-        course.noOfStudents = course.students.length;
-        delete course.students;
-
         res.json(course);
     } catch (err) {
         if (err.kind === 'ObjectId') {

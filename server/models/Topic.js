@@ -11,6 +11,7 @@ const coreResourceSchema = new mongoose.Schema(
 
 const TopicSchema = new mongoose.Schema({
     name: text,
+    description: String,
     course,
     coreResources: [coreResourceSchema],
     resourceDump: [comment],

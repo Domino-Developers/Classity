@@ -28,7 +28,7 @@ const Header = props => {
                     {course.avgRating}({course.reviews.length} reviews)
                 </p>
             </div>
-            <div>{course.noOfStudents} student(s) enrolled</div>
+            <div>{course.students.length} student(s) enrolled</div>
             <div>
                 Created by <em>{course.instructor.name}</em>
             </div>

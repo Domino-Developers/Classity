@@ -1,24 +1,68 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, Redirect } from 'react-router-dom';
+import useSWR, { mutate } from 'swr';
+
+import courseApi from '../../api/course';
+import topicApi from '../../api/topic';
 
 import SideBar from '../../components/SideBar';
 import Breadcrumb from '../../components/Breadcrumb';
 import Editable from '../../components/Editable';
 import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
+import Loading from '../../components/Loading';
+import Comments from '../Comments';
 
 import './Topic.css';
+import { useSelector } from 'react-redux';
+
+const updateTopic = async (topic, description, resources) => {
+    console.log('updating'); // This will be changed to overlay
+
+    await Promise.all([
+        topicApi.setCoreResources(topic._id, resources),
+        topicApi.update(topic._id, { description })
+    ]);
+
+    mutate(`get-topic-${topic._id}`, {
+        ...topic,
+        coreResources: resources,
+        description
+    });
+};
 
 const Topic = () => {
-    const instructor = true;
+    const { courseId, topicId } = useParams();
+    const {
+        isAuthenticated,
+        loading,
+        userData: { id }
+    } = useSelector(state => state.auth);
+
+    const { data: course } = useSWR(`get-course-${courseId}`, () =>
+        courseApi.get(courseId)
+    );
+    const { data: topic } = useSWR(`get-topic-${topicId}`, () =>
+        topicApi.get(topicId)
+    );
+
     const [editing, edit] = useState(false);
-    const [description, changeDescription] = useState(text);
-    const [names, changeNames] = useState({
-        resource1: 'Video Name 1',
-        resource2: 'Video Name 2',
-        resource3: 'Text Name 3',
-        resource4: 'Test Name 4'
-    });
+
+    const isInstructor =
+        !loading && isAuthenticated && course && course.instructor._id === id;
+    const isStudent =
+        !loading &&
+        isAuthenticated &&
+        course &&
+        course.students.indexOf(id) !== -1;
+
+    if (!loading && course && !isStudent && !isInstructor)
+        return <Redirect to={`/course/${courseId}`} />;
+
+    if (!course || !topic) return <Loading />;
+
+    let description = topic.description || 'No description yet.';
+    let resources = topic.coreResources;
 
     const icons = (
         <Fragment>
@@ -32,36 +76,32 @@ const Topic = () => {
     return (
         <Fragment>
             <Breadcrumb.Container
-                instructor={instructor}
+                instructor={isInstructor}
                 edit={edit}
                 editing={editing}
+                onSave={() => updateTopic(topic, description, resources)}
             >
-                <Breadcrumb.Item>Hi</Breadcrumb.Item>
-                <Breadcrumb.Item>Hello</Breadcrumb.Item>
+                <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                <Breadcrumb.Item>{topic.name}</Breadcrumb.Item>
             </Breadcrumb.Container>
             <div className='main-content-area'>
                 <SideBar.Container>
-                    <SideBar.Tab text='Topic1'>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                    </SideBar.Tab>
-                    <SideBar.Tab text='Topic1'>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                        <SideBar.Item>video1</SideBar.Item>
-                    </SideBar.Tab>
+                    {course.topics.map((topic, i) => (
+                        <SideBar.Tab text={topic.name} key={i}>
+                            {topic.coreResources.map((res, i) => (
+                                <SideBar.Item key={i}>{res.name}</SideBar.Item>
+                            ))}
+                        </SideBar.Tab>
+                    ))}
                 </SideBar.Container>
                 <div className='main-content'>
-                    <h2>Topic Name</h2>
+                    <h2>{topic.name}</h2>
                     <h3>Description</h3>
                     {editing ? (
                         <Editable
                             html={description}
                             tagName='p'
-                            onChange={e => changeDescription(e.target.value)}
+                            onChange={e => (description = e.target.value)}
                         />
                     ) : (
                         <FadeText html>{description}</FadeText>
@@ -69,74 +109,38 @@ const Topic = () => {
                     <Tabs.Container>
                         <Tabs.Tab name='Topic content'>
                             <ul className='topic-content'>
-                                <li className='video completed'>
-                                    <Link to='#!'>
-                                        {icons}
-                                        <Editable
-                                            html={names.resource1}
-                                            tagName='span'
-                                            onChange={e =>
-                                                changeNames({
-                                                    ...names,
-                                                    resource1: e.target.value
-                                                })
-                                            }
-                                            disabled={!editing}
-                                        />
-                                    </Link>
-                                </li>
-                                <li className='video'>
-                                    <Link to='#!'>
-                                        {icons}
-                                        <Editable
-                                            html={names.resource2}
-                                            tagName='span'
-                                            onChange={e =>
-                                                changeNames({
-                                                    ...names,
-                                                    resource2: e.target.value
-                                                })
-                                            }
-                                            disabled={!editing}
-                                        />
-                                    </Link>
-                                </li>
-                                <li className='text'>
-                                    <Link to='#!'>
-                                        {icons}
-                                        <Editable
-                                            html={names.resource3}
-                                            tagName='span'
-                                            onChange={e =>
-                                                changeNames({
-                                                    ...names,
-                                                    resource3: e.target.value
-                                                })
-                                            }
-                                            disabled={!editing}
-                                        />
-                                    </Link>
-                                </li>
-                                <li className='test'>
-                                    <Link to='#!'>
-                                        {icons}
-                                        <Editable
-                                            html={names.resource4}
-                                            tagName='span'
-                                            onChange={e =>
-                                                changeNames({
-                                                    ...names,
-                                                    resource4: e.target.value
-                                                })
-                                            }
-                                            disabled={!editing}
-                                        />
-                                    </Link>
-                                </li>
+                                {resources &&
+                                    resources.map((res, i) => (
+                                        <li className={res.kind} key={i}>
+                                            <Link to='#!'>
+                                                {icons}
+                                                <Editable
+                                                    html={res.name}
+                                                    tagName='span'
+                                                    onChange={e => {
+                                                        resources[i].name =
+                                                            e.target.value;
+                                                    }}
+                                                    disabled={!editing}
+                                                />
+                                            </Link>
+                                        </li>
+                                    ))}
                             </ul>
                         </Tabs.Tab>
-                        {!editing && <Tabs.Tab name='Resource dump'></Tabs.Tab>}
-                        {!editing && <Tabs.Tab name='Doubts'></Tabs.Tab>}
+                        {!editing && (
+                            <Tabs.Tab name='Resource dump'>
+                                <Comments
+                                    comments={topic.resourceDump}
+                                    user={id}
+                                />
+                            </Tabs.Tab>
+                        )}
+                        {!editing && (
+                            <Tabs.Tab name='Doubts'>
+                                <Comments comments={topic.doubt} user={id} />
+                            </Tabs.Tab>
+                        )}
                     </Tabs.Container>
                 </div>
             </div>
@@ -145,5 +149,3 @@ const Topic = () => {
 };
 
 export default Topic;
-
-const text = `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Mollitia nulla odit vitae at vero quas alias. Ullam iste tenetur totam. Facere totam, provident dicta natus perferendis, mollitia ipsam voluptatum impedit sequi veritatis, ea possimus repudiandae suscipit cumque ipsum amet sint atque doloribus consectetur aspernatur beatae unde quod sapiente necessitatibus! Dolores illum saepe, enim corporis fugiat maiores qui facilis consequatur. Sint fuga non provident laborum ullam laudantium accusantium, eveniet labore modi sit sequi tempora blanditiis quam quasi quae consequatur itaque neque distinctio repellendus voluptatem deleniti? Aliquid perspiciatis at, dignissimos eos numquam, culpa provident molestiae quo consectetur iure placeat, blanditiis praesentium aspernatur?`;
