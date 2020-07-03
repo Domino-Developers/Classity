@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Link, useParams, Redirect } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useSWR, { mutate } from 'swr';
 
 import courseApi from '../../api/course';
@@ -48,18 +48,10 @@ const Topic = () => {
 
     const [editing, edit] = useState(false);
 
-    const isInstructor =
-        !loading && isAuthenticated && course && course.instructor._id === id;
-    const isStudent =
-        !loading &&
-        isAuthenticated &&
-        course &&
-        course.students.indexOf(id) !== -1;
-
-    if (!loading && course && !isStudent && !isInstructor)
-        return <Redirect to={`/course/${courseId}`} />;
-
     if (!course || !topic) return <Loading />;
+
+    const isInstructor =
+        !loading && isAuthenticated && course.instructor._id === id;
 
     let description = topic.description || 'No description yet.';
     let resources = topic.coreResources;
