@@ -72,9 +72,7 @@ const Head = props => {
             <AnimateHeight height={toShow === id || editing ? 'auto' : 0}>
                 <ul>
                     {React.Children.toArray(children).map((e, i) => (
-                        <Fragment key={i}>
-                            {React.cloneElement(e, { editing })}
-                        </Fragment>
+                        <Fragment key={i}>{React.cloneElement(e, { editing })}</Fragment>
                     ))}
                 </ul>
             </AnimateHeight>

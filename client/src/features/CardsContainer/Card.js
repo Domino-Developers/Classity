@@ -2,6 +2,8 @@ import React from 'react';
 import Rating from '../../components/Rating';
 import { Link } from 'react-router-dom';
 
+import Html from '../../components/Html';
+
 const CourseCard = props => {
     const {
         _id,
@@ -17,7 +19,9 @@ const CourseCard = props => {
                     <img src={require('./img/course.jpeg')} alt='nope' />
                 </div>
                 <div className='card-title-container'>
-                    <h4 className='card-title'>{name}</h4>
+                    <Html tag='h4' className='card-title'>
+                        {name}
+                    </Html>
                 </div>
                 <div className='card-ins'>{instructor}</div>
                 <div className='card-rating'>

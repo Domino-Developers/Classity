@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '../../components/Button';
 import Rating from '../../components/Rating';
 import Editable from '../../components/Editable';
+import Html from '../../components/Html';
 
 const Header = props => {
     const {
@@ -30,7 +31,7 @@ const Header = props => {
                 <Editable html={name} tagName='h2' onChange={handleChange} disabled={!editing} />
             </div>
             <div className='header-description'>
-                <p>{course.description}</p>
+                <Html tag='p'>{course.description}</Html>
             </div>
             <div className='header-rating'>
                 <Rating rating={course.avgRating} />
