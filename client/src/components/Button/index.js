@@ -29,9 +29,11 @@ const Button = props => {
 
 Button.propTypes = {
     full: PropTypes.bool,
-    text: PropTypes.string.isRequired,
+    text: PropTypes.string,
     onClick: PropTypes.func,
-    to: PropTypes.string
+    to: PropTypes.string,
+    value: PropTypes.string,
+    loading: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
 };
 
 export default Button;

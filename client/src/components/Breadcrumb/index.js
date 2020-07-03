@@ -7,7 +7,7 @@ import CircularProgress from '../CircularProgress';
 import './Breadcrumb.css';
 
 const Container = props => {
-    const { children, instructor, edit, editing } = props;
+    const { children, instructor, edit, editing, onSave } = props;
 
     return (
         <ul className='breadcrumb'>
@@ -17,7 +17,13 @@ const Container = props => {
                     <Button text='Edit' onClick={() => edit(true)} />
                 )}
                 {instructor && editing && (
-                    <Button text='Save' onClick={() => edit(false)} />
+                    <Button
+                        text='Save'
+                        onClick={() => {
+                            edit(false);
+                            onSave();
+                        }}
+                    />
                 )}
             </li>
             <li>

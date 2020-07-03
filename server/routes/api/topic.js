@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 // middlewares
 const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
+const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Topic = require('../../models/Topic');
@@ -16,15 +17,49 @@ const router = express.Router();
 // ----------------------------------- Routes ------------------------------------------
 
 /**
+ * @route		GET api/topic/:topicId
+ * @description Get all topic data with topic ID
+ * @access		public
+ */
+router.get('/:topicId', classroomAuth, async (req, res) => {
+    try {
+        const topic = await Topic.findById(req.params.topicId)
+            .lean()
+            .populate('resourceDump')
+            .populate('doubt');
+        if (!topic) {
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Topic not found' }] });
+        }
+
+        res.json(topic);
+    } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Invalid Topic Id' }] });
+        }
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
  * @route		PATCH api/topic/:topicId
- * @description Rename a topic
+ * @description Change name/description of topic
  * @access		private + instructorOnly
  */
 router.patch('/:topicId', instructorAuth, async (req, res) => {
     try {
+        const { name, description } = req.body;
+        const change = {};
+        if (name) change.name = name;
+        if (description) change.description = description;
+
         const topic = await Topic.findOneAndUpdate(
             { _id: req.params.topicId },
-            { name: req.body.name },
+            change,
             { new: true }
         );
 
@@ -45,11 +80,18 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
         req.body.forEach((resource, i, arr) => {
             if (
                 !['text', 'video', 'test'].includes(resource.kind) ||
-                !resource.payload ||
-                !resource.name
+                !resource.name ||
+                (!resource.payload &&
+                    !resource.text &&
+                    !resource.url &&
+                    !resource.testId)
             ) {
                 throw new Error('Bad Request');
             }
+
+            if (resource.text) resource.payload = resource.text;
+            if (resource.url) resource.payload = resource.url;
+            if (resource.testId) resource.payload = resource.testId;
 
             arr[i] = {
                 kind: resource.kind,

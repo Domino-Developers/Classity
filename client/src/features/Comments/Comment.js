@@ -2,17 +2,31 @@ import React, { useState } from 'react';
 import AnimateHeight from 'react-animate-height';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
+
 import FadeText from '../../components/FadeText';
 import Rating from '../../components/Rating';
 import FromNow from '../../components/FromNow';
 
+import commentApi from '../../api/comment';
+
+const toggleLike = async (user, comment) => {
+    const likeIndex = comment.likes.indexOf(user);
+
+    if (likeIndex === -1) {
+        await commentApi.like(comment._id);
+    } else {
+        await commentApi.unlike(comment._id);
+    }
+};
+
 const Comment = props => {
-    const { review, reply, replies, comment } = props;
+    const { review, reply, replies, comment, user } = props;
 
     const [showReply, replyState] = useState(false);
     const [text, changeText] = useState('');
 
     const className = review ? 'is-review' : reply ? 'is-reply' : '';
+    const liked = comment.likes && comment.likes.indexOf(user) !== -1;
 
     return (
         <li className={className}>
@@ -21,14 +35,17 @@ const Comment = props => {
                     <FromNow date={comment.date} />
                 </p>
                 <div className='rating'>
-                    <Rating rating={comment.rating} />
+                    <Rating rating={comment.rating || 0} />
                 </div>
                 <div className='like'>
-                    <span className='icon active'>
+                    <span
+                        className={liked ? 'icon active' : 'icon'}
+                        onClick={() => toggleLike(user, comment)}
+                    >
                         <i className='far fa-thumbs-up outline'></i>
                         <i className='fas fa-thumbs-up filled'></i>
                     </span>
-                    <p>2</p>
+                    <p>{comment.likes && comment.likes.length}</p>
                 </div>
                 <div className='reply'>
                     <span
@@ -38,7 +55,7 @@ const Comment = props => {
                         <i className='far fa-comment-dots outline'></i>
                         <i className='fas fa-comment-dots filled'></i>
                     </span>
-                    <p>500</p>
+                    <p>{comment.reply && comment.reply.length}</p>
                 </div>
                 <p className='name'>Sanchit Arora</p>
                 <div className='text'>
@@ -59,8 +76,8 @@ const Comment = props => {
                 <AnimateHeight height={showReply ? 'auto' : 0}>
                     <h4>Replies</h4>
                     <ul>
-                        {replies.map((e, i) => (
-                            <Comment reply key={i} />
+                        {replies.map((r, i) => (
+                            <Comment reply comment={r} key={i} />
                         ))}
                     </ul>
                 </AnimateHeight>
@@ -72,7 +89,9 @@ const Comment = props => {
 Comment.propTypes = {
     rating: PropTypes.bool,
     reply: PropTypes.bool,
-    replies: PropTypes.array
+    replies: PropTypes.array,
+    comment: PropTypes.object.isRequired,
+    user: PropTypes.string
 };
 
 export default Comment;
