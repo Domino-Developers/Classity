@@ -16,14 +16,14 @@ const Button = props => {
         </div>
     ) : value ? (
         <input type='submit' value={value} className='btn btn-full' />
-    ) : (
-        <Link
-            className={full ? 'btn btn-full' : 'btn btn-ghost'}
-            onClick={onClick}
-            to={to || '#!'}
-        >
+    ) : to ? (
+        <Link className={full ? 'btn btn-full' : 'btn btn-ghost'} to={to}>
             {text}
         </Link>
+    ) : (
+        <button className={full ? 'btn btn-full' : 'btn btn-ghost'} onClick={onClick}>
+            {text}
+        </button>
     );
 };
 

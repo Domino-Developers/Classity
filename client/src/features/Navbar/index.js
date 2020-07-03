@@ -1,18 +1,16 @@
 import React, { Fragment } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Button from '../../components/Button';
 import Auth from '../Auth';
 import { authRejected } from '../Auth/authSlice';
+import { useQuery } from '../../utils/hooks';
 
 import './Navbar.css';
 
-const useQuery = location => new URLSearchParams(location.search);
-
 const Navbar = () => {
-    let location = useLocation();
-    let query = useQuery(location);
+    let [query, location] = useQuery();
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
@@ -26,8 +24,7 @@ const Navbar = () => {
                     href='#!'
                     onClick={() => {
                         dispatch(authRejected());
-                    }}
-                >
+                    }}>
                     Logout
                 </a>
             </li>
@@ -40,11 +37,7 @@ const Navbar = () => {
                 <Link to={`${location.pathname}?authMode=login`}>Log In</Link>
             </li>
             <li className='bg-primary'>
-                <Button
-                    to={`${location.pathname}?authMode=register`}
-                    text='Join for Free'
-                    full
-                />
+                <Button to={`${location.pathname}?authMode=register`} text='Join for Free' full />
             </li>
         </Fragment>
     );

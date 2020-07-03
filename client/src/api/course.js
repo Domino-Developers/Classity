@@ -66,8 +66,9 @@ export default {
     // update course desc, tags, name, imageURL
     async update(courseId, courseData) {
         try {
+            console.log(courseData);
             const res = await api.post(`/api/course/${courseId}`, {
-                body: JSON.stringify(courseData)
+                body: courseData
             });
             return res.data;
         } catch (err) {

@@ -152,17 +152,13 @@ router.get('/:courseId', async (req, res) => {
                 populate: { path: 'coreResources', select: 'name' }
             });
         if (!course) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Course not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Course not found' }] });
         }
 
         res.json(course);
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Course Id' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
@@ -182,9 +178,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 
         // Checking if course is there
         if (!course) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Course not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Course not found' }] });
         }
 
         // instructor can't enroll !
@@ -195,13 +189,8 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         }
 
         // check if student is not already enrolled
-        if (
-            course.students.filter(id => id.toString() === req.user.id).length >
-            0
-        ) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Already Enrolled' }] });
+        if (course.students.filter(id => id.toString() === req.user.id).length > 0) {
+            return res.status(400).json({ errors: [{ msg: 'Already Enrolled' }] });
         }
 
         // adding student to course
@@ -230,9 +219,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         return res.json(courseProgress);
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Course Id' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid Course Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
@@ -247,9 +234,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
-        let coursesEnrolled = await User.findById(req.user.id)
-            .lean()
-            .select('coursesEnrolled -_id');
+        let coursesEnrolled = await User.findById(req.user.id).lean().select('coursesEnrolled -_id');
         coursesEnrolled = coursesEnrolled['coursesEnrolled'];
         const courseProgressId = String(coursesEnrolled[courseId]);
 
@@ -278,17 +263,13 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         const courseId = req.params.courseId;
 
         if (isNaN(rating)) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Rating is not a number' }] });
+            return res.status(400).json({ errors: [{ msg: 'Rating is not a number' }] });
         }
 
         const course = await Course.findById(courseId);
         let totalRating = course.avgRating * course.reviews.length;
 
-        const index = course.reviews.findIndex(
-            review => String(review.user) === req.user.id
-        );
+        const index = course.reviews.findIndex(review => String(review.user) === req.user.id);
 
         if (index === -1) {
             course.reviews.push({ user: req.user.id, text, rating });
@@ -332,8 +313,7 @@ router.post(
             return res.status(400).json({
                 errors: [
                     {
-                        msg:
-                            'Please supply atleast one of: name, description, tags'
+                        msg: 'Please supply atleast one of: name, description, tags'
                     }
                 ]
             });
@@ -353,7 +333,14 @@ router.post(
                     modifiedDate: Date.now()
                 },
                 { new: true }
-            );
+            )
+                .lean()
+                .populate('instructor', 'name')
+                .populate({
+                    path: 'topics',
+                    select: 'name coreResources',
+                    populate: { path: 'coreResources', select: 'name' }
+                });
             res.json(newCourse);
         } catch (err) {
             console.error(err.message);
@@ -378,10 +365,9 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
         const studentPromises = [];
         for (let studentId of course.students) {
             studentPromises.push(
-                User.findOneAndUpdate(
-                    { _id: studentId },
-                    { $unset: { [`coursesEnrolled.${courseId}`]: '' } }
-                ).select('coursesEnrolled')
+                User.findOneAndUpdate({ _id: studentId }, { $unset: { [`coursesEnrolled.${courseId}`]: '' } }).select(
+                    'coursesEnrolled'
+                )
             );
         }
 
@@ -390,9 +376,7 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
         const courseProgressPromises = [];
         students.forEach(student => {
             const progressId = String(student.coursesEnrolled.get(courseId));
-            courseProgressPromises.push(
-                CourseProgress.findOneAndDelete({ _id: progressId })
-            );
+            courseProgressPromises.push(CourseProgress.findOneAndDelete({ _id: progressId }));
         });
 
         await Promise.all(courseProgressPromises);
@@ -416,11 +400,7 @@ router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
         const topic = await Topic.findById(topicId);
         const topicPromise = topic.remove();
 
-        const coursePromise = Course.findOneAndUpdate(
-            { _id: courseId },
-            { $pull: { topics: topicId } },
-            { new: true }
-        )
+        const coursePromise = Course.findOneAndUpdate({ _id: courseId }, { $pull: { topics: topicId } }, { new: true })
             .select('topics')
             .populate('topics', 'name');
 

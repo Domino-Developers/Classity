@@ -5,6 +5,8 @@
     margin-right: 30px;
     transition: color 0.2s, background-color 0.2s;
     display: inline-block;
+    cursor: pointer;
+    font-size: inherit;
 }
 
 .btn:not(.btn-disabled):hover {
