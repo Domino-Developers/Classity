@@ -4,9 +4,7 @@ import Collapse from '../../components/Collapse';
 
 const Content = props => {
     const { editing, course } = props;
-    const [names, changeNames] = useState([
-        ...course.topics.map(topic => topic.name)
-    ]);
+    const [names, changeNames] = useState([...course.topics.map(topic => topic.name)]);
 
     return (
         <section>
@@ -19,8 +17,7 @@ const Content = props => {
                         onChange={e => {
                             names.splice(i, 1, e.target.value);
                             changeNames(names);
-                        }}
-                    >
+                        }}>
                         {course.topics[i].coreResources.map((res, i) => (
                             <Collapse.Item key={i}> {res.name} </Collapse.Item>
                         ))}

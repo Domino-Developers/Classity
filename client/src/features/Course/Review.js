@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Comments from '../Comments';
 
@@ -8,5 +9,9 @@ const Review = ({ reviews }) => (
         <Comments review comments={reviews} />
     </section>
 );
+
+Review.propTypes = {
+    reviews: PropTypes.array.isRequired
+};
 
 export default Review;

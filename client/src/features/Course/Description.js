@@ -5,18 +5,19 @@ import FadeText from '../../components/FadeText';
 import Editable from '../../components/Editable';
 
 const Description = props => {
-    const { editing, desc } = props;
+    const { editing, desc, changeCourse } = props;
     const [description, changeDescription] = useState(desc);
+
+    const handleChange = e => {
+        changeDescription(e.target.value);
+        changeCourse('description', e.target.value);
+    };
 
     return (
         <section className='course-page-description'>
             <h2>Description</h2>
             {editing ? (
-                <Editable
-                    html={description}
-                    onChange={e => changeDescription(e.target.value)}
-                    rich
-                />
+                <Editable html={description} onChange={handleChange} rich />
             ) : (
                 <FadeText html>{description}</FadeText>
             )}
@@ -26,7 +27,8 @@ const Description = props => {
 
 Description.propTypes = {
     editing: PropTypes.bool.isRequired,
-    desc: PropTypes.string.isRequired
+    desc: PropTypes.string.isRequired,
+    changeCourse: PropTypes.func.isRequired
 };
 
 export default Description;
