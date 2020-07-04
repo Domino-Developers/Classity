@@ -44,19 +44,14 @@ const Course = () => {
 
     const [courseChanges, changeCourse] = pseudoState();
 
-    const testing = (key, value) => {
-        changeCourse(key, value);
-        console.log(courseChanges);
-    };
-
     const saveCourse = async () => {
         try {
+            console.log(courseChanges);
             if (courseChanges['name'] === data.name) delete courseChanges['name'];
             if (courseChanges['description'] === data.description)
                 delete courseChanges['description'];
 
             if (courseChanges['name'] === '') {
-                console.log('name empty');
                 dispatch(setAlert("Name can't be empty", 'danger'));
                 return;
             }
@@ -92,13 +87,17 @@ const Course = () => {
                 edit={edit}
                 editing={editing}
                 course={data}
-                changeCourse={testing}
+                changeCourse={changeCourse}
                 saveCourse={saveCourse}
                 isSaving={isSaving}
             />
             <div className='container'>
-                <Description editing={editing} desc={data.description} changeCourse={testing} />
-                <Content editing={editing} course={data} changeCourse={testing} />
+                <Description
+                    editing={editing}
+                    desc={data.description}
+                    changeCourse={changeCourse}
+                />
+                <Content editing={editing} course={data} changeCourse={changeCourse} />
                 {!editing &&
                     (data.reviews.length > 0 ? <Feedback course={data} /> : <p>No reviews yet</p>)}
                 {!editing && data.reviews.length > 0 && <Review reviews={data.reviews} />}

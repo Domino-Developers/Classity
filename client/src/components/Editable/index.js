@@ -28,26 +28,18 @@ const Editable = props => {
                 disabled={disabled}
                 tagName={tagName}
                 onPaste={pasteAsPlainText}
+                style={{ display: 'inline-block', minWidth: '20rem' }}
             />
             {rich && (
                 <div className='rich-buttons'>
                     <div className='left'>
-                        <a
-                            href='#!'
-                            onClick={e => makeRich(e, 'formatBlock', 'h1')}
-                        >
+                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'h1')}>
                             Heading
                         </a>
-                        <a
-                            href='#!'
-                            onClick={e => makeRich(e, 'formatBlock', 'h3')}
-                        >
+                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'h3')}>
                             SubHeading
                         </a>
-                        <a
-                            href='#!'
-                            onClick={e => makeRich(e, 'formatBlock', 'p')}
-                        >
+                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'p')}>
                             Normal
                         </a>
                     </div>
