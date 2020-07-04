@@ -1,0 +1,15 @@
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--dark-grey-color);
+    align-items: center;
+    width: 100%;
+    height: 55px;
+}
+
+.topbar-left,
+.topbar-right {
+    display: flex;
+    align-items: center;
+}

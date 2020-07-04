@@ -42,8 +42,8 @@ function App() {
                         <Route exact path='/' component={Landing} />
                         <Route exact path='/course/:courseId' component={Course} />
                         <ClassroomRoute
-                            path='/course/:courseId/topic/'
-                            component={ContentContainer}
+                            path='/course/:courseId/topic/:topicId'
+                            render={props => <ContentContainer {...props} />}
                         />
                     </Switch>
                 </div>
