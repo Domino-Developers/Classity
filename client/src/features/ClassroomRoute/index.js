@@ -5,7 +5,6 @@ import useSWR from 'swr';
 
 import courseApi from '../../api/course';
 
-import Loading from '../../components/Loading';
 import { setAlert } from '../../features/Alerts/alertSlice';
 
 const ClassroomRoute = props => {
@@ -26,28 +25,14 @@ const ClassroomRoute = props => {
     const { pathname } = useLocation();
     const courseId = pathname.split('/')[2];
 
-    const { data: course } = useSWR(`get-course-${courseId}`, () =>
-        courseApi.get(courseId)
-    );
+    const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
 
-    const isInstructor =
-        !loading && isAuthenticated && course && course.instructor._id === id;
-    const isStudent =
-        !loading &&
-        isAuthenticated &&
-        course &&
-        course.students.indexOf(id) !== -1;
+    const isInstructor = !loading && isAuthenticated && course && course.instructor._id === id;
+    const isStudent = !loading && isAuthenticated && course && course.students.indexOf(id) !== -1;
 
-    if (loading || !course) return <Loading />;
+    if (!redirect && !loading && course && !isStudent && !isInstructor) setRedirect(true);
 
-    if (!redirect && !loading && course && !isStudent && !isInstructor)
-        setRedirect(true);
-
-    return redirect ? (
-        <Redirect to={`/course/${courseId}`} />
-    ) : (
-        <Route {...props} />
-    );
+    return redirect ? <Redirect to={`/course/${courseId}`} /> : <Route {...props} />;
 };
 
 export default ClassroomRoute;

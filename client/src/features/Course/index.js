@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
@@ -11,7 +11,6 @@ import Content from './Content';
 import Feedback from './Feedback';
 import Review from './Review';
 import Loading from '../../components/Loading';
-import pseudoState from '../../utils/pseudoState';
 import stripHtml from '../../utils/stripHtml';
 import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
@@ -30,6 +29,7 @@ const Course = () => {
         loading,
         userData: { id }
     } = useSelector(state => state.auth);
+    const courseChanges = useRef({});
 
     // check instructor
     const isInstructor = !loading && isAuthenticated && course && course.instructor._id === id;
@@ -42,47 +42,46 @@ const Course = () => {
     if (!course) return <Loading />;
     if (editing && !isInstructor) edit(false);
 
-    const [courseChanges, changeCourse] = pseudoState();
-
     const saveCourse = async () => {
         try {
             const promises = [];
 
             // For updating course name & description
-            if (courseChanges.name === course.name) delete courseChanges.name;
-            if (courseChanges.description === course.description) delete courseChanges.description;
+            if (courseChanges.current.name === course.name) delete courseChanges.current.name;
+            if (courseChanges.current.description === course.description)
+                delete courseChanges.current.description;
 
-            if (stripHtml(courseChanges.name) === '') {
+            if (stripHtml(courseChanges.current.name) === '') {
                 dispatch(setAlert("Name can't be empty", 'danger'));
                 return;
             }
-            if (stripHtml(courseChanges.description) === '') {
+            if (stripHtml(courseChanges.current.description) === '') {
                 dispatch(setAlert("Description can't be empty", 'danger'));
                 return;
             }
 
-            if (courseChanges.name || courseChanges.description)
-                promises.push(courseApi.update(courseId, courseChanges));
+            if (courseChanges.current.name || courseChanges.current.description)
+                promises.push(courseApi.update(courseId, courseChanges.current));
 
             // For deleting/renaming topic
             course.topics.forEach(topic => {
-                const newTopicIndex = courseChanges.topics.findIndex(
+                const newTopicIndex = courseChanges.current.topics.findIndex(
                     newTopic => newTopic._id === topic._id
                 );
 
                 if (newTopicIndex === -1) {
                     promises.push(topicApi.delete(course._id, topic._id));
-                } else if (courseChanges.topics[newTopicIndex].name !== topic.name) {
+                } else if (courseChanges.current.topics[newTopicIndex].name !== topic.name) {
                     promises.push(
                         topicApi.update(topic._id, {
-                            name: courseChanges.topics[newTopicIndex].name
+                            name: courseChanges.current.topics[newTopicIndex].name
                         })
                     );
                 }
             });
 
             // For adding new topic
-            courseChanges.topics.forEach((topic, i) => {
+            courseChanges.current.topics.forEach((topic, i) => {
                 if (!topic._id)
                     promises.push(topicApi.add(course._id, { name: topic.name, position: i }));
             });
@@ -113,19 +112,19 @@ const Course = () => {
                 student={isStudent}
                 edit={edit}
                 editing={editing}
-                changeCourse={changeCourse}
                 course={course}
                 saveCourse={saveCourse}
                 cancelSave={cancel}
                 isSaving={isSaving}
+                courseChanges={courseChanges}
             />
             <div className='container'>
                 <Description
                     editing={editing}
                     desc={course.description}
-                    changeCourse={changeCourse}
+                    courseChanges={courseChanges}
                 />
-                <Content editing={editing} course={course} changeCourse={changeCourse} />
+                <Content editing={editing} course={course} courseChanges={courseChanges} />
 
                 {!editing &&
                     (course.reviews.length > 0 ? (

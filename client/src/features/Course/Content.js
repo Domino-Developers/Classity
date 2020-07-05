@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
 
 const Content = props => {
-    const { editing, course, changeCourse } = props;
+    const { editing, course, courseChanges } = props;
     const [topics, setTopics] = useState([...course.topics]);
-    changeCourse('topics', topics);
+    courseChanges.current.topics = topics;
 
     return (
         <section>
@@ -15,7 +15,7 @@ const Content = props => {
                     <Collapse.Item
                         onAdd={() => {
                             setTopics([{ name: 'New Topic', coreResources: [] }, ...topics]);
-                            changeCourse('topics', topics);
+                            courseChanges.current.topics = topics;
                         }}
                     >
                         New Topic
@@ -32,11 +32,11 @@ const Content = props => {
                                 { ...topic, name: e.target.value },
                                 ...topics.slice(i + 1)
                             ]);
-                            changeCourse('topics', topics);
+                            courseChanges.current.topics = topics;
                         }}
                         onDelete={() => {
                             setTopics([...topics.slice(0, i), ...topics.slice(i + 1)]);
-                            changeCourse('topics', topics);
+                            courseChanges.current.topics = topics;
                         }}
                     >
                         {topic.coreResources.map((res, i) => (
@@ -49,7 +49,7 @@ const Content = props => {
                                     { name: 'New Topic', coreResources: [] },
                                     ...topics.slice(i + 1)
                                 ]);
-                                changeCourse('topics', topics);
+                                courseChanges.current.topics = topics;
                             }}
                         >
                             New Topic
@@ -63,7 +63,8 @@ const Content = props => {
 
 Content.propTypes = {
     editing: PropTypes.bool.isRequired,
-    course: PropTypes.object.isRequired
+    course: PropTypes.object.isRequired,
+    courseChanges: PropTypes.object.isRequired
 };
 
 export default Content;
