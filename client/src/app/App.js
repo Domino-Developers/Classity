@@ -5,13 +5,13 @@ import loadable from '@loadable/component';
 
 import Navbar from '../features/Navbar';
 import Loading from '../components/Loading';
-import Topic from '../features/Topic';
 import store from './store';
 import './App.css';
 import Alerts from '../features/Alerts';
 import { loadUser, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
+import ContentContainer from '../components/ContentContainer';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -40,15 +40,10 @@ function App() {
                 <div className='main'>
                     <Switch>
                         <Route exact path='/' component={Landing} />
-                        <Route
-                            exact
-                            path='/course/:courseId'
-                            component={Course}
-                        />
+                        <Route exact path='/course/:courseId' component={Course} />
                         <ClassroomRoute
-                            exact
                             path='/course/:courseId/topic/:topicId'
-                            component={Topic}
+                            render={props => <ContentContainer {...props} />}
                         />
                     </Switch>
                 </div>

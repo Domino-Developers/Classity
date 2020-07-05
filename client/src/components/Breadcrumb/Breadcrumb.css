@@ -1,14 +1,5 @@
 .breadcrumb {
     display: flex;
-    padding: 0 2rem;
-    border-bottom: 1px solid var(--dark-grey-color);
-    width: 100%;
-    align-items: center;
-    height: 55px;
-}
-
-.breadcrumb-progress {
-    display: flex;
     align-items: center;
 }
 
@@ -43,23 +34,19 @@ a.bread-link::after {
     border-left-color: var(--primary-color);
 }
 
-.breadcrumb li:nth-last-of-type(3) a.bread-link {
+.breadcrumb li:last-of-type a.bread-link {
     cursor: default;
 }
 
-.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover {
+.breadcrumb li:not(:last-of-type) .bread-link:hover {
     background-color: var(--dark-primary-color);
 }
 
-.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover::before {
+.breadcrumb li:not(:last-of-type) .bread-link:hover::before {
     border-color: var(--dark-primary-color);
     border-left-color: transparent;
 }
 
-.breadcrumb li:not(:nth-last-of-type(3)) .bread-link:hover::after {
+.breadcrumb li:not(:nth-last-of-type(1)) .bread-link:hover::after {
     border-left-color: var(--dark-primary-color);
-}
-
-.breadcrumb li:last-of-type {
-    margin-left: auto;
 }

@@ -1,41 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Button from '../Button';
-import CircularProgress from '../CircularProgress';
-
 import './Breadcrumb.css';
 
 const Container = props => {
-    const { children, instructor, edit, editing, onSave } = props;
+    const { children } = props;
 
-    return (
-        <ul className='breadcrumb'>
-            {children}
-            <li>
-                {instructor && !editing && (
-                    <Button text='Edit' onClick={() => edit(true)} />
-                )}
-                {instructor && editing && (
-                    <Button
-                        text='Save'
-                        onClick={() => {
-                            edit(false);
-                            onSave();
-                        }}
-                    />
-                )}
-            </li>
-            <li>
-                {!instructor && (
-                    <div className='breadcrumb-progress'>
-                        Your progress
-                        <CircularProgress size='50' progress={80} />
-                    </div>
-                )}
-            </li>
-        </ul>
-    );
+    return <ul className='breadcrumb'>{children}</ul>;
 };
 
 const Item = props => {
