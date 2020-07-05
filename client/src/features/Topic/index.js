@@ -5,8 +5,6 @@ import useSWR from 'swr';
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 
-import SideBar from '../../components/SideBar';
-import Breadcrumb from '../../components/Breadcrumb';
 import Editable from '../../components/Editable';
 import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
@@ -59,101 +57,81 @@ const Topic = () => {
 
     return (
         <Fragment>
-            <Breadcrumb.Container
-                instructor={isInstructor}
-                edit={edit}
-                editing={editing}
-                onSave={() => updateTopic(topic, description, resources)}
-            >
-                <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
-                <Breadcrumb.Item>{topic.name}</Breadcrumb.Item>
-            </Breadcrumb.Container>
-            <div className='main-content-area'>
-                <SideBar.Container>
-                    {course.topics.map((topic, i) => (
-                        <SideBar.Tab text={topic.name} key={i}>
-                            {topic.coreResources.map((res, i) => (
-                                <SideBar.Item key={i}>{res.name}</SideBar.Item>
-                            ))}
-                        </SideBar.Tab>
-                    ))}
-                </SideBar.Container>
-                <div className='main-content'>
-                    <h2>{topic.name}</h2>
-                    <h3>Description</h3>
-                    {editing ? (
-                        <Editable
-                            html={description}
-                            tagName='p'
-                            onChange={e => (description = e.target.value)}
-                        />
-                    ) : (
-                        <FadeText html>{description}</FadeText>
-                    )}
-                    <Tabs.Container>
-                        <Tabs.Tab name='Topic content'>
-                            <ul className='topic-content'>
-                                {resources &&
-                                    resources.map((res, i) => (
-                                        <Fragment key={i}>
-                                            <li className={res.kind}>
-                                                {editing && (
-                                                    <Delete
-                                                        onDelete={() => {
-                                                            setResources([
-                                                                ...resources.slice(0, i),
-                                                                ...resources.slice(i + 1)
-                                                            ]);
-                                                        }}
-                                                    />
-                                                )}
-                                                <Link to='#!'>
-                                                    {icons}
-                                                    <Editable
-                                                        html={res.name}
-                                                        tagName='span'
-                                                        onChange={e => {
-                                                            resources[i].name = e.target.value;
-                                                        }}
-                                                        disabled={!editing}
-                                                    />
-                                                </Link>
-                                            </li>
+            <div className='main-content'>
+                <h2>{topic.name}</h2>
+                <h3>Description</h3>
+                {editing ? (
+                    <Editable
+                        html={description}
+                        tagName='p'
+                        onChange={e => (description = e.target.value)}
+                    />
+                ) : (
+                    <FadeText html>{description}</FadeText>
+                )}
+                <Tabs.Container>
+                    <Tabs.Tab name='Topic content'>
+                        <ul className='topic-content'>
+                            {resources &&
+                                resources.map((res, i) => (
+                                    <Fragment key={i}>
+                                        <li className={res.kind}>
                                             {editing && (
-                                                <li>
-                                                    <AddNew
-                                                        onAdd={() => {
-                                                            setResources([
-                                                                ...resources.slice(0, i + 1),
-                                                                {
-                                                                    kind: 'text',
-                                                                    name: 'new',
-                                                                    text: ' '
-                                                                },
-                                                                ...resources.slice(i + 1)
-                                                            ]);
-                                                        }}
-                                                    >
-                                                        New Resource
-                                                    </AddNew>
-                                                </li>
+                                                <Delete
+                                                    onDelete={() => {
+                                                        setResources([
+                                                            ...resources.slice(0, i),
+                                                            ...resources.slice(i + 1)
+                                                        ]);
+                                                    }}
+                                                />
                                             )}
-                                        </Fragment>
-                                    ))}
-                            </ul>
+                                            <Link to='#!'>
+                                                {icons}
+                                                <Editable
+                                                    html={res.name}
+                                                    tagName='span'
+                                                    onChange={e => {
+                                                        resources[i].name = e.target.value;
+                                                    }}
+                                                    disabled={!editing}
+                                                />
+                                            </Link>
+                                        </li>
+                                        {editing && (
+                                            <li>
+                                                <AddNew
+                                                    onAdd={() => {
+                                                        setResources([
+                                                            ...resources.slice(0, i + 1),
+                                                            {
+                                                                kind: 'text',
+                                                                name: 'new',
+                                                                text: ' '
+                                                            },
+                                                            ...resources.slice(i + 1)
+                                                        ]);
+                                                    }}
+                                                >
+                                                    New Resource
+                                                </AddNew>
+                                            </li>
+                                        )}
+                                    </Fragment>
+                                ))}
+                        </ul>
+                    </Tabs.Tab>
+                    {!editing && (
+                        <Tabs.Tab name='Resource dump'>
+                            <Comments comments={topic.resourceDump} user={id} />
                         </Tabs.Tab>
-                        {!editing && (
-                            <Tabs.Tab name='Resource dump'>
-                                <Comments comments={topic.resourceDump} user={id} />
-                            </Tabs.Tab>
-                        )}
-                        {!editing && (
-                            <Tabs.Tab name='Doubts'>
-                                <Comments comments={topic.doubt} user={id} />
-                            </Tabs.Tab>
-                        )}
-                    </Tabs.Container>
-                </div>
+                    )}
+                    {!editing && (
+                        <Tabs.Tab name='Doubts'>
+                            <Comments comments={topic.doubt} user={id} />
+                        </Tabs.Tab>
+                    )}
+                </Tabs.Container>
             </div>
         </Fragment>
     );
