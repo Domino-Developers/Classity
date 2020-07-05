@@ -14,6 +14,7 @@ const Header = props => {
         course,
         changeCourse,
         saveCourse,
+        cancelSave,
         isSaving,
         student
     } = props;
@@ -50,12 +51,15 @@ const Header = props => {
                     <Button text='Edit Course' full onClick={() => edit(true)} />
                 )}
                 {instructor && editing && (
-                    <Button
-                        text='Save Course'
-                        full
-                        onClick={saveCourse}
-                        loading={isSaving ? 'Saving' : null}
-                    />
+                    <div>
+                        <Button
+                            text='Save Course'
+                            full
+                            onClick={saveCourse}
+                            loading={isSaving ? 'Saving' : null}
+                        />
+                        <Button text='Cancel' full onClick={cancelSave} />
+                    </div>
                 )}
             </div>
         </div>
@@ -69,6 +73,7 @@ Header.propTypes = {
     course: PropTypes.object.isRequired,
     changeCourse: PropTypes.func.isRequired,
     saveCourse: PropTypes.func.isRequired,
+    cancelSave: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
     student: PropTypes.bool.isRequired
 };

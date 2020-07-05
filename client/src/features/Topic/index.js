@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
@@ -12,6 +12,8 @@ import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
 import Loading from '../../components/Loading';
 import Comments from '../Comments';
+import AddNew from '../../components/AddNew';
+import Delete from '../../components/Delete';
 
 import './Topic.css';
 import { useSelector } from 'react-redux';
@@ -23,12 +25,6 @@ const updateTopic = async (topic, description, resources) => {
         topicApi.setCoreResources(topic._id, resources),
         topicApi.update(topic._id, { description })
     ]);
-
-    mutate(`get-topic-${topic._id}`, {
-        ...topic,
-        coreResources: resources,
-        description
-    });
 };
 
 const Topic = () => {
@@ -39,22 +35,18 @@ const Topic = () => {
         userData: { id }
     } = useSelector(state => state.auth);
 
-    const { data: course } = useSWR(`get-course-${courseId}`, () =>
-        courseApi.get(courseId)
-    );
-    const { data: topic } = useSWR(`get-topic-${topicId}`, () =>
-        topicApi.get(topicId)
-    );
+    const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
+    const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
     const [editing, edit] = useState(false);
+    const [resources, setResources] = useState();
 
     if (!course || !topic) return <Loading />;
 
-    const isInstructor =
-        !loading && isAuthenticated && course.instructor._id === id;
+    const isInstructor = !loading && isAuthenticated && course.instructor._id === id;
 
     let description = topic.description || 'No description yet.';
-    let resources = topic.coreResources;
+    if (!resources) setResources(topic.coreResources);
 
     const icons = (
         <Fragment>
@@ -103,29 +95,56 @@ const Topic = () => {
                             <ul className='topic-content'>
                                 {resources &&
                                     resources.map((res, i) => (
-                                        <li className={res.kind} key={i}>
-                                            <Link to='#!'>
-                                                {icons}
-                                                <Editable
-                                                    html={res.name}
-                                                    tagName='span'
-                                                    onChange={e => {
-                                                        resources[i].name =
-                                                            e.target.value;
-                                                    }}
-                                                    disabled={!editing}
-                                                />
-                                            </Link>
-                                        </li>
+                                        <Fragment key={i}>
+                                            <li className={res.kind}>
+                                                {editing && (
+                                                    <Delete
+                                                        onDelete={() => {
+                                                            setResources([
+                                                                ...resources.slice(0, i),
+                                                                ...resources.slice(i + 1)
+                                                            ]);
+                                                        }}
+                                                    />
+                                                )}
+                                                <Link to='#!'>
+                                                    {icons}
+                                                    <Editable
+                                                        html={res.name}
+                                                        tagName='span'
+                                                        onChange={e => {
+                                                            resources[i].name = e.target.value;
+                                                        }}
+                                                        disabled={!editing}
+                                                    />
+                                                </Link>
+                                            </li>
+                                            {editing && (
+                                                <li>
+                                                    <AddNew
+                                                        onAdd={() => {
+                                                            setResources([
+                                                                ...resources.slice(0, i + 1),
+                                                                {
+                                                                    kind: 'text',
+                                                                    name: 'new',
+                                                                    text: ' '
+                                                                },
+                                                                ...resources.slice(i + 1)
+                                                            ]);
+                                                        }}
+                                                    >
+                                                        New Resource
+                                                    </AddNew>
+                                                </li>
+                                            )}
+                                        </Fragment>
                                     ))}
                             </ul>
                         </Tabs.Tab>
                         {!editing && (
                             <Tabs.Tab name='Resource dump'>
-                                <Comments
-                                    comments={topic.resourceDump}
-                                    user={id}
-                                />
+                                <Comments comments={topic.resourceDump} user={id} />
                             </Tabs.Tab>
                         )}
                         {!editing && (

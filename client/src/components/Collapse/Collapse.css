@@ -1,6 +1,11 @@
 .course-topics > li > p {
     background-color: #eee;
     cursor: pointer;
+    display: flex;
+}
+
+.course-topics > li > p > a {
+    margin-left: auto;
 }
 
 .course-topics > li {
@@ -25,10 +30,4 @@
 .course-topics .hide .hide-button,
 .course-topics .show .show-button {
     display: none;
-}
-
-.course-topics .delete-btn {
-    color: var(--danger-color);
-    border: none;
-    padding-right: 5px;
 }

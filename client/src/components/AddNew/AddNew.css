@@ -4,6 +4,7 @@
     position: relative;
     z-index: 1;
     margin: -5px 0;
+    overflow: hidden;
 }
 
 .add-new a {
@@ -16,6 +17,10 @@
     overflow-y: hidden;
     max-height: 0;
     transition: 0.2s max-height;
+}
+
+.add-new a i.fas {
+    display: inline-block;
 }
 
 .add-new:hover {
