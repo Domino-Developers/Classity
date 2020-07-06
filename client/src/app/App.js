@@ -12,6 +12,7 @@ import { loadUser, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
 import ContentContainer from '../components/ContentContainer';
+import Resource from '../features/Resource';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -45,6 +46,7 @@ function App() {
                             path='/course/:courseId/topic/:topicId'
                             render={props => <ContentContainer {...props} />}
                         />
+                        <Route path='/resource' component={Resource} />
                     </Switch>
                 </div>
             </Router>
