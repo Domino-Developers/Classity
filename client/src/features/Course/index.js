@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 
@@ -20,10 +20,14 @@ import './Course.css';
 const Course = () => {
     // hooks
     const dispatch = useDispatch();
+    const history = useHistory();
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
-    const { data: course, error } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
+    const [isEnrolling, setEnrolling] = useState(false);
+    const { data: course, error, mutate } = useSWR(`get-course-${courseId}`, () =>
+        courseApi.get(courseId)
+    );
     const {
         isAuthenticated,
         loading,
@@ -41,6 +45,26 @@ const Course = () => {
     if (error && navigator.onLine) return <div> Opps... not found </div>;
     if (!course) return <Loading />;
     if (editing && !isInstructor) edit(false);
+
+    const enroll = async () => {
+        if (!id) {
+            history.push('?authMode=register');
+            dispatch(setAlert('Please Register or Login to Enroll', 'danger'));
+            return;
+        }
+        try {
+            setEnrolling(true);
+            await courseApi.enroll(course._id);
+            mutate({ ...course, students: [...course.students, id] });
+            setEnrolling(false);
+        } catch (err) {
+            if (err.errors) {
+                const errors = err.errors;
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+            }
+            setEnrolling(false);
+        }
+    };
 
     const saveCourse = async () => {
         try {
@@ -93,7 +117,7 @@ const Course = () => {
         } catch (err) {
             if (err.errors) {
                 const errors = err.errors;
-                errors.forEach(e => dispatch(setAlert(e, 'danger')));
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
             }
             setSave(false);
             edit(false);
@@ -115,7 +139,9 @@ const Course = () => {
                 course={course}
                 saveCourse={saveCourse}
                 cancelSave={cancel}
+                enroll={enroll}
                 isSaving={isSaving}
+                isEnrolling={isEnrolling}
                 courseChanges={courseChanges}
             />
             <div className='container'>

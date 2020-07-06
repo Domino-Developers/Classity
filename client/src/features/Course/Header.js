@@ -15,7 +15,9 @@ const Header = props => {
         courseChanges,
         saveCourse,
         cancelSave,
+        enroll,
         isSaving,
+        isEnrolling,
         student
     } = props;
 
@@ -51,7 +53,15 @@ const Header = props => {
             </div>
             <div>Last updated: {new Date(course.modifiedDate).toLocaleDateString()} </div>
             <div className='header-enroll'>
-                {!instructor && !student && <Button text='Enroll' full />}
+                {!instructor && !student && (
+                    <Button
+                        text='Enroll Course'
+                        full
+                        onClick={enroll}
+                        loading={isEnrolling ? 'Enrolling' : null}
+                    />
+                )}
+                {student && <Button text='Enrolled' full />}
                 {instructor && !editing && (
                     <Button text='Edit Course' full onClick={() => edit(true)} />
                 )}
@@ -79,7 +89,9 @@ Header.propTypes = {
     courseChanges: PropTypes.object.isRequired,
     saveCourse: PropTypes.func.isRequired,
     cancelSave: PropTypes.func.isRequired,
+    enroll: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
+    isEnrolling: PropTypes.bool.isRequired,
     student: PropTypes.bool.isRequired
 };
 

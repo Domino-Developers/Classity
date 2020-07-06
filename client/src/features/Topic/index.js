@@ -61,7 +61,7 @@ const Topic = () => {
         } catch (err) {
             if (err.errors) {
                 const errors = err.errors;
-                errors.forEach(e => dispatch(setAlert(e, 'danger')));
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
             }
             setSave(false);
             edit(false);
