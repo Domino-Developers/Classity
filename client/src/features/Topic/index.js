@@ -152,8 +152,7 @@ const Topic = () => {
                                                             },
                                                             ...resources.slice(i + 1)
                                                         ]);
-                                                    }}
-                                                >
+                                                    }}>
                                                     New Resource
                                                 </AddNew>
                                             </li>
