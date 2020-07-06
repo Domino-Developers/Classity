@@ -10,7 +10,7 @@ const authSlice = createSlice({
     initialState: {
         token: null,
         isAuthenticated: false,
-        loading: false,
+        loading: true,
         userData: {}
     },
     reducers: {
@@ -21,13 +21,11 @@ const authSlice = createSlice({
             state.userData = {};
         },
         authSuccess: (state, action) => {
-            if (action.payload.remember)
-                localStorage.setItem('GTS_TOKEN', action.payload.token);
+            if (action.payload.remember) localStorage.setItem('GTS_TOKEN', action.payload.token);
             sessionStorage.setItem('GTS_TOKEN', action.payload.token);
 
             // send to other tabs if communicate
-            if (!action.payload.dontCommunicate)
-                sendTokenRes(action.payload.token);
+            if (!action.payload.dontCommunicate) sendTokenRes(action.payload.token);
 
             // Add auth header to axios
             setAuthToken(action.payload.token);
