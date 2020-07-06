@@ -1,8 +1,10 @@
 import React, { useState, Fragment } from 'react';
 import AnimateHeight from 'react-animate-height';
+import { Link } from 'react-router-dom';
 
 import AddNew from '../AddNew';
 import Editable from '../Editable';
+import Delete from '../Delete';
 
 import './Collapse.css';
 
@@ -44,7 +46,7 @@ const Container = props => {
 };
 
 const Head = props => {
-    const { text, toggleShow, toShow, id, editing, children, onChange } = props;
+    const { text, toggleShow, toShow, id, editing, children, onChange, onDelete, to } = props;
 
     const editable = onChange ? true : false;
 
@@ -52,7 +54,7 @@ const Head = props => {
         <Fragment>
             {editing && editable ? (
                 <p>
-                    <i className='fas fa-minus delete-btn'></i>
+                    <Delete onDelete={onDelete} />
                     <Editable html={text} onChange={onChange} tagName='span' />
                 </p>
             ) : (
@@ -65,6 +67,7 @@ const Head = props => {
                                 __html: text
                             }}
                         />
+                        {to && <Link to={to}>View</Link>}
                     </p>
                 )
             )}
@@ -81,17 +84,14 @@ const Head = props => {
 };
 
 const Item = props => {
-    const { children, editing, add } = props;
+    const { children, editing, onAdd } = props;
 
     return (
         <li>
-            {editing && add ? (
-                <AddNew>
-                    <i className='fas fa-plus'></i>
-                    {children}
-                </AddNew>
+            {editing && onAdd ? (
+                <AddNew onAdd={onAdd}>{children}</AddNew>
             ) : (
-                !add && <p>{children}</p>
+                !onAdd && <p>{children}</p>
             )}
         </li>
     );

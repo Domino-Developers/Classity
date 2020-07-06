@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Topic from '../../features/Topic';
 import Resource from '../../features/Resource';
@@ -9,9 +9,11 @@ import SideBar from '../SideBar';
 import Loading from '../Loading';
 
 const ContentContainer = props => {
-    return (
+    const [exist, setExist] = useState(true);
+
+    return exist ? (
         <Fragment>
-            <TopBar params={props.match.params} />
+            <TopBar params={props.match.params} setExist={setExist} />
             <div className='main-content-area'>
                 <SideBarContainer params={props.match.params} />
                 <Switch>
@@ -24,14 +26,15 @@ const ContentContainer = props => {
                 </Switch>
             </div>
         </Fragment>
+    ) : (
+        <h1>Oops</h1>
     );
 };
 
 const SideBarContainer = ({ params: { courseId } }) => {
-    const { data: course, error } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
+    const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
 
     if (!course) return <Loading />;
-    if (error && navigator.onLine) return <div>Opps </div>;
 
     return (
         <Fragment>

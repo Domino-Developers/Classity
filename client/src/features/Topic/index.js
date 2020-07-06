@@ -1,6 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
+import { useSelector, useDispatch } from 'react-redux';
 
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
@@ -10,26 +11,16 @@ import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
 import Loading from '../../components/Loading';
 import Comments from '../Comments';
+import AddNew from '../../components/AddNew';
+import Delete from '../../components/Delete';
+import Button from '../../components/Button';
+import { useEdit } from '../../utils/hooks';
+import { setAlert } from '../Alerts/alertSlice';
 
 import './Topic.css';
-import { useSelector } from 'react-redux';
-
-const updateTopic = async (topic, description, resources) => {
-    console.log('updating'); // This will be changed to overlay
-
-    await Promise.all([
-        topicApi.setCoreResources(topic._id, resources),
-        topicApi.update(topic._id, { description })
-    ]);
-
-    mutate(`get-topic-${topic._id}`, {
-        ...topic,
-        coreResources: resources,
-        description
-    });
-};
 
 const Topic = () => {
+    const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
     const {
         isAuthenticated,
@@ -40,14 +31,47 @@ const Topic = () => {
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
-    const [editing, edit] = useState(false);
+    const [editing, edit] = useEdit();
+    const [isSaving, setSave] = useState(false);
+
+    const [resources, setResources] = useState();
+    const description = useRef();
 
     if (!course || !topic) return <Loading />;
 
     const isInstructor = !loading && isAuthenticated && course.instructor._id === id;
 
-    let description = topic.description || 'No description yet.';
-    let resources = topic.coreResources;
+    if (!resources) setResources(topic.coreResources);
+    if (!description.current) description.current = topic.description || 'No description yet.';
+
+    const saveTopic = async () => {
+        try {
+            const promises = [];
+
+            if (topic.coreResources !== resources)
+                promises.push(topicApi.setCoreResources(topic._id, resources));
+
+            if (topic.description !== description.current)
+                promises.push(topicApi.update(topic._id, { description: description.current }));
+
+            setSave(true);
+            await Promise.all(promises);
+            setSave(false);
+            edit(false);
+        } catch (err) {
+            if (err.errors) {
+                const errors = err.errors;
+                errors.forEach(e => dispatch(setAlert(e, 'danger')));
+            }
+            setSave(false);
+            edit(false);
+        }
+    };
+
+    const cancel = () => {
+        edit(false);
+        window.location.reload(false);
+    };
 
     const icons = (
         <Fragment>
@@ -62,34 +86,79 @@ const Topic = () => {
         <Fragment>
             <div className='main-content'>
                 <h2>{topic.name}</h2>
+
+                {isInstructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
+                {isInstructor && editing && (
+                    <Fragment>
+                        <Button
+                            text='Save Topic'
+                            onClick={saveTopic}
+                            loading={isSaving ? 'Saving' : null}
+                        />
+                        <Button text='Cancel' onClick={cancel} />
+                    </Fragment>
+                )}
+
                 <h3>Description</h3>
+
                 {editing ? (
                     <Editable
-                        html={description}
+                        html={description.current}
                         tagName='p'
-                        onChange={e => (description = e.target.value)}
+                        onChange={e => (description.current = e.target.value)}
                     />
                 ) : (
-                    <FadeText html>{description}</FadeText>
+                    <FadeText html>{description.current}</FadeText>
                 )}
                 <Tabs.Container>
                     <Tabs.Tab name='Topic content'>
                         <ul className='topic-content'>
                             {resources &&
                                 resources.map((res, i) => (
-                                    <li className={res.kind} key={i}>
-                                        <Link to='#!'>
-                                            {icons}
-                                            <Editable
-                                                html={res.name}
-                                                tagName='span'
-                                                onChange={e => {
-                                                    resources[i].name = e.target.value;
-                                                }}
-                                                disabled={!editing}
-                                            />
-                                        </Link>
-                                    </li>
+                                    <Fragment key={i}>
+                                        <li className={res.kind}>
+                                            {editing && (
+                                                <Delete
+                                                    onDelete={() => {
+                                                        setResources([
+                                                            ...resources.slice(0, i),
+                                                            ...resources.slice(i + 1)
+                                                        ]);
+                                                    }}
+                                                />
+                                            )}
+                                            <Link to='#!'>
+                                                {icons}
+                                                <Editable
+                                                    html={res.name}
+                                                    tagName='span'
+                                                    onChange={e => {
+                                                        resources[i].name = e.target.value;
+                                                    }}
+                                                    disabled={!editing}
+                                                />
+                                            </Link>
+                                        </li>
+                                        {editing && (
+                                            <li>
+                                                <AddNew
+                                                    onAdd={() => {
+                                                        setResources([
+                                                            ...resources.slice(0, i + 1),
+                                                            {
+                                                                kind: 'text',
+                                                                name: 'new',
+                                                                text: ' '
+                                                            },
+                                                            ...resources.slice(i + 1)
+                                                        ]);
+                                                    }}
+                                                >
+                                                    New Resource
+                                                </AddNew>
+                                            </li>
+                                        )}
+                                    </Fragment>
                                 ))}
                         </ul>
                     </Tabs.Tab>

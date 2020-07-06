@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import FadeText from '../../components/FadeText';
 import Editable from '../../components/Editable';
 
 const Description = props => {
-    const { editing, desc, changeCourse } = props;
-    const [description, changeDescription] = useState(desc);
+    const { editing, desc, courseChanges } = props;
+    const description = useRef(desc);
 
     const handleChange = e => {
-        changeDescription(e.target.value);
-        changeCourse('description', e.target.value);
+        description.current = e.target.value;
+        courseChanges.current.description = e.target.value;
     };
 
     return (
         <section className='course-page-description'>
             <h2>Description</h2>
             {editing ? (
-                <Editable html={description} onChange={handleChange} rich />
+                <Editable html={description.current} onChange={handleChange} rich />
             ) : (
-                <FadeText html>{description}</FadeText>
+                <FadeText html>{description.current}</FadeText>
             )}
         </section>
     );
@@ -28,7 +28,7 @@ const Description = props => {
 Description.propTypes = {
     editing: PropTypes.bool.isRequired,
     desc: PropTypes.string.isRequired,
-    changeCourse: PropTypes.func.isRequired
+    courseChanges: PropTypes.object.isRequired
 };
 
 export default Description;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../components/Button';
@@ -12,23 +12,29 @@ const Header = props => {
         edit,
         editing,
         course,
-        changeCourse,
+        courseChanges,
         saveCourse,
+        cancelSave,
         isSaving,
         student
     } = props;
 
-    const [name, changeName] = useState(course.name);
+    const name = useRef(course.name);
 
     const handleChange = e => {
-        changeName(e.target.value);
-        changeCourse('name', e.target.value);
+        name.current = e.target.value;
+        courseChanges.current.name = e.target.value;
     };
 
     return (
         <div className='course-header'>
             <div className='header-title'>
-                <Editable html={name} tagName='h2' onChange={handleChange} disabled={!editing} />
+                <Editable
+                    html={name.current}
+                    tagName='h2'
+                    onChange={handleChange}
+                    disabled={!editing}
+                />
             </div>
             <div className='header-description'>
                 <Html tag='p'>{course.description}</Html>
@@ -50,12 +56,15 @@ const Header = props => {
                     <Button text='Edit Course' full onClick={() => edit(true)} />
                 )}
                 {instructor && editing && (
-                    <Button
-                        text='Save Course'
-                        full
-                        onClick={saveCourse}
-                        loading={isSaving ? 'Saving' : null}
-                    />
+                    <div>
+                        <Button
+                            text='Save Course'
+                            full
+                            onClick={saveCourse}
+                            loading={isSaving ? 'Saving' : null}
+                        />
+                        <Button text='Cancel' full onClick={cancelSave} />
+                    </div>
                 )}
             </div>
         </div>
@@ -67,8 +76,9 @@ Header.propTypes = {
     editing: PropTypes.bool.isRequired,
     edit: PropTypes.func.isRequired,
     course: PropTypes.object.isRequired,
-    changeCourse: PropTypes.func.isRequired,
+    courseChanges: PropTypes.object.isRequired,
     saveCourse: PropTypes.func.isRequired,
+    cancelSave: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
     student: PropTypes.bool.isRequired
 };

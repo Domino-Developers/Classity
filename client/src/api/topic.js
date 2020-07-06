@@ -15,7 +15,7 @@ export default {
     async add(courseId, topicData) {
         try {
             const res = await api.put(`/api/course/${courseId}/topic`, {
-                body: JSON.stringify(topicData)
+                body: topicData
             });
             return res.data;
         } catch (err) {
@@ -38,9 +38,7 @@ export default {
     // Delete topic
     async delete(courseId, topicId) {
         try {
-            const res = await api.delete(
-                `/api/course/${courseId}/topic/${topicId}`
-            );
+            const res = await api.delete(`/api/course/${courseId}/topic/${topicId}`);
             return res.data;
         } catch (err) {
             throw err.response.data;
@@ -62,9 +60,7 @@ export default {
     // Delete coreResource
     async deleteCoreResource(topicId, cresId) {
         try {
-            const res = await api.delete(
-                `/api/topic/${topicId}/coreResource/${cresId}`
-            );
+            const res = await api.delete(`/api/topic/${topicId}/coreResource/${cresId}`);
             return res.data;
         } catch (err) {
             throw err.response.data;
