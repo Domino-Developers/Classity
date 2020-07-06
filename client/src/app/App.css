@@ -6,7 +6,7 @@
     --light-color: #fcfcfc;
     --danger-color: #dc3545;
     --success-color: #28a745;
-    --grey-color: #eee;
+    --grey-color: rgb(214, 214, 214);
     --dark-grey-color: #aaa;
 }
 
