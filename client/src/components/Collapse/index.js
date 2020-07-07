@@ -89,7 +89,9 @@ const Item = props => {
     return (
         <li>
             {editing && onAdd ? (
-                <AddNew onAdd={onAdd}>{children}</AddNew>
+                <AddNew>
+                    <span onAdd={onAdd}>{children}</span>
+                </AddNew>
             ) : (
                 !onAdd && <p>{children}</p>
             )}

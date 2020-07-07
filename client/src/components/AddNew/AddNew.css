@@ -1,32 +1,22 @@
 .add-new {
-    width: 100%;
-    min-height: 10px;
-    position: relative;
-    z-index: 1;
-    margin: -5px 0;
+    display: flex;
+    justify-content: space-between;
+    max-height: 10px;
     overflow: hidden;
+    transition: max-height 0.2s;
 }
 
-.add-new a {
-    width: 100%;
+.add-new .add-new-link {
     text-align: center;
-    transform: translate(0, -50%);
-    position: absolute;
-    top: 50%;
-    left: 0;
-    overflow-y: hidden;
-    max-height: 0;
-    transition: 0.2s max-height;
+    margin: 0 auto;
+    width: 100%;
+    padding: 1rem;
 }
 
-.add-new a i.fas {
+.add-new .add-new-link i {
     display: inline-block;
 }
 
 .add-new:hover {
-    padding: 30px;
-}
-
-.add-new:hover a {
-    max-height: 50px;
+    max-height: 5rem;
 }

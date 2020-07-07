@@ -141,19 +141,49 @@ const Topic = () => {
                                         </li>
                                         {editing && (
                                             <li>
-                                                <AddNew
-                                                    onAdd={() => {
-                                                        setResources([
-                                                            ...resources.slice(0, i + 1),
-                                                            {
-                                                                kind: 'text',
-                                                                name: 'new',
-                                                                text: ' '
-                                                            },
-                                                            ...resources.slice(i + 1)
-                                                        ]);
-                                                    }}>
-                                                    New Resource
+                                                <AddNew>
+                                                    <span
+                                                        onAdd={() => {
+                                                            setResources([
+                                                                ...resources.slice(0, i + 1),
+                                                                {
+                                                                    kind: 'text',
+                                                                    name: 'new',
+                                                                    payload: ' '
+                                                                },
+                                                                ...resources.slice(i + 1)
+                                                            ]);
+                                                        }}>
+                                                        New Text
+                                                    </span>
+                                                    <span
+                                                        onAdd={() => {
+                                                            setResources([
+                                                                ...resources.slice(0, i + 1),
+                                                                {
+                                                                    kind: 'video',
+                                                                    name: 'new',
+                                                                    payload: ' '
+                                                                },
+                                                                ...resources.slice(i + 1)
+                                                            ]);
+                                                        }}>
+                                                        New Video
+                                                    </span>
+                                                    <span
+                                                        onAdd={() => {
+                                                            setResources([
+                                                                ...resources.slice(0, i + 1),
+                                                                {
+                                                                    kind: 'test',
+                                                                    name: 'new',
+                                                                    payload: ' '
+                                                                },
+                                                                ...resources.slice(i + 1)
+                                                            ]);
+                                                        }}>
+                                                        New Test
+                                                    </span>
                                                 </AddNew>
                                             </li>
                                         )}
