@@ -44,10 +44,10 @@ const Navbar = () => {
 
     return (
         <Fragment>
-            <nav className='navbar bg-dark'>
-                <h1>
-                    <Link to={'/'}>Study Tube</Link>
-                </h1>
+            <nav className='navbar'>
+                <Link to={'/'} className='project-name'>
+                    Classity
+                </Link>
                 <ul>
                     <li>
                         <a href='#!'>Explore</a>
