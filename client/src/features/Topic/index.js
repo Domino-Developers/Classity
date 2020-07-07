@@ -41,6 +41,8 @@ const Topic = () => {
 
     const isInstructor = !loading && isAuthenticated && course.instructor._id === id;
 
+    if (editing && !isInstructor) edit(false);
+
     if (!resources) setResources(topic.coreResources);
     if (!description.current) description.current = topic.description || 'No description yet.';
 
@@ -113,6 +115,23 @@ const Topic = () => {
                 <Tabs.Container>
                     <Tabs.Tab name='Topic content'>
                         <ul className='topic-content'>
+                            {editing && (
+                                <li>
+                                    <AddNew
+                                        onAdd={() => {
+                                            setResources([
+                                                {
+                                                    kind: 'text',
+                                                    name: 'new',
+                                                    text: ' '
+                                                },
+                                                ...resources
+                                            ]);
+                                        }}>
+                                        New Resource
+                                    </AddNew>
+                                </li>
+                            )}
                             {resources &&
                                 resources.map((res, i) => (
                                     <Fragment key={i}>
@@ -127,7 +146,8 @@ const Topic = () => {
                                                     }}
                                                 />
                                             )}
-                                            <Link to='#!'>
+                                            <Link
+                                                to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
                                                 {icons}
                                                 <Editable
                                                     html={res.name}

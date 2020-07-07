@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator');
 
 // middlewares
@@ -28,17 +29,13 @@ router.get('/:topicId', classroomAuth, async (req, res) => {
             .populate('resourceDump')
             .populate('doubt');
         if (!topic) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Topic not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Topic not found' }] });
         }
 
         res.json(topic);
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Topic Id' }] });
+            return res.status(400).json({ errors: [{ msg: 'Invalid Topic Id' }] });
         }
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
@@ -57,11 +54,9 @@ router.patch('/:topicId', instructorAuth, async (req, res) => {
         if (name) change.name = name;
         if (description) change.description = description;
 
-        const topic = await Topic.findOneAndUpdate(
-            { _id: req.params.topicId },
-            change,
-            { new: true }
-        );
+        const topic = await Topic.findOneAndUpdate({ _id: req.params.topicId }, change, {
+            new: true
+        });
 
         res.json(topic);
     } catch (err) {
@@ -81,10 +76,7 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
             if (
                 !['text', 'video', 'test'].includes(resource.kind) ||
                 !resource.name ||
-                (!resource.payload &&
-                    !resource.text &&
-                    !resource.url &&
-                    !resource.testId)
+                (!resource.payload && !resource.text && !resource.url && !resource.testId)
             ) {
                 throw new Error('Bad Request');
             }
@@ -98,7 +90,8 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
                 name: resource.name,
                 text: resource.payload,
                 url: resource.payload,
-                testId: resource.payload
+                testId: resource.payload,
+                _id: resource._id || new mongoose.Types.ObjectId().toHexString()
             };
         });
 
@@ -123,42 +116,33 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
  * @description Add student's resource/doubt
  * @access		private + studentOnly
  */
-router.put(
-    '/:topicId/comment/:type(doubt|resourceDump)',
-    studentAuth,
-    async (req, res) => {
-        try {
-            const { type, topicId } = req.params;
-            const user = req.user.id;
-            const text = req.body.text;
+router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (req, res) => {
+    try {
+        const { type, topicId } = req.params;
+        const user = req.user.id;
+        const text = req.body.text;
 
-            if (!text) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'Text not found' }] });
-            }
-
-            const comment = new Comment({ user, topic: topicId, text });
-            const commentPromise = comment.save();
-
-            const topicPromise = Topic.findOneAndUpdate(
-                { _id: topicId },
-                { $push: { [type]: comment.id } },
-                { new: true }
-            ).populate(type);
-
-            const [newTopic] = await Promise.all([
-                topicPromise,
-                commentPromise
-            ]);
-
-            res.json(newTopic[type]);
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        if (!text) {
+            return res.status(400).json({ errors: [{ msg: 'Text not found' }] });
         }
+
+        const comment = new Comment({ user, topic: topicId, text });
+        const commentPromise = comment.save();
+
+        const topicPromise = Topic.findOneAndUpdate(
+            { _id: topicId },
+            { $push: { [type]: comment.id } },
+            { new: true }
+        ).populate(type);
+
+        const [newTopic] = await Promise.all([topicPromise, commentPromise]);
+
+        res.json(newTopic[type]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
-);
+});
 
 /**
  * @route		POST api/topic/:topicId/test
@@ -197,8 +181,7 @@ router.post(
             if (ValidationErrors) {
                 const error_messages = {},
                     errors = ValidationErrors.errors;
-                for (let field in errors)
-                    error_messages[field] = errors[field].message;
+                for (let field in errors) error_messages[field] = errors[field].message;
                 return res.status(400).json({ errors: error_messages });
             }
 
@@ -246,9 +229,7 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
         const comment = await Comment.findById(commentId).select('user');
 
         if (!comment) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Comment not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Comment not found' }] });
         }
 
         if (String(comment.user) !== req.user.id) {
@@ -285,45 +266,35 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
  * @description Delete a core resource
  * @access		private + instructorOnly
  */
-router.delete(
-    '/:topicId/coreResource/:resourceId',
-    instructorAuth,
-    async (req, res) => {
-        try {
-            const { topicId, resourceId } = req.params;
+router.delete('/:topicId/coreResource/:resourceId', instructorAuth, async (req, res) => {
+    try {
+        const { topicId, resourceId } = req.params;
 
-            const topic = await Topic.findById(topicId).select(
-                'course coreResources'
-            );
-            const coreResources = topic.coreResources;
+        const topic = await Topic.findById(topicId).select('course coreResources');
+        const coreResources = topic.coreResources;
 
-            const index = coreResources.findIndex(
-                resource => String(resource.id) === resourceId
-            );
+        const index = coreResources.findIndex(resource => String(resource.id) === resourceId);
 
-            if (index === -1) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'Core resource not found' }] });
-            }
-
-            if (coreResources[index].kind === 'test') {
-                await Test.findOneAndDelete({
-                    _id: coreResources[index].testId
-                });
-            }
-
-            coreResources.splice(index, 1);
-
-            topic.coreResources = coreResources;
-            await topic.save();
-
-            res.json({ coreResources });
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        if (index === -1) {
+            return res.status(400).json({ errors: [{ msg: 'Core resource not found' }] });
         }
+
+        if (coreResources[index].kind === 'test') {
+            await Test.findOneAndDelete({
+                _id: coreResources[index].testId
+            });
+        }
+
+        coreResources.splice(index, 1);
+
+        topic.coreResources = coreResources;
+        await topic.save();
+
+        res.json({ coreResources });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
-);
+});
 
 module.exports = router;

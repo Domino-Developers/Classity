@@ -41,7 +41,7 @@ const TopBar = ({ params, setExist }) => {
     navList.push({ name: topic.name, link: `/course/${courseId}/topic/${topicId}` });
 
     if (resourceId) {
-        const resource = topic.coreResources.find(res => res.id === resourceId);
+        const resource = topic.coreResources.find(res => res._id === resourceId);
         if (!resource) {
             exist = false;
             return <Loading />;
