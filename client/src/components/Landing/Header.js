@@ -1,26 +1,25 @@
 import React from 'react';
-import { setAlert } from '../../features/Alerts/alertSlice';
+import { useHistory } from 'react-router-dom';
 
 import Button from '../Button';
-import { useDispatch } from 'react-redux';
 
 const Header = () => {
-    const dispatch = useDispatch();
+    const history = useHistory();
 
     return (
         <section>
             <header>
                 <div className='hero-box'>
                     <h1 className='hero-text'>
-                        Better Platform
+                        Bunk Your Classes,
                         <br />
-                        for Better Future!
+                        Not your studies .
                     </h1>
                     <Button
                         text='Join for Free'
                         full
                         onClick={() => {
-                            dispatch(setAlert('test', 'success'));
+                            history.push('?authMode=register');
                         }}
                     />
                 </div>
