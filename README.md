@@ -1,4 +1,3 @@
 ## SummerUP project
 
-studytube
-
+Classity

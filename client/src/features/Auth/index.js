@@ -21,31 +21,25 @@ const Auth = props => {
             <div className='overlay-container'>
                 <div className='auth-container'>
                     <div className='auth-header'>
-                        <h1>StudyTube</h1>
+                        <h1 className='project-name'>Classity</h1>
                         <ul className='auth-nav'>
                             <li>
                                 <Link
-                                    className={
-                                        mode === 'register' ? 'active' : ''
-                                    }
-                                    to={`${path}?authMode=register`}
-                                >
+                                    className={mode === 'register' ? 'active' : ''}
+                                    to={`${path}?authMode=register`}>
                                     Sign Up
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     className={mode === 'login' ? 'active' : ''}
-                                    to={`${path}?authMode=login`}
-                                >
+                                    to={`${path}?authMode=login`}>
                                     Log in
                                 </Link>
                             </li>
                         </ul>
                     </div>
-                    <div className='auth-card'>
-                        {mode === 'login' ? <Login /> : <Register />}
-                    </div>
+                    <div className='auth-card'>{mode === 'login' ? <Login /> : <Register />}</div>
                 </div>
             </div>
             {isAuthenticated && <Redirect to={path} />}
