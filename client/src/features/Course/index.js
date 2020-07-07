@@ -112,6 +112,7 @@ const Course = () => {
 
             setSave(true);
             await Promise.all(promises);
+            await mutate();
             setSave(false);
             edit(false);
         } catch (err) {

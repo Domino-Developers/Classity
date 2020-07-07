@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useSelector, useDispatch } from 'react-redux';
@@ -29,13 +29,17 @@ const Topic = () => {
     } = useSelector(state => state.auth);
 
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
-    const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
+    const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
 
     const [resources, setResources] = useState();
     const description = useRef();
+
+    useEffect(() => {
+        if (topic) setResources(topic.coreResources);
+    }, [topic]);
 
     if (!course || !topic) return <Loading />;
 
@@ -58,6 +62,7 @@ const Topic = () => {
 
             setSave(true);
             await Promise.all(promises);
+            await mutate();
             setSave(false);
             edit(false);
         } catch (err) {
@@ -117,18 +122,46 @@ const Topic = () => {
                         <ul className='topic-content'>
                             {editing && (
                                 <li>
-                                    <AddNew
-                                        onAdd={() => {
-                                            setResources([
-                                                {
-                                                    kind: 'text',
-                                                    name: 'new',
-                                                    text: ' '
-                                                },
-                                                ...resources
-                                            ]);
-                                        }}>
-                                        New Resource
+                                    <AddNew>
+                                        <span
+                                            onAdd={() => {
+                                                setResources([
+                                                    {
+                                                        kind: 'text',
+                                                        name: 'new',
+                                                        payload: ' '
+                                                    },
+                                                    ...resources
+                                                ]);
+                                            }}>
+                                            New Text
+                                        </span>
+                                        <span
+                                            onAdd={() => {
+                                                setResources([
+                                                    {
+                                                        kind: 'video',
+                                                        name: 'new',
+                                                        payload: ' '
+                                                    },
+                                                    ...resources
+                                                ]);
+                                            }}>
+                                            New Video
+                                        </span>
+                                        <span
+                                            onAdd={() => {
+                                                setResources([
+                                                    {
+                                                        kind: 'test',
+                                                        name: 'new',
+                                                        payload: ' '
+                                                    },
+                                                    ...resources
+                                                ]);
+                                            }}>
+                                            New Test
+                                        </span>
                                     </AddNew>
                                 </li>
                             )}
