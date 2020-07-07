@@ -4,10 +4,7 @@ const { course, comment, text } = require('./common');
 const Comment = require('./Comment');
 const Test = require('./Test');
 
-const coreResourceSchema = new mongoose.Schema(
-    { name: text },
-    { discriminatorKey: 'kind' }
-);
+const coreResourceSchema = new mongoose.Schema({ name: text }, { discriminatorKey: 'kind' });
 
 const TopicSchema = new mongoose.Schema({
     name: text,
@@ -39,17 +36,12 @@ TopicSchema.path('coreResources').discriminator(
 TopicSchema.pre('remove', async function (next) {
     try {
         const commentIds = [].concat(this.doubt, this.resourceDump);
-        const testIds = this.coreResources.filter(
-            resource => resource.kind === 'test'
-        );
+        const testIds = this.coreResources.filter(resource => resource.kind === 'test');
 
         const commentPromise = Comment.find({ _id: { $in: commentIds } });
         const testPromise = Test.find({ _id: { $in: testIds } });
 
-        const [comments, tests] = await Promise.all([
-            commentPromise,
-            testPromise
-        ]);
+        const [comments, tests] = await Promise.all([commentPromise, testPromise]);
 
         const commentPromises = [];
         for (let comment of comments) {

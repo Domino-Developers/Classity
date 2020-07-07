@@ -18,6 +18,11 @@
     margin: auto;
 }
 
+.video-url-form input {
+    margin: 1rem;
+    width: 80%;
+}
+
 /* Text */
 .text-heading {
     font-size: 2.125rem;
