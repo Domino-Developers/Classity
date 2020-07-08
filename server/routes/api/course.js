@@ -85,6 +85,48 @@ router.get('/', async (req, res) => {
 });
 
 /**
+ * @route		GET api/course/custom
+ * @description Get Map of courses and courseprogress of courseIds passed
+ * @access		private
+ */
+router.get('/custom', auth, async (req, res) => {
+    const coursesReq = req.body;
+
+    try {
+        const courseIds = coursesReq.map(c => c._id);
+        const courseProgressIds = coursesReq.map(c => c.courseProgressId).filter(c => c);
+
+        const coursePromise = Course.find({ _id: { $in: courseIds } })
+            .populate('instructor', 'name -_id')
+            .select(['name', 'instructor', 'tags', 'avgRating']);
+        const courseProgressesPromise = CourseProgress.find({ _id: { $in: courseProgressIds } });
+
+        const [courses, courseProgresses] = await Promise.all([
+            coursePromise,
+            courseProgressesPromise
+        ]);
+
+        let response = {};
+
+        let courseProgressIndex = 0;
+        coursesReq.forEach((c, i) => {
+            response[c._id] = {
+                course: courses[i]
+            };
+            if (c.courseProgressId) {
+                response[c._id]['courseProgress'] = courseProgresses[courseProgressIndex];
+                courseProgressIndex++;
+            }
+        });
+
+        return res.json(response);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
  * @route		PUT api/course/:courseId/topic
  * @description Add a topic to course
  * @access		private + instructorOnly
@@ -234,7 +276,9 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
-        let coursesEnrolled = await User.findById(req.user.id).lean().select('coursesEnrolled -_id');
+        let coursesEnrolled = await User.findById(req.user.id)
+            .lean()
+            .select('coursesEnrolled -_id');
         coursesEnrolled = coursesEnrolled['coursesEnrolled'];
         const courseProgressId = String(coursesEnrolled[courseId]);
 
@@ -365,9 +409,10 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
         const studentPromises = [];
         for (let studentId of course.students) {
             studentPromises.push(
-                User.findOneAndUpdate({ _id: studentId }, { $unset: { [`coursesEnrolled.${courseId}`]: '' } }).select(
-                    'coursesEnrolled'
-                )
+                User.findOneAndUpdate(
+                    { _id: studentId },
+                    { $unset: { [`coursesEnrolled.${courseId}`]: '' } }
+                ).select('coursesEnrolled')
             );
         }
 
@@ -400,7 +445,11 @@ router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
         const topic = await Topic.findById(topicId);
         const topicPromise = topic.remove();
 
-        const coursePromise = Course.findOneAndUpdate({ _id: courseId }, { $pull: { topics: topicId } }, { new: true })
+        const coursePromise = Course.findOneAndUpdate(
+            { _id: courseId },
+            { $pull: { topics: topicId } },
+            { new: true }
+        )
             .select('topics')
             .populate('topics', 'name');
 
