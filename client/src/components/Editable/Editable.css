@@ -1,5 +1,7 @@
 [contenteditable='true'] {
     outline: none;
+    border: 1px solid var(--dark-grey-color);
+    transition: border 0.2s;
 }
 
 [contenteditable='true']:focus,
