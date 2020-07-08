@@ -64,6 +64,10 @@ const authSlice = createSlice({
                 coursesEnrolled: user.coursesEnrolled,
                 coursesCreated: user.coursesCreated
             };
+        },
+        addEnrolledCourse: (state, action) => {
+            const { courseId, courseProgressId } = action.payload;
+            state.userData.coursesEnrolled[courseId] = courseProgressId;
         }
     }
 });
@@ -73,11 +77,11 @@ const {
     authStart,
     authSuccess,
     fetchUserStart,
-    fetchUserSuccess
+    fetchUserSuccess,
+    addEnrolledCourse
 } = authSlice.actions;
 
-// exporting for logout
-export { authRejected };
+export { authRejected, addEnrolledCourse };
 
 export default authSlice.reducer;
 
