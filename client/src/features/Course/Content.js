@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
 
 const Content = props => {
     const { editing, course, courseChanges } = props;
-    const [topics, setTopics] = useState([...course.topics]);
+    const [topics, setTopics] = useState(course.topics);
     courseChanges.current.topics = topics;
+
+    useEffect(() => {
+        setTopics(course.topics);
+    }, [course.topics]);
 
     return (
         <section>
@@ -16,8 +20,7 @@ const Content = props => {
                         onAdd={() => {
                             setTopics([{ name: 'New Topic', coreResources: [] }, ...topics]);
                             courseChanges.current.topics = topics;
-                        }}
-                    >
+                        }}>
                         New Topic
                     </Collapse.Item>
                 </Collapse.Head>
@@ -37,8 +40,7 @@ const Content = props => {
                         onDelete={() => {
                             setTopics([...topics.slice(0, i), ...topics.slice(i + 1)]);
                             courseChanges.current.topics = topics;
-                        }}
-                    >
+                        }}>
                         {topic.coreResources.map((res, i) => (
                             <Collapse.Item key={i}> {res.name} </Collapse.Item>
                         ))}
@@ -50,8 +52,7 @@ const Content = props => {
                                     ...topics.slice(i + 1)
                                 ]);
                                 courseChanges.current.topics = topics;
-                            }}
-                        >
+                            }}>
                             New Topic
                         </Collapse.Item>
                     </Collapse.Head>

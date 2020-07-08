@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import stripHtml from '../../utils/stripHtml';
+
 import './Breadcrumb.css';
 
 const Container = props => {
@@ -15,7 +17,7 @@ const Item = props => {
     return (
         <li>
             <Link to={to || '#!'} className='bread-link'>
-                {children}
+                {stripHtml(children)}
             </Link>
         </li>
     );
