@@ -179,9 +179,7 @@ const Topic = () => {
                                                     }}
                                                 />
                                             )}
-                                            <Link
-                                                to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
-                                                {icons}
+                                            {editing ? (
                                                 <Editable
                                                     html={res.name}
                                                     tagName='span'
@@ -190,7 +188,13 @@ const Topic = () => {
                                                     }}
                                                     disabled={!editing}
                                                 />
-                                            </Link>
+                                            ) : (
+                                                <Link
+                                                    to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
+                                                    {icons}
+                                                    <Editable html={res.name} tagName='span' />
+                                                </Link>
+                                            )}
                                         </li>
                                         {editing && (
                                             <li>
