@@ -47,21 +47,6 @@ const Resource = () => {
         }
     };
 
-    /* const resources = [
-        {
-            kind: 'text',
-            name: 'Lorem ipsum dolor sit amet.',
-            text:
-                'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero sit dolores veritatis amet in reiciendis optio tempore et voluptatem excepturi, pariatur incidunt non enim nam cumque quod autem, quos aut consectetur reprehenderit tenetur ad laboriosam perspiciatis recusandae? Amet aperiam iste ab sed soluta quia quasi possimus praesentium illo ipsam cum, voluptatem consectetur fugiat nam dolorem a, optio dignissimos laudantium vel enim? Incidunt delectus numquam, dignissimos eaque deleniti explicabo architecto consectetur quibusdam dolorem officiis repellat aut accusamus a, tenetur odit quasi!'
-        },
-        {
-            kind: 'test',
-            name: 'Quiz1',
-            passScore: '80',
-            score: '100'
-        }
-    ]; */
-
     const templates = {
         video: props => <Video {...props} instructor={isInstructor} update={update} />,
         text: props => <TextRes {...props} instructor={isInstructor} update={update} />,

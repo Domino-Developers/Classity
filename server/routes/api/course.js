@@ -11,6 +11,7 @@ const Course = require('../../models/Course');
 const User = require('../../models/User');
 const Topic = require('../../models/Topic');
 const CourseProgress = require('../../models/CourseProgress');
+const { course } = require('../../models/common');
 
 // Initialize router
 const router = express.Router();
@@ -90,7 +91,10 @@ router.get('/', async (req, res) => {
  * @access		private
  */
 router.get('/custom', auth, async (req, res) => {
-    const coursesReq = req.body;
+    if (!req.query.source) return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+
+    let { source: coursesReqJson } = req.query;
+    const coursesReq = JSON.parse(coursesReqJson);
 
     try {
         const courseIds = coursesReq.map(c => c._id);
@@ -108,14 +112,14 @@ router.get('/custom', auth, async (req, res) => {
 
         let response = {};
 
-        let courseProgressIndex = 0;
         coursesReq.forEach((c, i) => {
             response[c._id] = {
-                course: courses[i]
+                course: courses.find(co => co._id.toString() === c._id)
             };
             if (c.courseProgressId) {
-                response[c._id]['courseProgress'] = courseProgresses[courseProgressIndex];
-                courseProgressIndex++;
+                response[c._id]['courseProgress'] = courseProgresses.find(
+                    cp => cp._id.toString() === c.courseProgressId
+                );
             }
         });
 

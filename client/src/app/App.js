@@ -11,8 +11,7 @@ import Alerts from '../features/Alerts';
 import { loadUser, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
-import ContentContainer from '../components/ContentContainer';
-import Resource from '../features/Resource';
+import PrivateRoute from '../components/PrivateRoute';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -20,6 +19,13 @@ const Course = loadable(() => import('../features/Course'), {
 });
 const Landing = loadable(() => import('../components/Landing'), {
     fallback: <Loading />
+});
+const ContentContainer = loadable(() => import('../components/ContentContainer'), {
+    fallback: <Loading />
+});
+
+const Dashboard = loadable(() => import('../features/Dashboard'), {
+    fallback: <div>Dashboard Loading ... </div>
 });
 
 function App() {
@@ -46,7 +52,7 @@ function App() {
                             path='/course/:courseId/topic/:topicId'
                             render={props => <ContentContainer {...props} />}
                         />
-                        <Route path='/resource' component={Resource} />
+                        <PrivateRoute exact path='/dashboard' component={Dashboard} />
                     </Switch>
                 </div>
             </Router>
