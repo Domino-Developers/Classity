@@ -1,0 +1,9 @@
+.dashboard-heading {
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-weight: 600;
+    font-size: 3rem;
+    padding-bottom: 0.5rem;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--dark-grey-color);
+}

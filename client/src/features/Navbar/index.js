@@ -17,7 +17,7 @@ const Navbar = () => {
     const authLinks = (
         <Fragment>
             <li>
-                <a href='#!'>Dashboard</a>
+                <Link to='/dashboard'>Dashboard</Link>
             </li>
             <li>
                 <a

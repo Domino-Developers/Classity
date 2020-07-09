@@ -21,6 +21,16 @@ export default {
         }
     },
 
+    // custom getting
+    async getCustomCoursesMin(query) {
+        try {
+            const res = await api.get('/api/course/custom', { query: query });
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
+    },
+
     // Get course all course data
     async get(courseId) {
         try {

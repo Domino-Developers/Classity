@@ -1,16 +1,24 @@
 import axios from 'axios';
 
 function getConfig(payload) {
-    const config = {
+    let config = {
         headers: {
             'Content-Type': 'application/json'
         }
     };
     if (!payload.body) delete config.headers['Content-Type'];
+    return config;
 }
 
 export default {
-    get(url) {
+    get(url, payload) {
+        if (payload)
+            return axios.get(url, {
+                params: {
+                    source_content_type: 'application/json',
+                    source: JSON.stringify(payload.query)
+                }
+            });
         return axios.get(url);
     },
     post(url, payload = {}) {
