@@ -5,7 +5,7 @@ export default {
     async add(topicId, type, comment) {
         try {
             const res = await api.put(`/api/topic/${topicId}/comment/${type}`, {
-                body: JSON.stringify(comment)
+                body: comment
             });
             return res.data;
         } catch (err) {
@@ -16,9 +16,7 @@ export default {
     // Delete doubt/resourceDump
     async delete(topicId, comId) {
         try {
-            const res = await api.delete(
-                `/api/topic/${topicId}/comment/${comId}`
-            );
+            const res = await api.delete(`/api/topic/${topicId}/comment/${comId}`);
             return res.data;
         } catch (err) {
             throw err.response.data;
@@ -49,7 +47,7 @@ export default {
     async addReply(commentId, reply) {
         try {
             const res = await api.put(`/api/comment/${commentId}/reply`, {
-                body: JSON.stringify(reply)
+                body: reply
             });
 
             return res.data;
@@ -61,9 +59,7 @@ export default {
     // Delete a reply
     async deleteReply(commentId, replyId) {
         try {
-            const res = await api.delete(
-                `/api/comment/${commentId}/reply/${replyId}`
-            );
+            const res = await api.delete(`/api/comment/${commentId}/reply/${replyId}`);
             return res.data;
         } catch (err) {
             throw err.response.data;

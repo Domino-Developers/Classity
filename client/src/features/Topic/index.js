@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
+import commentApi from '../../api/comment';
 
 import Editable from '../../components/Editable';
 import Tabs from '../../components/Tabs';
@@ -14,6 +15,7 @@ import Comments from '../Comments';
 import AddNew from '../../components/AddNew';
 import Delete from '../../components/Delete';
 import Button from '../../components/Button';
+import Html from '../../components/Html';
 import { useEdit } from '../../utils/hooks';
 import { setAlert } from '../Alerts/alertSlice';
 
@@ -38,7 +40,7 @@ const Topic = () => {
     const description = useRef();
 
     useEffect(() => {
-        if (topic) setResources(topic.coreResources);
+        if (topic) setResources([...topic.coreResources]);
     }, [topic]);
 
     if (!course || !topic) return <Loading />;
@@ -47,7 +49,7 @@ const Topic = () => {
 
     if (editing && !isInstructor) edit(false);
 
-    if (!resources) setResources(topic.coreResources);
+    if (!resources) setResources([...topic.coreResources]);
     if (!description.current) description.current = topic.description || 'No description yet.';
 
     const saveTopic = async () => {
@@ -78,6 +80,33 @@ const Topic = () => {
     const cancel = () => {
         edit(false);
         window.location.reload(false);
+    };
+
+    const addComment = async (type, comment, clear) => {
+        try {
+            await commentApi.add(topic._id, type, comment);
+
+            mutate({
+                ...topic,
+                [type]: [
+                    ...topic[type],
+                    {
+                        text: comment.text,
+                        user: id,
+                        likes: [],
+                        reply: [],
+                        date: Date.now()
+                    }
+                ]
+            });
+
+            clear();
+        } catch (err) {
+            if (err.errors) {
+                const errors = err.errors;
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+            }
+        }
     };
 
     const icons = (
@@ -142,7 +171,8 @@ const Topic = () => {
                                                     {
                                                         kind: 'video',
                                                         name: 'new',
-                                                        payload: ' '
+                                                        payload:
+                                                            'https://www.youtube.com/watch?v=I7CfaDYzTVM'
                                                     },
                                                     ...resources
                                                 ]);
@@ -192,7 +222,7 @@ const Topic = () => {
                                                 <Link
                                                     to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
                                                     {icons}
-                                                    <Editable html={res.name} tagName='span' />
+                                                    <Html tag='span'>{res.name}</Html>
                                                 </Link>
                                             )}
                                         </li>
@@ -220,7 +250,8 @@ const Topic = () => {
                                                                 {
                                                                     kind: 'video',
                                                                     name: 'new',
-                                                                    payload: ' '
+                                                                    payload:
+                                                                        'https://www.youtube.com/watch?v=I7CfaDYzTVM'
                                                                 },
                                                                 ...resources.slice(i + 1)
                                                             ]);
@@ -250,12 +281,24 @@ const Topic = () => {
                     </Tabs.Tab>
                     {!editing && (
                         <Tabs.Tab name='Resource dump'>
-                            <Comments comments={topic.resourceDump} user={id} />
+                            <Comments
+                                comments={topic.resourceDump}
+                                user={id}
+                                newText='Share a resource'
+                                onAdd={(comment, clear) =>
+                                    addComment('resourceDump', comment, clear)
+                                }
+                            />
                         </Tabs.Tab>
                     )}
                     {!editing && (
                         <Tabs.Tab name='Doubts'>
-                            <Comments comments={topic.doubt} user={id} />
+                            <Comments
+                                comments={topic.doubt}
+                                user={id}
+                                newText='Ask a doubt'
+                                onAdd={(comment, clear) => addComment('doubt', comment, clear)}
+                            />
                         </Tabs.Tab>
                     )}
                 </Tabs.Container>

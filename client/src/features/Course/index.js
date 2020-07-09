@@ -155,13 +155,8 @@ const Course = () => {
                 />
                 <Content editing={editing} course={course} courseChanges={courseChanges} />
 
-                {!editing &&
-                    (course.reviews.length > 0 ? (
-                        <Feedback course={course} />
-                    ) : (
-                        <p>No reviews yet</p>
-                    ))}
-                {!editing && course.reviews.length > 0 && <Review reviews={course.reviews} />}
+                {!editing && course.reviews.length > 0 && <Feedback course={course} />}
+                {!editing && <Review />}
             </div>
         </Fragment>
     );

@@ -9,6 +9,10 @@
     text-align: center;
 }
 
+.comments li.new-comment {
+    padding-top: 0;
+}
+
 .is-reply .comment {
     width: 80%;
 }
@@ -104,7 +108,7 @@
 }
 
 /* Input */
-.comment input {
+.comments input {
     font-size: 1rem;
     border: 1px solid var(--dark-grey-color);
     padding: 5px 0.5rem;
@@ -112,15 +116,18 @@
     width: 80%;
 }
 
-.comment input:focus {
+.comments input:focus {
     border: 1px solid var(--primary-color);
 }
 
-.comment .add a {
-    display: none;
+.comments .add a {
     margin-left: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s;
 }
 
-.comment .add a.active {
-    display: inline;
+.comments .add a.active {
+    opacity: 1;
+    visibility: visible;
 }

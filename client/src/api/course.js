@@ -55,7 +55,7 @@ export default {
     async review(courseId, reviewData) {
         try {
             const res = await api.put(`/api/course/${courseId}/review`, {
-                body: JSON.stringify(reviewData)
+                body: reviewData
             });
             return res.data;
         } catch (err) {
