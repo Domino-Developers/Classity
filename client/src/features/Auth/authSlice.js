@@ -68,6 +68,10 @@ const authSlice = createSlice({
         addEnrolledCourse: (state, action) => {
             const { courseId, courseProgressId } = action.payload;
             state.userData.coursesEnrolled[courseId] = courseProgressId;
+        },
+        addCreatedCourse: (state, action) => {
+            const { courseId } = action.payload;
+            state.userData.coursesCreated.push(courseId);
         }
     }
 });
@@ -78,10 +82,11 @@ const {
     authSuccess,
     fetchUserStart,
     fetchUserSuccess,
-    addEnrolledCourse
+    addEnrolledCourse,
+    addCreatedCourse
 } = authSlice.actions;
 
-export { authRejected, addEnrolledCourse };
+export { authRejected, addEnrolledCourse, addCreatedCourse };
 
 export default authSlice.reducer;
 

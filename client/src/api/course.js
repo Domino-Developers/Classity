@@ -5,7 +5,7 @@ export default {
     async add(courseData) {
         try {
             const res = await api.post('/api/course', {
-                body: JSON.stringify(courseData)
+                body: courseData
             });
             return res.data;
         } catch (err) {

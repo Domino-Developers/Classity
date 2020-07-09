@@ -1,9 +1,14 @@
-import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import React, { Fragment, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import useSWR from 'swr';
-import course from '../../api/course';
+
+import courseStore from '../../api/course';
 import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
+import Button from '../../components/Button';
+import { addCourse } from './helper';
+import { addCreatedCourse } from '../Auth/authSlice';
 
 import './Dashboard.css';
 
@@ -22,15 +27,29 @@ const Dashboard = () => {
     ];
 
     const { data, error } = useSWR(`get-custom-course-min-${JSON.stringify(reqBody)}`, () =>
-        course.getCustomCoursesMin(reqBody)
+        courseStore.getCustomCoursesMin(reqBody)
     );
-    console.log('data', data);
+    const [creating, setCreating] = useState(false);
+    const history = useHistory();
+    const dispatch = useDispatch();
+
     if (loading || !data) return <Loading />;
     if (error && navigator.onLine) return <div>Opps</div>;
 
     return (
         <div className='container'>
-            <h1 className='dashboard-heading'>Dashboard</h1>
+            <div className='dashboard-header'>
+                <h1 className='dashboard-heading'>Dashboard</h1>
+                <Button
+                    text='Create a course'
+                    onClick={() =>
+                        addCourse(history, setCreating, id =>
+                            dispatch(addCreatedCourse({ courseId: id }))
+                        )
+                    }
+                    loading={creating}
+                />
+            </div>
             <Tabs.Container>
                 <Tabs.Tab name='Enrolled'>
                     {Object.keys(coursesEnrolled).map((id, i) => {
