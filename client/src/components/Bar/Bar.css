@@ -1,0 +1,12 @@
+.bar {
+    width: 100%;
+    height: 1rem;
+    background-color: var(--grey-color);
+    border-radius: 5px;
+}
+
+.bar-filled {
+    height: 100%;
+    background-color: var(--dark-grey-color);
+    border-radius: 5px;
+}

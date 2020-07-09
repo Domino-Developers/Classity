@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Rating from '../../components/Rating';
+import Bar from '../../components/Bar';
 
 const Feedback = props => {
     const { course } = props;
@@ -18,37 +19,27 @@ const Feedback = props => {
                     <p>{course.avgRating}</p>
                     <Rating rating={course.avgRating} />
                 </div>
-                <div className='bar bar-5'>
-                    <div className='bar-filled' style={{ width: `${percent(5)}%` }}></div>
-                </div>
+                <Bar filled={percent(5)} />
                 <div className='rating rating-5'>
                     <Rating rating={5} />
                     <p>{percent(5)}%</p>
                 </div>
-                <div className='bar bar-4'>
-                    <div className='bar-filled' style={{ width: `${percent(4)}%` }}></div>
-                </div>
+                <Bar filled={percent(4)} />
                 <div className='rating rating-4'>
                     <Rating rating={4} />
                     <p>{percent(4)}%</p>
                 </div>
-                <div className='bar bar-3'>
-                    <div className='bar-filled' style={{ width: `${percent(3)}%` }}></div>
-                </div>
+                <Bar filled={percent(3)} />
                 <div className='rating rating-3'>
                     <Rating rating={3} />
                     <p>{percent(3)}%</p>
                 </div>
-                <div className='bar bar-2'>
-                    <div className='bar-filled' style={{ width: `${percent(2)}%` }}></div>
-                </div>
+                <Bar filled={percent(2)} />
                 <div className='rating rating-2'>
                     <Rating rating={2} />
                     <p>{percent(2)}%</p>
                 </div>
-                <div className='bar bar-1'>
-                    <div className='bar-filled' style={{ width: `${percent(1)}%` }}></div>
-                </div>
+                <Bar filled={percent(1)} />
                 <div className='rating rating-1'>
                     <Rating rating={1} />
                     <p>{percent(1)}%</p>
