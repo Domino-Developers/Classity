@@ -16,6 +16,7 @@ import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
 import './Course.css';
+import { addEnrolledCourse } from '../Auth/authSlice';
 
 const Course = () => {
     // hooks
@@ -54,8 +55,9 @@ const Course = () => {
         }
         try {
             setEnrolling(true);
-            await courseApi.enroll(course._id);
-            mutate({ ...course, students: [...course.students, id] });
+            const courseProgressId = (await courseApi.enroll(course._id))._id;
+            dispatch(addEnrolledCourse({ courseId, courseProgressId }));
+            await mutate({ ...course, students: [...course.students, id] });
             setEnrolling(false);
         } catch (err) {
             if (err.errors) {
