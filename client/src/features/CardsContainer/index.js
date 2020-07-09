@@ -25,7 +25,7 @@ const CardsContainer = props => {
     return (
         <div className='cards-container'>
             {data ? (
-                data.map((course, i) => <Card course={course} key={i} />)
+                data.map((course, i) => <Card course={course} key={i} progress={30} />)
             ) : (
                 <Loading />
             )}

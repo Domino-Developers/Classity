@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Rating from '../../components/Rating';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +12,8 @@ const CourseCard = props => {
         name
     } = props.course;
 
+    const progress = props.progress;
+
     return (
         <Link to={`/course/${_id}`}>
             <div className='course-card'>
@@ -24,11 +26,23 @@ const CourseCard = props => {
                     </Html>
                 </div>
                 <div className='card-ins'>{instructor}</div>
-                <div className='card-rating'>
-                    <Rating rating={avgRating} />
-                    <p>{avgRating.toFixed(1)}</p>
-                    {/* <p>(1000)</p> */}
-                </div>
+                {!progress ? (
+                    <div className='card-rating'>
+                        <Rating rating={avgRating} />
+                        <p>{avgRating.toFixed(1)}</p>
+                    </div>
+                ) : (
+                    <Fragment>
+                        <div className='card-last-study'>Last studied: {'10 days ago'}</div>
+                        <div className='card-progress' style={{ width: `${progress}%` }}></div>
+                        <div className='card-streak'>
+                            <span className='number'>
+                                <i className='fas fa-fire'></i>10
+                            </span>
+                            <p>streak</p>
+                        </div>
+                    </Fragment>
+                )}
             </div>
         </Link>
     );
