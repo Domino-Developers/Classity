@@ -4,11 +4,11 @@ import Collapse from '../../components/Collapse';
 
 const Content = props => {
     const { editing, course, courseChanges } = props;
-    const [topics, setTopics] = useState(course.topics);
+    const [topics, setTopics] = useState([...course.topics]);
     courseChanges.current.topics = topics;
 
     useEffect(() => {
-        setTopics(course.topics);
+        setTopics([...course.topics]);
     }, [course.topics]);
 
     return (

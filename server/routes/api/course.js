@@ -306,8 +306,8 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         const { text, rating } = req.body;
         const courseId = req.params.courseId;
 
-        if (isNaN(rating)) {
-            return res.status(400).json({ errors: [{ msg: 'Rating is not a number' }] });
+        if (!Number.isInteger(rating) || rating <= 0 || !text) {
+            return res.status(400).json({ errors: [{ msg: 'Bad Request' }] });
         }
 
         const course = await Course.findById(courseId);
