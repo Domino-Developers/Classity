@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import useSWR from 'swr';
@@ -11,6 +11,7 @@ import { addCourse } from './helper';
 import { addCreatedCourse } from '../Auth/authSlice';
 
 import './Dashboard.css';
+import CardsContainer from '../CardsContainer';
 
 const Dashboard = () => {
     const {
@@ -33,8 +34,18 @@ const Dashboard = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    if (loading || !data) return <Loading />;
     if (error && navigator.onLine) return <div>Opps</div>;
+
+    let enrolledCourses, createdCourses;
+    if (data) {
+        enrolledCourses = Object.keys(coursesEnrolled).map(id => ({
+            ...data[id].course,
+            lastStudied: data[id].courseProgress.lastStudied,
+            streak: data[id].courseProgress.streak,
+            progress: data[id].courseProgress.precentageCompleted
+        }));
+        createdCourses = coursesCreated.map(id => data[id].course);
+    }
 
     return (
         <div className='container'>
@@ -50,28 +61,18 @@ const Dashboard = () => {
                     loading={creating}
                 />
             </div>
-            <Tabs.Container>
-                <Tabs.Tab name='Enrolled'>
-                    {Object.keys(coursesEnrolled).map((id, i) => {
-                        const courseToShow = data[id].course;
-                        const courseProgress = data[id].courseProgress;
-
-                        // Put your card here!
-
-                        return (
-                            <div key={i} className='course'>
-                                {courseToShow.name} -&gt; {courseProgress.precentageCompleted}
-                            </div>
-                        );
-                    })}
-                </Tabs.Tab>
-                <Tabs.Tab name='Created'>
-                    {coursesCreated.map((id, i) => (
-                        // put your card here
-                        <p key={i}>{data[id].course.name}</p>
-                    ))}
-                </Tabs.Tab>
-            </Tabs.Container>
+            {loading || !data ? (
+                <Loading />
+            ) : (
+                <Tabs.Container>
+                    <Tabs.Tab name='Enrolled'>
+                        <CardsContainer courses={enrolledCourses} />
+                    </Tabs.Tab>
+                    <Tabs.Tab name='Created'>
+                        <CardsContainer courses={createdCourses} normal />
+                    </Tabs.Tab>
+                </Tabs.Container>
+            )}
         </div>
     );
 };
