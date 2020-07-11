@@ -16,15 +16,14 @@ import './Resource.css';
 const Resource = () => {
     const dispatch = useDispatch();
     const { courseId, topicId, resourceId } = useParams();
-    const {
-        isAuthenticated,
-        loading,
-        userData: { id }
-    } = useSelector(state => state.auth);
+    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
+
+    const { _id: id, loading: loading2 } = useSelector(state => state.user);
 
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
+    const loading = loading1 || loading2;
     if (!course || !topic) return <Loading />;
 
     const isInstructor = !loading && isAuthenticated && course.instructor._id === id;

@@ -10,24 +10,17 @@ import Loading from '../../components/Loading';
 
 const ClassroomRoute = props => {
     const dispatch = useDispatch();
-
     const [redirect, setRedirect] = useState(false);
-
     useEffect(() => {
         if (redirect) dispatch(setAlert('Course not enrolled.', 'danger'));
     });
-
-    const {
-        isAuthenticated,
-        loading,
-        userData: { id }
-    } = useSelector(state => state.auth);
-
+    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
+    const { _id: id, loading: loading2 } = useSelector(state => state.user);
     const { pathname } = useLocation();
     const courseId = pathname.split('/')[2];
-
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
 
+    const loading = loading1 || loading2;
     const isInstructor = !loading && isAuthenticated && course && course.instructor._id === id;
     const isStudent = !loading && isAuthenticated && course && course.students.indexOf(id) !== -1;
 
