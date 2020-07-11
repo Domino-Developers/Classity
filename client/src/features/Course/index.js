@@ -16,7 +16,7 @@ import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
 import './Course.css';
-import { addEnrolledCourse } from '../Auth/authSlice';
+import { addEnrolledCourse } from '../User/userSlice';
 
 const Course = () => {
     // hooks

@@ -4,21 +4,20 @@ import { sendFlushReq, sendTokenRes } from '../../utils/storageCom';
 import user from '../../api/user';
 import { setAlert } from '../Alerts/alertSlice';
 import { setAuthToken, removeAuthToken } from '../../utils/authToken';
+import { fetchUser } from '../User/userSlice';
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
         token: null,
         isAuthenticated: false,
-        loading: true,
-        userData: {}
+        loading: true
     },
     reducers: {
         authStart: (state, action) => {
             state.token = null;
             state.isAuthenticated = false;
             state.loading = true;
-            state.userData = {};
         },
         authSuccess: (state, action) => {
             if (action.payload.remember) localStorage.setItem('GTS_TOKEN', action.payload.token);
@@ -39,7 +38,10 @@ const authSlice = createSlice({
             sessionStorage.removeItem('GTS_TOKEN');
 
             // remove token from other tabs if comunicate
-            if (!action.payload) sendFlushReq();
+            if (!action.payload || (action.payload && !action.payload.dontCommunicate)) {
+                console.log('sending logout');
+                sendFlushReq();
+            }
 
             // remove token from axios
             removeAuthToken();
@@ -47,76 +49,15 @@ const authSlice = createSlice({
             state.token = null;
             state.isAuthenticated = false;
             state.loading = false;
-            state.userData = {};
-        },
-        fetchUserStart: (state, action) => {
-            state.loading = true;
-            state.userData = {};
-        },
-        fetchUserSuccess: (state, action) => {
-            const user = action.payload;
-            state.loading = false;
-            state.userData = {
-                id: user._id,
-                name: user.name,
-                avatar: user.avatar,
-                email: user.email,
-                coursesEnrolled: user.coursesEnrolled,
-                coursesCreated: user.coursesCreated
-            };
-        },
-        addEnrolledCourse: (state, action) => {
-            const { courseId, courseProgressId } = action.payload;
-            state.userData.coursesEnrolled[courseId] = courseProgressId;
-        },
-        addCreatedCourse: (state, action) => {
-            const { courseId } = action.payload;
-            state.userData.coursesCreated.push(courseId);
         }
     }
 });
 
-const {
-    authRejected,
-    authStart,
-    authSuccess,
-    fetchUserStart,
-    fetchUserSuccess,
-    addEnrolledCourse,
-    addCreatedCourse
-} = authSlice.actions;
+const { authRejected, authStart, authSuccess } = authSlice.actions;
 
-export { authRejected, addEnrolledCourse, addCreatedCourse };
+export { authRejected, authSuccess };
 
 export default authSlice.reducer;
-
-// function to fetch user with token
-const fetchUser = () => async dispatch => {
-    dispatch(fetchUserStart());
-    try {
-        const user_res = await user.getCurrentUserData();
-
-        // success
-        dispatch(fetchUserSuccess({ ...user_res }));
-    } catch (err) {
-        const errors = err.errors;
-        errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        dispatch(authRejected());
-        console.error(err);
-    }
-};
-
-// function to init user on start
-export const loadUser = ({ dontCommunicate }) => dispatch => {
-    const token = sessionStorage.getItem('GTS_TOKEN');
-    if (token) {
-        // auth success will be failed if token not valid later
-        dispatch(authSuccess({ token, dontCommunicate }));
-
-        // fetch user
-        dispatch(fetchUser());
-    }
-};
 
 // function to login user
 export const login = (email, password, remember) => async dispatch => {
@@ -137,6 +78,18 @@ export const login = (email, password, remember) => async dispatch => {
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         dispatch(authRejected());
         console.error(err);
+    }
+};
+
+// function to init auth on start
+export const initAuth = ({ dontCommunicate }) => dispatch => {
+    const token = sessionStorage.getItem('GTS_TOKEN');
+    if (token) {
+        // auth success will be failed if token not valid later
+        dispatch(authSuccess({ token, dontCommunicate }));
+
+        // fetch user
+        dispatch(fetchUser());
     }
 };
 
