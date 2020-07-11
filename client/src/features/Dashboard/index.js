@@ -8,7 +8,7 @@ import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { addCourse } from './helper';
-import { addCreatedCourse } from '../Auth/authSlice';
+import { addCreatedCourse } from '../User/userSlice';
 
 import './Dashboard.css';
 import CardsContainer from '../CardsContainer';

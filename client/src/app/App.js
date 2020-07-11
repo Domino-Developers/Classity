@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 import store from './store';
 import './App.css';
 import Alerts from '../features/Alerts';
-import { loadUser, authRejected } from '../features/Auth/authSlice';
+import { initAuth, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
 import PrivateRoute from '../components/PrivateRoute';
@@ -32,10 +32,10 @@ function App() {
     useEffect(() => {
         initTokenCom(
             () => {
-                store.dispatch(loadUser({ dontCommunicate: true }));
+                store.dispatch(initAuth({ dontCommunicate: true }));
             },
             () => {
-                store.dispatch(authRejected({ dontComunicate: true }));
+                store.dispatch(authRejected({ dontCommunicate: true }));
             }
         );
     }, []);
