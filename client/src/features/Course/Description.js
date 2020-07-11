@@ -14,7 +14,7 @@ const Description = props => {
     };
 
     return (
-        <section className='course-page-description'>
+        <section className='course-description'>
             <h2>Description</h2>
             {editing ? (
                 <Editable html={description.current} onChange={handleChange} rich />

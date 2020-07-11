@@ -25,7 +25,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "compile:sass": "node-sass src/sass/main.scss src/app/App.css -w"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -42,5 +43,8 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://0.0.0.0:5000"
+    "proxy": "http://0.0.0.0:5000",
+    "devDependencies": {
+        "node-sass": "^4.14.1"
+    }
 }

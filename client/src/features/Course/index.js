@@ -15,7 +15,6 @@ import stripHtml from '../../utils/stripHtml';
 import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
-import './Course.css';
 import { enroll } from '../User/userSlice';
 import { createSelector } from '@reduxjs/toolkit';
 

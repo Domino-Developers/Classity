@@ -1,0 +1,42 @@
+.collapse {
+    &__item {
+        margin-bottom: 5px;
+    }
+
+    &__text {
+        border: 1px solid $color-grey-3;
+        padding: 1rem;
+
+        &--outer {
+            background-color: $color-grey-1;
+            cursor: pointer;
+            display: flex;
+        }
+
+        &--inner {
+            padding-left: 5rem;
+        }
+    }
+
+    &__link {
+        margin-left: auto;
+        line-height: 1;
+        font-size: 2.5rem;
+        color: $color-primary;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scaleX(1.5);
+        }
+    }
+
+    &__btn {
+        margin-right: 1rem;
+        color: $color-primary;
+    }
+
+    &__item--show &__btn--show,
+    &__item--hide &__btn--hide {
+        display: none;
+    }
+}

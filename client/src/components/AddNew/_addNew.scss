@@ -1,0 +1,30 @@
+.add-new {
+    display: flex;
+    justify-content: space-between;
+    max-height: 15px;
+    overflow: hidden;
+    transition: max-height 0.2s;
+    transition-delay: 0.1s;
+    border: 1px solid $color-grey-1;
+    border-left: none;
+    border-right: none;
+
+    &:hover {
+        max-height: 10rem;
+    }
+
+    &__link {
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        padding: 1rem;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+
+    &__icon {
+        margin-right: 5px;
+    }
+}

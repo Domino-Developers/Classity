@@ -1,0 +1,9 @@
+.loading {
+    width: 6rem;
+    height: 6rem;
+    margin: 0 auto;
+    border: 2px solid $color-primary;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: loading-circle 1s infinite;
+}

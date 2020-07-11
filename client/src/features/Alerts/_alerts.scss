@@ -1,0 +1,25 @@
+.alerts {
+    position: fixed;
+    width: 100%;
+    padding: 0 2rem;
+    z-index: 120;
+    bottom: 0;
+    opacity: 0.8;
+
+    &__alert {
+        margin: 2rem auto;
+        padding: 2rem;
+        color: $color-white;
+        border-radius: 2rem;
+        text-align: center;
+        max-width: 1124px;
+
+        &--danger {
+            background-color: $color-danger;
+        }
+
+        &--success {
+            background-color: $color-success;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+// Todo
+// main content area, content area
+// resource:test
+@import 'abstracts/variables';
+
+@import 'base/base';
+@import 'base/typography';
+@import 'base/utilities';
+@import 'base/animations';
+
+@import 'layouts/containers';
+@import 'layouts/overlay';
+
+@import '../components/Landing/landing';
+@import '../components/Button/button';
+@import '../components/Breadcrumb/breadcrumb';
+@import '../components/CircularProgress/circularProgress';
+@import '../components/TopBar/topBar';
+@import '../components/Tabs/tabs';
+@import '../components/Rating/rating';
+@import '../components/SideBar/sideBar';
+@import '../components/Collapse/collapse';
+@import '../components/AddNew/addNew';
+@import '../components/Editable/editable';
+@import '../components/FadeText/fadeText';
+@import '../components/Loading/loading';
+
+@import '../features/Navbar/navbar';
+@import '../features/Auth/auth';
+@import '../features/Course/course';
+@import '../features/Topic/topic';
+@import '../features/Comments/comments';
+@import '../features/Alerts/alerts';
+@import '../features/Resource/resource';
+@import '../features/Dashboard/dashboard';
+@import '../features/CardsContainer/cardsContainer';

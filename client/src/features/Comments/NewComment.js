@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import Rating from '../../components/Rating';
 
-import './Comments.css';
-
 const NewComment = ({ review, comments, onAdd, user, newText }) => {
     const [text, setText] = useState('');
     const [rating, setRating] = useState();
@@ -21,10 +19,11 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
     }
 
     return (
-        <div className='add'>
+        <div>
             {review && <h4>Your review</h4>}
             {review && <Rating select={setRating} rating={rating} />}
             <input
+                className='comment__input'
                 type='text'
                 onChange={e => setText(e.target.value)}
                 value={text}
@@ -32,7 +31,9 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
             />
             <a
                 href='#!'
-                className={text && (!review || rating) ? 'active' : ''}
+                className={
+                    'comment__btn' + (text && (!review || rating) ? ' comment__btn--active' : '')
+                }
                 onClick={() => onAdd({ text, rating }, () => setText(''))}>
                 Submit
             </a>

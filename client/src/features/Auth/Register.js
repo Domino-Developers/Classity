@@ -40,10 +40,11 @@ const Register = () => {
 
     const { name, email, password, password2 } = formData;
     return (
-        <form className='auth-form' onSubmit={onSubmit}>
-            <div className='auth-form-group'>
-                <label htmlFor='name'>Name</label>
+        <form onSubmit={onSubmit}>
+            <label className='auth__label'>
+                Name
                 <input
+                    className='auth__input auth__input--text'
                     type='text'
                     name='name'
                     placeholder='Name'
@@ -51,10 +52,11 @@ const Register = () => {
                     value={name}
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
-                <label htmlFor='email'>Email: </label>
+            </label>
+            <label className='auth__label'>
+                Email:
                 <input
+                    className='auth__input auth__input--text'
                     type='email'
                     name='email'
                     placeholder='Email'
@@ -62,10 +64,11 @@ const Register = () => {
                     value={email}
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
-                <label htmlFor='password'>Password</label>
+            </label>
+            <label className='auth__label'>
+                Password
                 <input
+                    className='auth__input auth__input--text'
                     type='password'
                     name='password'
                     placeholder='Password'
@@ -74,10 +77,11 @@ const Register = () => {
                     minLength='6'
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
-                <label htmlFor='password2'>Confirm Password</label>
+            </label>
+            <label className='auth__label'>
+                Confirm Password
                 <input
+                    className='auth__input auth__input--text'
                     type='password'
                     name='password2'
                     placeholder='Confirm Password'
@@ -86,8 +90,8 @@ const Register = () => {
                     minLength='6'
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
+            </label>
+            <div className='auth__input'>
                 <Button value='Submit' loading={loading && 'Loading'} />
             </div>
         </form>

@@ -1,0 +1,50 @@
+.star-rating {
+    display: flex;
+    margin-right: 5px;
+
+    &__full,
+    &__empty {
+        height: 3rem;
+    }
+
+    &__full {
+        background: url('../img/5star-full.png');
+        background-size: 15rem 3rem;
+    }
+
+    &__empty {
+        background: url('../img/5star-empty.png');
+        background-size: 15rem 3rem;
+        background-position: right;
+    }
+}
+
+.star-rating-new {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    &__label {
+        background: url('../img/star-empty.png');
+        background-size: 3rem 3rem;
+        height: 3rem;
+        width: 3rem;
+        flex-shrink: 0;
+
+        &:hover,
+        &:hover ~ & {
+            background: url('../img/star-hover.png');
+            background-size: 3rem 3rem;
+        }
+    }
+
+    &__input:checked ~ &__label {
+        background: url('../img/star-full.png');
+        background-size: 3rem 3rem;
+    }
+
+    &__input {
+        display: none;
+    }
+}

@@ -1,0 +1,35 @@
+.tab {
+    &__names {
+        display: flex;
+        margin: 4rem 0;
+    }
+
+    &__item {
+        border: 1px solid transparent;
+        border-bottom: 1px solid $color-grey-3;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        transition: 0.2s border;
+
+        &--show {
+            border: 1px solid $color-grey-3;
+            border-bottom: 1px solid transparent;
+        }
+
+        &--empty {
+            flex-grow: 1;
+        }
+    }
+
+    &__btn {
+        border: none;
+        background-color: transparent;
+        font-size: 2.5rem;
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}

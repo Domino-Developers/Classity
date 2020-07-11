@@ -43,9 +43,7 @@ const Video = ({ payload, instructor, update }) => {
 
     return (
         <Fragment>
-            <h2>
-                <center>{payload.name}</center>
-            </h2>
+            <h2 className='u-center-text'>{payload.name}</h2>
             {instructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
             {instructor && editing && (
                 <Fragment>
@@ -55,29 +53,29 @@ const Video = ({ payload, instructor, update }) => {
             )}
 
             {editing ? (
-                <form className='video-url-form'>
+                <form>
                     <label>
                         Video url
                         <input
+                            className='video__input'
                             type='text'
                             value={url}
                             onChange={e => setUrl(e.target.value)}></input>
                     </label>
                 </form>
             ) : (
-                <div className='video-container'>
-                    <div className='video-wrapper'>
-                        {loading && <Loading />}
-                        <iframe
-                            title='video'
-                            src={embedUrl}
-                            onLoad={() => {
-                                setLoading(false);
-                            }}
-                            frameBorder='0'
-                            allow='accelerometer; encrypted-media; gyroscope; picture-in-picture'
-                            allowFullScreen></iframe>
-                    </div>
+                <div className='video__container'>
+                    {loading && <Loading />}
+                    <iframe
+                        className='video__frame'
+                        title='video'
+                        src={embedUrl}
+                        onLoad={() => {
+                            setLoading(false);
+                        }}
+                        frameBorder='0'
+                        allow='accelerometer; encrypted-media; gyroscope; picture-in-picture'
+                        allowFullScreen></iframe>
                 </div>
             )}
         </Fragment>

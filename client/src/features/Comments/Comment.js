@@ -28,7 +28,7 @@ const Comment = props => {
 
     if (comment.topic && !topic) return <Loading />;
 
-    const className = review ? 'is-review' : reply ? 'is-reply' : '';
+    const className = review ? 'review' : reply ? 'reply' : '';
     const liked = comment.likes && comment.likes.indexOf(user) !== -1;
 
     let type;
@@ -104,49 +104,61 @@ const Comment = props => {
     };
 
     return (
-        <li className={className}>
-            <div className='comment'>
-                <p className='date'>
+        <li className={'comment' + (className ? ` comment--${className}` : '')}>
+            <div className='comment__container'>
+                <p className='comment__date'>
                     <FromNow date={comment.date} />
                 </p>
-                <div className='rating'>
+                <div className='comment__rating'>
                     <Rating rating={comment.rating || 0} />
                 </div>
-                <div className='like'>
-                    <span className={liked ? 'icon active' : 'icon'} onClick={() => toggleLike()}>
-                        <i className='far fa-thumbs-up outline'></i>
-                        <i className='fas fa-thumbs-up filled'></i>
+                <div className='comment__like'>
+                    <span
+                        className={
+                            'comment__icon-container' +
+                            (liked ? ' comment__icon-container--active' : '')
+                        }
+                        onClick={() => toggleLike()}>
+                        <i className='far fa-thumbs-up comment__icon comment__icon--outline'></i>
+                        <i className='fas fa-thumbs-up comment__icon comment__icon--filled'></i>
                     </span>
                     <p>{comment.likes && comment.likes.length}</p>
                 </div>
-                <div className='reply'>
+                <div className='comment__reply'>
                     <span
-                        className={showReply ? 'icon active' : 'icon'}
+                        className={
+                            'comment__icon-container' +
+                            (showReply ? ' comment__icon-container--active' : '')
+                        }
                         onClick={() => replyState(!showReply)}>
-                        <i className='far fa-comment-dots outline'></i>
-                        <i className='fas fa-comment-dots filled'></i>
+                        <i className='far fa-comment-dots comment__icon comment__icon--outline'></i>
+                        <i className='fas fa-comment-dots comment__icon comment__icon--filled'></i>
                     </span>
                     <p>{comment.reply && comment.reply.length}</p>
                 </div>
-                <p className='name'>Sanchit Arora</p>
-                <div className='text'>
+                <p className='comment__name'>Sanchit Arora</p>
+                <div className='comment__text'>
                     <FadeText>{comment.text}</FadeText>
                 </div>
-                <div className='add'>
+                <div className='comment__add'>
                     <input
+                        className='comment__input'
                         type='text'
                         placeholder='Enter your comment'
                         onChange={e => setText(e.target.value)}
                         value={text}
                     />
-                    <a href='#!' className={text ? 'active' : ''} onClick={addReply}>
+                    <a
+                        href='#!'
+                        className={'comment__btn' + (text ? ' comment__btn--active' : '')}
+                        onClick={addReply}>
                         Submit
                     </a>
                 </div>
             </div>
             {!reply && !review && (
                 <AnimateHeight height={showReply ? 'auto' : 0}>
-                    <h4>Replies</h4>
+                    <h4 className='comment__heading'>Replies</h4>
                     <ul>
                         {replies.map((r, i) => (
                             <Comment reply comment={r} key={i} />

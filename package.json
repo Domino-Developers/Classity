@@ -5,7 +5,8 @@
     "scripts": {
         "server": "npm run server --prefix server",
         "client": "npm start --prefix client",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "compile:sass": "npm run compile:sass --prefix client"
     },
     "repository": {
         "type": "git",

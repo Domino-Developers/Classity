@@ -8,9 +8,9 @@ const Header = () => {
 
     return (
         <section>
-            <header>
-                <div className='hero-box'>
-                    <h1 className='hero-text'>
+            <header className='landing-header'>
+                <div className='landing-header__box'>
+                    <h1 className='landing-header__text'>
                         Bunk Your Classes,
                         <br />
                         Not your studies .

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 
-import './Tabs.css';
-
 const Container = props => {
     const [toShow, show] = useState(0);
     const [content, changeContent] = useState('');
@@ -13,24 +11,20 @@ const Container = props => {
 
     return (
         <Fragment>
-            <ul className='tab-names'>
-                {childrenArr.map((e, i) => {
-                    const className = toShow === i ? 'show' : 'hide';
-
-                    return (
-                        <li className={className} key={i}>
-                            {React.cloneElement(e, {
-                                id: i,
-                                toShow,
-                                changeContent,
-                                show
-                            })}
-                        </li>
-                    );
-                })}
-                <li className='no-tab'></li>
+            <ul className='tab__names'>
+                {childrenArr.map((e, i) => (
+                    <li className={'tab__item' + (toShow === i ? ' tab__item--show' : '')} key={i}>
+                        {React.cloneElement(e, {
+                            id: i,
+                            toShow,
+                            changeContent,
+                            show
+                        })}
+                    </li>
+                ))}
+                <li className='tab__item tab__item--empty'></li>
             </ul>
-            <div className='tab-content'>{content}</div>
+            <div className='tab__content'>{content}</div>
         </Fragment>
     );
 };
@@ -42,7 +36,11 @@ const Tab = props => {
         if (id === toShow) changeContent(children);
     });
 
-    return <button onClick={() => show(id)}>{name}</button>;
+    return (
+        <button className='tab__btn' onClick={() => show(id)}>
+            {name}
+        </button>
+    );
 };
 
 export default { Container, Tab };

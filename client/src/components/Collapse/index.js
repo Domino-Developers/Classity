@@ -4,9 +4,6 @@ import { Link } from 'react-router-dom';
 
 import AddNew from '../AddNew';
 import Editable from '../Editable';
-import Delete from '../Delete';
-
-import './Collapse.css';
 
 const Container = props => {
     const { editing, children } = props;
@@ -15,14 +12,14 @@ const Container = props => {
     const toggleShow = e => {
         const current = document.getElementById(toShow);
         if (current) {
-            current.classList.remove('show');
-            current.classList.add('hide');
+            current.classList.remove('collapse__item--show');
+            current.classList.add('collapse__item--hide');
         }
 
         const parent = e.target.closest('li');
         if (parent.id !== toShow) {
-            parent.classList.add('show');
-            parent.classList.remove('hide');
+            parent.classList.add('collapse__item--show');
+            parent.classList.remove('collapse__item--hide');
             show(parent.id);
         } else {
             show('head');
@@ -30,9 +27,9 @@ const Container = props => {
     };
 
     return (
-        <ul className='course-topics'>
+        <ul className='collapse'>
             {React.Children.toArray(children).map((e, i) => (
-                <li className='hide' id={'head' + i} key={i}>
+                <li className='collapse__item collapse__item--hide' id={'head' + i} key={i}>
                     {React.cloneElement(e, {
                         id: 'head' + i,
                         toShow,
@@ -53,21 +50,25 @@ const Head = props => {
     return (
         <Fragment>
             {editing && editable ? (
-                <p>
-                    <Delete onDelete={onDelete} />
+                <p className='collapse__text collapse__text--outer'>
+                    <i className='fas fa-minus delete-btn' onClick={onDelete}></i>
                     <Editable html={text} onChange={onChange} tagName='span' />
                 </p>
             ) : (
                 text && (
-                    <p onClick={toggleShow}>
-                        <i className='fas fa-plus show-button'></i>
-                        <i className='fas fa-minus hide-button'></i>
+                    <p className='collapse__text collapse__text--outer' onClick={toggleShow}>
+                        <i className='fas fa-plus collapse__btn collapse__btn--show'></i>
+                        <i className='fas fa-minus collapse__btn collapse__btn--hide'></i>
                         <span
                             dangerouslySetInnerHTML={{
                                 __html: text
                             }}
                         />
-                        {to && <Link to={to}>View</Link>}
+                        {to && (
+                            <Link className='collapse__link' to={to}>
+                                &rarr;
+                            </Link>
+                        )}
                     </p>
                 )
             )}
@@ -93,7 +94,7 @@ const Item = props => {
                     <span onAdd={onAdd}>{children}</span>
                 </AddNew>
             ) : (
-                !onAdd && <p>{children}</p>
+                !onAdd && <p className='collapse__text collapse__text--inner'>{children}</p>
             )}
         </li>
     );

@@ -33,7 +33,7 @@ const TextRes = ({ payload, instructor, update }) => {
 
     return (
         <Fragment>
-            <h2 className='text-heading'> {payload.name} </h2>
+            <h2 className='text__heading'> {payload.name} </h2>
             {instructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
             {instructor && editing && (
                 <Fragment>
@@ -41,7 +41,7 @@ const TextRes = ({ payload, instructor, update }) => {
                     <Button text='Cancel' onClick={cancel} />
                 </Fragment>
             )}
-            <div className='text-container'>
+            <div>
                 <Editable
                     html={text}
                     onChange={e => setText(e.target.value)}

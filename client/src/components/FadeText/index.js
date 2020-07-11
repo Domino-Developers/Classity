@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AnimateHeight from 'react-animate-height';
 
-import './FadeText.css';
-
 const FadeText = props => {
     const lines = props.lines || 4;
     const isHtml = props.html;
@@ -19,27 +17,18 @@ const FadeText = props => {
     }, [element.clientHeight, showHeight]);
 
     const contracted = (
-        <div className={'fade-text' + (show ? ' show' : '')}>
-            <AnimateHeight height={show ? 'auto' : showHeight}>
-                <div className='content'>
-                    {isHtml ? (
-                        <div dangerouslySetInnerHTML={{ __html: text }} />
-                    ) : (
-                        <div>{text}</div>
-                    )}
-                    <div
-                        className='fade'
-                        style={{ top: `${1.2 * (lines - 1)}rem` }}
-                    ></div>
-                </div>
+        <div className={'fade-text' + (show ? ' fade-text--show' : '')}>
+            <AnimateHeight height={show ? 'auto' : showHeight} duration={250}>
+                {isHtml ? <div dangerouslySetInnerHTML={{ __html: text }} /> : <div>{text}</div>}
+                <div className='fade-text__hide' style={{ top: `${2.4 * (lines - 1)}rem` }}></div>
             </AnimateHeight>
             <a href='#!' onClick={() => toggle(!show)}>
                 {show ? (
-                    <span>
+                    <span className='fade-text__btn'>
                         <i className='fas fa-minus'></i>See less
                     </span>
                 ) : (
-                    <span>
+                    <span className='fade-text__btn'>
                         <i className='fas fa-plus'></i>See more
                     </span>
                 )}
@@ -48,10 +37,7 @@ const FadeText = props => {
     );
 
     const normal = isHtml ? (
-        <div
-            dangerouslySetInnerHTML={{ __html: text }}
-            ref={e => (element = e)}
-        />
+        <div dangerouslySetInnerHTML={{ __html: text }} ref={e => (element = e)} />
     ) : (
         <div ref={e => (element = e)}>{text}</div>
     );
