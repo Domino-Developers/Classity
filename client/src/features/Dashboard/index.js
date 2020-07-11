@@ -8,17 +8,13 @@ import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { addCourse } from './helper';
-import { addCreatedCourse } from '../Auth/authSlice';
+import { addCreatedCourse } from '../User/userSlice';
 
 import './Dashboard.css';
 import CardsContainer from '../CardsContainer';
 
 const Dashboard = () => {
-    const {
-        loading,
-        userData: { coursesCreated, coursesEnrolled }
-    } = useSelector(state => state.auth);
-
+    const { loading, coursesEnrolled, coursesCreated } = useSelector(state => state.user);
     const reqBody = [
         ...Object.keys(coursesEnrolled).map(k => ({
             _id: k,

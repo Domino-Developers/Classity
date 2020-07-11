@@ -24,12 +24,8 @@ import './Topic.css';
 const Topic = () => {
     const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
-    const {
-        isAuthenticated,
-        loading,
-        userData: { id }
-    } = useSelector(state => state.auth);
-
+    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
+    const { _id: id, loading: loading2 } = useSelector(state => state.user);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
@@ -42,6 +38,8 @@ const Topic = () => {
     useEffect(() => {
         if (topic) setResources([...topic.coreResources]);
     }, [topic]);
+
+    const loading = loading1 || loading2;
 
     if (!course || !topic) return <Loading />;
 

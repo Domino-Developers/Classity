@@ -16,7 +16,7 @@ import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
 import './Course.css';
-import { addEnrolledCourse } from '../Auth/authSlice';
+import { addEnrolledCourse } from '../User/userSlice';
 
 const Course = () => {
     // hooks
@@ -29,11 +29,9 @@ const Course = () => {
     const { data: course, error, mutate } = useSWR(`get-course-${courseId}`, () =>
         courseApi.get(courseId)
     );
-    const {
-        isAuthenticated,
-        loading,
-        userData: { id }
-    } = useSelector(state => state.auth);
+    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
+    const { _id: id, loading: loading2 } = useSelector(state => state.user);
+    const loading = loading2 || loading1;
     const courseChanges = useRef({});
 
     // check instructor

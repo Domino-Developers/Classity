@@ -15,7 +15,7 @@ const TopBar = ({ params, setExist }) => {
     const { courseId, topicId } = params;
     let resourceId = null;
     const match = useRouteMatch('/course/:courseId/topic/:topicId/resource/:resourceId');
-    const { id } = useSelector(state => state.auth.userData);
+    const id = useSelector(state => state.user._id);
     const { data: course, error: courseError } = useSWR(
         courseId ? `get-course-${courseId}` : null,
         () => courseApi.get(courseId)

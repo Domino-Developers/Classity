@@ -10,10 +10,8 @@ import { setAlert } from '../Alerts/alertSlice';
 
 const Review = () => {
     const dispatch = useDispatch();
-    const {
-        userData: { id }
-    } = useSelector(state => state.auth);
 
+    const id = useSelector(state => state.user._id);
     const { courseId } = useParams();
     const { data: course, mutate } = useSWR(`get-course-${courseId}`, () =>
         courseApi.get(courseId)
