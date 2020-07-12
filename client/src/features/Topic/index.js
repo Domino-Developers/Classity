@@ -13,13 +13,10 @@ import FadeText from '../../components/FadeText';
 import Loading from '../../components/Loading';
 import Comments from '../Comments';
 import AddNew from '../../components/AddNew';
-import Delete from '../../components/Delete';
 import Button from '../../components/Button';
 import Html from '../../components/Html';
 import { useEdit } from '../../utils/hooks';
 import { setAlert } from '../Alerts/alertSlice';
-
-import './Topic.css';
 
 const Topic = () => {
     const dispatch = useDispatch();
@@ -109,10 +106,10 @@ const Topic = () => {
 
     const icons = (
         <Fragment>
-            <i className='fas fa-check-circle completed'></i>
-            <i className='fab fa-youtube video'></i>
-            <i className='fas fa-book-open text'></i>
-            <i className='fas fa-clipboard-list test'></i>
+            <i className='fas fa-check-circle topic-content__icon topic-content__icon--completed'></i>
+            <i className='fab fa-youtube topic-content__icon topic-content__icon--video'></i>
+            <i className='fas fa-book-open topic-content__icon topic-content__icon--text'></i>
+            <i className='fas fa-clipboard-list topic-content__icon topic-content__icon--test'></i>
         </Fragment>
     );
 
@@ -196,20 +193,22 @@ const Topic = () => {
                             {resources &&
                                 resources.map((res, i) => (
                                     <Fragment key={i}>
-                                        <li className={res.kind}>
+                                        <li
+                                            className={`topic-content__item topic-content__item--${res.kind}`}>
                                             {editing && (
-                                                <Delete
-                                                    onDelete={() => {
+                                                <i
+                                                    className='fas fa-minus delete-btn'
+                                                    onClick={() => {
                                                         setResources([
                                                             ...resources.slice(0, i),
                                                             ...resources.slice(i + 1)
                                                         ]);
-                                                    }}
-                                                />
+                                                    }}></i>
                                             )}
                                             {editing ? (
                                                 <Editable
                                                     html={res.name}
+                                                    className={`topic-content__link topic-content__link--edit topic-content__${res.kind}`}
                                                     tagName='span'
                                                     onChange={e => {
                                                         resources[i].name = e.target.value;
@@ -218,9 +217,14 @@ const Topic = () => {
                                                 />
                                             ) : (
                                                 <Link
-                                                    to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
+                                                    to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}
+                                                    className='topic-content__link'>
                                                     {icons}
-                                                    <Html tag='span'>{res.name}</Html>
+                                                    <Html
+                                                        tag='span'
+                                                        className={`topic-content__${res.kind}`}>
+                                                        {res.name}
+                                                    </Html>
                                                 </Link>
                                             )}
                                         </li>

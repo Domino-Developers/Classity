@@ -32,10 +32,11 @@ const Login = () => {
         dispatch(login(email, password, remember));
     };
     return (
-        <form className='auth-form' onSubmit={onSubmit}>
-            <div className='auth-form-group'>
-                <label htmlFor='email'>Email: </label>
+        <form onSubmit={onSubmit}>
+            <label className='auth__label'>
+                Email:
                 <input
+                    className='auth__input auth__input--text'
                     type='email'
                     name='email'
                     placeholder='Email'
@@ -43,10 +44,11 @@ const Login = () => {
                     value={email}
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
-                <label htmlFor='password'>Password</label>
+            </label>
+            <label className='auth__label'>
+                Password
                 <input
+                    className='auth__input auth__input--text'
                     type='password'
                     name='password'
                     placeholder='Password'
@@ -55,17 +57,18 @@ const Login = () => {
                     minLength='6'
                     required
                 />
-            </div>
-            <div className='auth-form-group'>
+            </label>
+            <label className='auth__label'>
                 <input
+                    className='auth__input'
                     type='checkbox'
                     name='remember'
                     checked={remember}
                     onChange={checkBoxChange}
                 />{' '}
                 Remember me
-            </div>
-            <div className='auth-form-group'>
+            </label>
+            <div className='auth__input'>
                 <Button value='Submit' loading={loading && 'Loading'} />
             </div>
         </form>

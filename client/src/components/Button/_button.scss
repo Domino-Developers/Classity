@@ -1,0 +1,59 @@
+.btn {
+    border: 1px solid $color-primary;
+    border-radius: 200px;
+    padding: 10px 30px;
+    transition: color 0.2s, background-color 0.2s;
+    display: inline-block;
+    cursor: pointer;
+    font-size: inherit;
+
+    &--full {
+        background-color: $color-primary;
+        color: $color-white;
+    }
+
+    &--ghost {
+        color: $color-primary;
+
+        &:hover {
+            color: $color-white;
+        }
+    }
+
+    &:not(&--disabled):hover {
+        background-color: $color-primary-dark;
+        border: 1px solid $color-primary-dark;
+    }
+
+    &--disabled {
+        position: relative;
+        background-color: $color-grey-3;
+        border: 1px solid $color-grey-3;
+        cursor: progress;
+    }
+
+    &__show {
+        position: absolute;
+        top: 50%;
+        left: 1.6rem;
+        transform: translateY(-50%);
+        display: flex;
+        opacity: 0.5;
+    }
+
+    &__hide {
+        opacity: 0;
+    }
+
+    &__dots {
+        display: inline-block;
+        white-space: nowrap;
+        animation: loading-dots 2s infinite;
+        overflow-x: hidden;
+    }
+}
+
+.delete-btn {
+    color: $color-danger;
+    cursor: pointer;
+}

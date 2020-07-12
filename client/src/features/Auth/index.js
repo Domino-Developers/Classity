@@ -6,40 +6,43 @@ import PropTypes from 'prop-types';
 import Register from './Register';
 import Login from './Login';
 
-import './Auth.css';
-
 const Auth = props => {
     const { path, mode } = props;
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
     return (
         <Fragment>
-            <div className='overlay'></div>
-            <Link to={path} className='overlay-close'>
-                <i className='fas fa-times'></i>
-            </Link>
-            <div className='overlay-container'>
-                <div className='auth-container'>
-                    <div className='auth-header'>
-                        <h1 className='project-name'>Classity</h1>
-                        <ul className='auth-nav'>
+            <div className='overlay'>
+                <Link to={path} className='overlay__close'>
+                    <i className='fas fa-times overlay__clos'></i>
+                </Link>
+                <div className='overlay__container'>
+                    <div className='auth'>
+                        <span className='project-name auth__heading'>Classity</span>
+                        <ul className='auth__nav'>
                             <li>
                                 <Link
-                                    className={mode === 'register' ? 'active' : ''}
+                                    className={
+                                        mode === 'register' ? 'auth__link active' : 'auth__link'
+                                    }
                                     to={`${path}?authMode=register`}>
                                     Sign Up
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    className={mode === 'login' ? 'active' : ''}
+                                    className={
+                                        mode === 'login' ? 'auth__link active' : 'auth__link'
+                                    }
                                     to={`${path}?authMode=login`}>
                                     Log in
                                 </Link>
                             </li>
                         </ul>
+                        <div className='auth__card'>
+                            {mode === 'login' ? <Login /> : <Register />}
+                        </div>
                     </div>
-                    <div className='auth-card'>{mode === 'login' ? <Login /> : <Register />}</div>
                 </div>
             </div>
             {isAuthenticated && <Redirect to={path} />}

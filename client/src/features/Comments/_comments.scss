@@ -1,0 +1,118 @@
+.comment {
+    &:not(&--reply) {
+        border-bottom: 1px solid $color-grey-2;
+        padding: 5rem 0;
+    }
+
+    &__container {
+        display: grid;
+        grid-template-rows: repeat(4, min-content);
+        grid-template-columns: 1fr 3fr min-content;
+        grid-row-gap: 5px;
+        grid-template-areas:
+            'date rating like'
+            'name text reply'
+            '.     add  .   ';
+    }
+
+    &__heading {
+        margin: 1rem 0;
+        text-decoration: underline;
+        font-weight: 400;
+    }
+
+    // Positioning
+    &__date {
+        color: $color-grey-3;
+        grid-area: date;
+    }
+
+    &__rating {
+        grid-area: rating;
+        display: none;
+    }
+
+    &__like {
+        grid-area: like;
+    }
+
+    &__name {
+        grid-area: name;
+    }
+
+    &__text {
+        grid-area: text;
+        grid-row: span 2;
+    }
+
+    &__reply {
+        grid-area: reply;
+    }
+
+    &__add {
+        grid-area: add;
+    }
+
+    // Hiding / Unhiding if review or reply
+    &--review &__rating {
+        display: block;
+    }
+
+    &--review &__reply,
+    &--review &__like,
+    &--review &__add,
+    &--reply &__add,
+    &--reply &__like,
+    &--reply &__reply {
+        display: none;
+    }
+
+    // Icons
+    &__like,
+    &__reply {
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon {
+        font-size: 3rem;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    &__icon--filled,
+    &__icon-container--active &__icon--outline,
+    &__icon-container:hover &__icon--outline {
+        display: none;
+    }
+
+    &__icon-container--active &__icon--filled,
+    &__icon-container:hover &__icon--filled {
+        display: inline;
+    }
+
+    // Input
+    &__input {
+        font-size: 2rem;
+        border: 1px solid $color-grey-3;
+        padding: 5px 0.5rem;
+        border-radius: 5px;
+        width: 80%;
+
+        &:focus {
+            border: 1px solid $color-primary;
+        }
+    }
+
+    &__btn {
+        margin-left: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s;
+
+        &--active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}

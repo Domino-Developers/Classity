@@ -11,8 +11,6 @@ import courseApi from '../../api/course';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 
-import './Resource.css';
-
 const Resource = () => {
     const dispatch = useDispatch();
     const { courseId, topicId, resourceId } = useParams();

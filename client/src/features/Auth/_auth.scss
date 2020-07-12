@@ -1,0 +1,52 @@
+.auth {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    max-width: 400px;
+    margin: auto;
+    color: $color-white;
+
+    &__card {
+        background-color: $color-white;
+        width: 100%;
+        z-index: 110;
+        padding: 2rem 2rem;
+        border-radius: 10px;
+        color: $color-black;
+    }
+
+    &__heading {
+        margin-top: 2rem;
+        margin-bottom: 8rem;
+    }
+
+    &__nav {
+        margin: 2rem 0;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &__link {
+        font-size: 2.4rem;
+        text-transform: uppercase;
+        font-weight: 900;
+        cursor: pointer;
+
+        &.active {
+            border-bottom: 1px solid $color-white;
+        }
+    }
+
+    &__label {
+        margin: 2.4rem 0;
+        display: block;
+    }
+
+    &__input--text {
+        width: 100%;
+        padding: 8px;
+        font-size: 2.4rem;
+        border: 1px solid $color-grey-3;
+    }
+}

@@ -1,0 +1,28 @@
+[contenteditable='true'] {
+    outline: none;
+    border: 1px solid $color-grey-3;
+    transition: border 0.2s;
+}
+
+[contenteditable='true']:focus,
+[contenteditable='true']:hover {
+    border: 1px solid $color-primary;
+}
+
+.editable {
+    &__rich-btns {
+        display: flex;
+
+        &--right {
+            margin-left: auto;
+        }
+    }
+
+    &__btn {
+        margin: 0 1rem;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}

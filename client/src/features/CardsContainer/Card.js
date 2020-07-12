@@ -16,39 +16,35 @@ const CourseCard = props => {
         progress,
         streak
     } = props.course;
+
     return (
-        <Link to={`/course/${_id}`}>
-            <div className='course-card'>
-                <div className='card-img'>
-                    <img src={require('./img/course.jpeg')} alt='nope' />
+        <Link to={`/course/${_id}`} className='card'>
+            <img className='card__img' src={require('./img/course.jpeg')} alt={name} />
+
+            <Html tag='h4' className='card__title'>
+                {name}
+            </Html>
+            <div className='card__instructor'>{instructor}</div>
+            {props.normal ? (
+                <div className='card__rating'>
+                    <Rating rating={avgRating} />
+                    <p>{avgRating.toFixed(1)}</p>
                 </div>
-                <div className='card-title-container'>
-                    <Html tag='h4' className='card-title'>
-                        {name}
-                    </Html>
-                </div>
-                <div className='card-ins'>{instructor}</div>
-                {props.normal ? (
-                    <div className='card-rating'>
-                        <Rating rating={avgRating} />
-                        <p>{avgRating.toFixed(1)}</p>
+            ) : (
+                <Fragment>
+                    <div className='card__last-study'>
+                        Last studied: <FromNow date={lastStudied} />
                     </div>
-                ) : (
-                    <Fragment>
-                        <div className='card-last-study'>
-                            Last studied: <FromNow date={lastStudied} />
-                        </div>
-                        <div className='card-progress' style={{ width: `${progress}%` }}></div>
-                        <div className='card-streak'>
-                            <span className='number'>
-                                <i className='fas fa-fire'></i>
-                                {streak}
-                            </span>
-                            <p>streak</p>
-                        </div>
-                    </Fragment>
-                )}
-            </div>
+                    <div className='card__progress' style={{ width: `${progress}%` }}></div>
+                    <div className='card__streak'>
+                        <span className='number'>
+                            <i className='fas fa-fire'></i>
+                            {streak}
+                        </span>
+                        <p>streak</p>
+                    </div>
+                </Fragment>
+            )}
         </Link>
     );
 };

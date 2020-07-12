@@ -1,0 +1,23 @@
+.circular-progress {
+    display: block;
+    margin-left: 5px;
+
+    &__circle {
+        fill: none;
+
+        &--inner {
+            stroke: $color-primary;
+        }
+
+        &--outer {
+            stroke: $color-grey-2;
+        }
+    }
+
+    &__text {
+        text-anchor: middle;
+        dominant-baseline: middle;
+        font-size: 1.2rem;
+        fill: $color-primary;
+    }
+}

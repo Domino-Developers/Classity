@@ -5,7 +5,6 @@ import Goals from './Goals';
 import Header from './Header';
 import Loading from '../Loading';
 
-import './Landing.css';
 import useSWR from 'swr';
 import courseStore from '../../api/course';
 

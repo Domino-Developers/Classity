@@ -2,8 +2,6 @@ import React, { Fragment } from 'react';
 import ContentEditable from 'react-contenteditable';
 import PropTypes from 'prop-types';
 
-import './Editable.css';
-
 const pasteAsPlainText = event => {
     event.preventDefault();
 
@@ -18,7 +16,7 @@ const makeRich = (event, command, argument) => {
 };
 
 const Editable = props => {
-    const { html, onChange, disabled, tagName, rich } = props;
+    const { html, onChange, disabled, tagName, rich, className } = props;
 
     return (
         <Fragment>
@@ -29,28 +27,41 @@ const Editable = props => {
                 tagName={tagName}
                 onPaste={pasteAsPlainText}
                 style={{ display: 'inline-block', minWidth: '20rem' }}
+                className={className}
             />
-            {rich && (
-                <div className='rich-buttons'>
-                    <div className='left'>
-                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'h1')}>
+            {rich && !disabled && (
+                <div className='editable__rich-btns'>
+                    <div>
+                        <a
+                            className='editable__btn'
+                            href='#!'
+                            onClick={e => makeRich(e, 'formatBlock', 'h1')}>
                             Heading
                         </a>
-                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'h3')}>
+                        <a
+                            className='editable__btn'
+                            href='#!'
+                            onClick={e => makeRich(e, 'formatBlock', 'h3')}>
                             SubHeading
                         </a>
-                        <a href='#!' onClick={e => makeRich(e, 'formatBlock', 'p')}>
+                        <a
+                            className='editable__btn'
+                            href='#!'
+                            onClick={e => makeRich(e, 'formatBlock', 'p')}>
                             Normal
                         </a>
                     </div>
-                    <div className='right'>
-                        <a href='#!' onClick={e => makeRich(e, 'bold')}>
+                    <div className='editable__rich-btns--right'>
+                        <a className='editable__btn' href='#!' onClick={e => makeRich(e, 'bold')}>
                             Bold
                         </a>
-                        <a href='#!' onClick={e => makeRich(e, 'italic')}>
+                        <a className='editable__btn' href='#!' onClick={e => makeRich(e, 'italic')}>
                             Italic
                         </a>
-                        <a href='#!' onClick={e => makeRich(e, 'underline')}>
+                        <a
+                            className='editable__btn'
+                            href='#!'
+                            onClick={e => makeRich(e, 'underline')}>
                             Underline
                         </a>
                     </div>
@@ -62,6 +73,7 @@ const Editable = props => {
 
 Editable.propTypes = {
     html: PropTypes.string,
+    className: PropTypes.string,
     tagName: PropTypes.string,
     onChange: PropTypes.func,
     disabled: PropTypes.bool

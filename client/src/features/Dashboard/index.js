@@ -10,7 +10,6 @@ import Button from '../../components/Button';
 import { addCourse } from './helper';
 import { addCreatedCourse, addCourseProgress } from '../User/userSlice';
 
-import './Dashboard.css';
 import CardsContainer from '../CardsContainer';
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -82,8 +81,8 @@ const Dashboard = () => {
 
     return (
         <div className='container'>
-            <div className='dashboard-header'>
-                <h1 className='dashboard-heading'>Dashboard</h1>
+            <div className='dashboard__header'>
+                <h2 className='dashboard__heading'>Dashboard</h2>
                 <Button
                     text='Create a course'
                     onClick={() =>

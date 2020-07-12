@@ -5,8 +5,6 @@ import Comment from './Comment';
 import NewComment from './NewComment';
 import Button from '../../components/Button';
 
-import './Comments.css';
-
 const Comments = props => {
     const change = props.show || 5;
     const seeMore = props.seeMore || 'See more';
@@ -16,8 +14,8 @@ const Comments = props => {
     const comments = props.comments.slice(0, toShow);
 
     return (
-        <ul className='comments'>
-            <li className='new-comment'>
+        <ul>
+            <li className='comment'>
                 <NewComment
                     review={props.review}
                     comments={props.comments}
@@ -33,8 +31,8 @@ const Comments = props => {
                     <Comment key={i} comment={com} replies={com.reply} user={props.user} />
                 )
             )}
-            {toShow < props.comments.length && (
-                <li className='more'>
+            {toShow < props.comments.length + 10 && (
+                <li className='comment u-center-text'>
                     <Button text={seeMore} onClick={() => show(toShow + change)} />
                 </li>
             )}

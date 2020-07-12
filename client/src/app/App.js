@@ -44,7 +44,7 @@ function App() {
             <Router>
                 <Navbar />
                 <Alerts />
-                <div className='main'>
+                <main>
                     <Switch>
                         <Route exact path='/' component={Landing} />
                         <Route exact path='/course/:courseId' component={Course} />
@@ -54,7 +54,7 @@ function App() {
                         />
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
                     </Switch>
-                </div>
+                </main>
             </Router>
         </Provider>
     );

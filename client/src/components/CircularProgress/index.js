@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import './CircularProgress.css';
-
 const CircularProgress = props => {
     const { size, progress } = props;
     const strokeWidth = 2;
     const center = size / 2;
     const radius = center - strokeWidth / 2;
     const circumference = 2 * Math.PI * radius;
-    const style = getComputedStyle(document.body);
 
     const [offset, setOffset] = useState(0);
 
@@ -19,16 +16,16 @@ const CircularProgress = props => {
     }, [setOffset, circumference, progress, offset]);
 
     return (
-        <svg className='progress-svg' width={size} height={size}>
+        <svg className='circular-progress' width={size} height={size}>
             <circle
-                stroke={style.getPropertyValue('--grey-color')}
+                className='circular-progress__circle circular-progress__circle--outer'
                 cx={center}
                 cy={center}
                 r={radius}
                 strokeWidth={strokeWidth}
             />
             <circle
-                stroke={style.getPropertyValue('--primary-color')}
+                className='circular-progress__circle circular-progress__circle--inner'
                 cx={center}
                 cy={center}
                 r={radius}
@@ -36,7 +33,7 @@ const CircularProgress = props => {
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
             />
-            <text x={center} y={center}>
+            <text className='circular-progress__text' x={center} y={center}>
                 {progress}%
             </text>
         </svg>

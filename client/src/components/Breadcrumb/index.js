@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import stripHtml from '../../utils/stripHtml';
 
-import './Breadcrumb.css';
-
 const Container = props => {
     const { children } = props;
 
@@ -15,8 +13,8 @@ const Item = props => {
     const { to, children } = props;
 
     return (
-        <li>
-            <Link to={to || '#!'} className='bread-link'>
+        <li className='breadcrumb__item'>
+            <Link to={to || '#!'} className='breadcrumb__link'>
                 {stripHtml(children)}
             </Link>
         </li>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Alert = props => {
-    return <div className={`alert alert-${props.type}`}>{props.text}</div>;
+    return <div className={`alerts__alert alerts__alert--${props.type}`}>{props.text}</div>;
 };
 
 Alert.propTypes = {

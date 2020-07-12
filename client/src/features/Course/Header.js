@@ -30,7 +30,7 @@ const Header = props => {
 
     return (
         <div className='course-header'>
-            <div className='header-title'>
+            <div className='course-header__title'>
                 <Editable
                     html={name.current}
                     tagName='h2'
@@ -38,13 +38,13 @@ const Header = props => {
                     disabled={!editing}
                 />
             </div>
-            <div className='header-description'>
+            <div className='course-header__description'>
                 <Html tag='p'>{course.description}</Html>
             </div>
-            <div className='header-rating'>
+            <div className='course-header__rating'>
                 <Rating rating={course.avgRating} />
                 <p>
-                    {course.avgRating}({course.reviews.length} reviews)
+                    {course.avgRating.toFixed(1)}({course.reviews.length} reviews)
                 </p>
             </div>
             <div>{course.students.length} student(s) enrolled</div>
@@ -52,7 +52,7 @@ const Header = props => {
                 Created by <em>{course.instructor.name}</em>
             </div>
             <div>Last updated: {new Date(course.modifiedDate).toLocaleDateString()} </div>
-            <div className='header-enroll'>
+            <div className='course-header__enroll'>
                 {!instructor && !student && (
                     <Button
                         text='Enroll Course'

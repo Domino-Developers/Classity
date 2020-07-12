@@ -9,8 +9,6 @@ import Loading from '../Loading';
 //apis
 import courseApi from '../../api/course';
 
-import './TopBar.css';
-
 const TopBar = ({ params, setExist }) => {
     const { courseId, topicId } = params;
     let resourceId = null;
@@ -54,7 +52,7 @@ const TopBar = ({ params, setExist }) => {
     return (
         <Fragment>
             <div className='topbar'>
-                <div className='topbar-left'>
+                <div className='topbar__left'>
                     <Breadcrumb.Container>
                         {navList.map((item, i) => (
                             <Breadcrumb.Item key={i} to={item.link}>
@@ -64,7 +62,7 @@ const TopBar = ({ params, setExist }) => {
                     </Breadcrumb.Container>
                 </div>
                 {!instructor && (
-                    <div className='topbar-right'>
+                    <div className='topbar__right'>
                         Your progress
                         <CircularProgress size='50' progress={80} />
                     </div>

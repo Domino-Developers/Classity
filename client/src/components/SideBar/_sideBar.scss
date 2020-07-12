@@ -1,0 +1,29 @@
+.sidebar {
+    display: flex;
+    height: 100%;
+
+    &__close {
+        padding: 2rem 1rem;
+        background-color: $color-grey-2;
+        box-shadow: 5px 0px 5px -5px $color-grey-3;
+    }
+
+    &__btn {
+        cursor: pointer;
+        border: none;
+        font-size: 3rem;
+        background-color: $color-grey-2;
+    }
+
+    &__list {
+        margin-top: 5px;
+        width: 280px;
+        padding: 0 5px;
+        overflow-y: scroll;
+        transition: width 0.25s ease 0s;
+
+        &--collapsed {
+            width: 0;
+        }
+    }
+}

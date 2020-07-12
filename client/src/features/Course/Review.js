@@ -44,7 +44,7 @@ const Review = () => {
 
     return (
         <section className='reviews'>
-            <h3>Reviews</h3>
+            <h3 className='reviews__heading'>Reviews</h3>
             <Comments review comments={course.reviews} onAdd={add} user={id} />
         </section>
     );

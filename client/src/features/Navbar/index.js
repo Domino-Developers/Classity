@@ -7,8 +7,6 @@ import Auth from '../Auth';
 import { authRejected } from '../Auth/authSlice';
 import { useQuery } from '../../utils/hooks';
 
-import './Navbar.css';
-
 const Navbar = () => {
     let [query, location] = useQuery();
     const dispatch = useDispatch();
@@ -16,10 +14,10 @@ const Navbar = () => {
 
     const authLinks = (
         <Fragment>
-            <li>
+            <li className='nav__item'>
                 <Link to='/dashboard'>Dashboard</Link>
             </li>
-            <li>
+            <li className='nav__item'>
                 <a
                     href='#!'
                     onClick={() => {
@@ -33,10 +31,10 @@ const Navbar = () => {
 
     const guestLinks = (
         <Fragment>
-            <li>
+            <li className='nav__item'>
                 <Link to={`${location.pathname}?authMode=login`}>Log In</Link>
             </li>
-            <li className='bg-primary'>
+            <li className='nav__item'>
                 <Button to={`${location.pathname}?authMode=register`} text='Join for Free' full />
             </li>
         </Fragment>
@@ -44,12 +42,12 @@ const Navbar = () => {
 
     return (
         <Fragment>
-            <nav className='navbar'>
+            <nav className='nav'>
                 <Link to={'/'} className='project-name'>
                     Classity
                 </Link>
-                <ul>
-                    <li>
+                <ul className='nav__list'>
+                    <li className='nav__item'>
                         <a href='#!'>Explore</a>
                     </li>
                     {isAuthenticated ? authLinks : guestLinks}
