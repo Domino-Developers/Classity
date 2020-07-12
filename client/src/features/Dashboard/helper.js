@@ -9,7 +9,6 @@ export const addCourse = async (history, setLoading, addToState) => {
 
     setLoading(true);
     const courseRes = await courseStore.add(dummyCourse);
-    console.log(courseRes);
     addToState(courseRes._id);
     setLoading(false);
     history.replace(`/course/${courseRes._id}?edit=true`);

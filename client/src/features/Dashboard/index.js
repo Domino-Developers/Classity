@@ -8,24 +8,47 @@ import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { addCourse } from './helper';
-import { addCreatedCourse } from '../User/userSlice';
+import { addCreatedCourse, addCourseProgress } from '../User/userSlice';
 
 import './Dashboard.css';
 import CardsContainer from '../CardsContainer';
+import { createSelector } from '@reduxjs/toolkit';
+
+const sel = createSelector(
+    [
+        state => state.user.loading,
+        state => state.user.coursesEnrolled,
+        state => state.user.coursesCreated
+    ],
+    (loading, coursesEnrolled, coursesCreated) => ({
+        loading,
+        coursesEnrolled,
+        coursesCreated
+    })
+);
 
 const Dashboard = () => {
-    const { loading, coursesEnrolled, coursesCreated } = useSelector(state => state.user);
-    const reqBody = [
-        ...Object.keys(coursesEnrolled).map(k => ({
-            _id: k,
-            courseProgressId: coursesEnrolled[k]
-        })),
-        ...coursesCreated.map(c => ({ _id: c }))
-    ];
+    const { loading, coursesEnrolled, coursesCreated } = useSelector(sel);
+    let reqBody;
+    if (!loading) {
+        reqBody = [
+            ...Object.keys(coursesEnrolled)
+                .map(k => ({
+                    _id: k,
+                    courseProgressId: coursesEnrolled[k]
+                }))
+                .map(c => {
+                    if (typeof c.courseProgressId === 'string') return c;
+                    else return { _id: c._id };
+                }),
+            ...coursesCreated.map(c => ({ _id: c }))
+        ];
+    }
 
-    const { data, error } = useSWR(`get-custom-course-min-${JSON.stringify(reqBody)}`, () =>
-        courseStore.getCustomCoursesMin(reqBody)
-    );
+    const { data, error } = useSWR(loading ? null : 'get-custom-course-min', () => {
+        console.log('fetching');
+        return courseStore.getCustomCoursesMin(reqBody);
+    });
     const [creating, setCreating] = useState(false);
     const history = useHistory();
     const dispatch = useDispatch();
@@ -34,12 +57,26 @@ const Dashboard = () => {
 
     let enrolledCourses, createdCourses;
     if (data) {
-        enrolledCourses = Object.keys(coursesEnrolled).map(id => ({
-            ...data[id].course,
-            lastStudied: data[id].courseProgress.lastStudied,
-            streak: data[id].courseProgress.streak,
-            progress: data[id].courseProgress.precentageCompleted
-        }));
+        enrolledCourses = Object.keys(coursesEnrolled).map(id => {
+            const courseData = data[id].course;
+            let progressData;
+
+            if (data[id].courseProgress && typeof coursesEnrolled[id] === 'string') {
+                dispatch(
+                    addCourseProgress({ courseId: id, courseProgress: data[id].courseProgress })
+                );
+                progressData = data[id].courseProgress;
+            } else {
+                progressData = coursesEnrolled[id];
+            }
+
+            return {
+                ...courseData,
+                lastStudied: progressData.lastStudied,
+                streak: progressData.streak,
+                progress: progressData.precentageCompleted
+            };
+        });
         createdCourses = coursesCreated.map(id => data[id].course);
     }
 
