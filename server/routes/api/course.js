@@ -12,6 +12,7 @@ const User = require('../../models/User');
 const Topic = require('../../models/Topic');
 const CourseProgress = require('../../models/CourseProgress');
 const { course } = require('../../models/common');
+const { verifyToken } = require('../../utils/tokenVerifier');
 
 // Initialize router
 const router = express.Router();
@@ -199,6 +200,16 @@ router.get('/:courseId', async (req, res) => {
             });
         if (!course) {
             return res.status(400).json({ errors: [{ msg: 'Course not found' }] });
+        }
+
+        // check if a student has called this route
+        const validToken = verifyToken(req);
+        if (validToken) {
+            const id = req.user.id;
+            if (course.students.find(_id => _id.toString() === id)) {
+                const courseProgress = await CourseProgress.find({ user: id, course: course._id });
+                course['courseProgress'] = courseProgress;
+            }
         }
 
         res.json(course);
