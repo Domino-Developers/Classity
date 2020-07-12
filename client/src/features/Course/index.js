@@ -16,7 +16,23 @@ import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
 import './Course.css';
-import { addEnrolledCourse } from '../User/userSlice';
+import { enroll } from '../User/userSlice';
+import { createSelector } from '@reduxjs/toolkit';
+
+const sel = createSelector(
+    [
+        state => state.auth.isAuthenticated,
+        state => state.auth.loading,
+        state => state.user._id,
+        state => state.user.loading
+    ],
+    (isAuthenticated, loading1, _id, loading2) => ({
+        isAuthenticated,
+        loading1,
+        loading2,
+        _id
+    })
+);
 
 const Course = () => {
     // hooks
@@ -25,19 +41,14 @@ const Course = () => {
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
-    const [isEnrolling, setEnrolling] = useState(false);
     const { data: course, error, mutate } = useSWR(`get-course-${courseId}`, () =>
         courseApi.get(courseId)
     );
-    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
-    const { _id: id, loading: loading2 } = useSelector(state => state.user);
-    const loading = loading2 || loading1;
+    const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
+    const loading = loading1 || loading2;
     const courseChanges = useRef({});
 
-    // check instructor
     const isInstructor = !loading && isAuthenticated && course && course.instructor._id === id;
-
-    // check student
     const isStudent = !loading && isAuthenticated && course && course.students.includes(id);
 
     // error and loading
@@ -45,25 +56,17 @@ const Course = () => {
     if (!course) return <Loading />;
     if (editing && !isInstructor) edit(false);
 
-    const enroll = async () => {
+    const onEnroll = async () => {
         if (!id) {
             history.push('?authMode=register');
             dispatch(setAlert('Please Register or Login to Enroll', 'danger'));
             return;
         }
-        try {
-            setEnrolling(true);
-            const courseProgressId = (await courseApi.enroll(course._id))._id;
-            dispatch(addEnrolledCourse({ courseId, courseProgressId }));
-            await mutate({ ...course, students: [...course.students, id] });
-            setEnrolling(false);
-        } catch (err) {
-            if (err.errors) {
-                const errors = err.errors;
-                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
-            }
-            setEnrolling(false);
-        }
+        dispatch(
+            enroll(courseId, async () => {
+                await mutate({ ...course, students: [...course.students, id] });
+            })
+        );
     };
 
     const saveCourse = async () => {
@@ -140,9 +143,9 @@ const Course = () => {
                 course={course}
                 saveCourse={saveCourse}
                 cancelSave={cancel}
-                enroll={enroll}
+                enroll={onEnroll}
                 isSaving={isSaving}
-                isEnrolling={isEnrolling}
+                isEnrolling={loading2}
                 courseChanges={courseChanges}
             />
             <div className='container'>
