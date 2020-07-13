@@ -15,7 +15,7 @@ import stripHtml from '../../utils/stripHtml';
 import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
-import { enroll } from '../User/userSlice';
+import { enroll, addCourseProgressIfNeeded } from '../User/userSlice';
 import { createSelector } from '@reduxjs/toolkit';
 
 const sel = createSelector(
@@ -23,13 +23,15 @@ const sel = createSelector(
         state => state.auth.isAuthenticated,
         state => state.auth.loading,
         state => state.user._id,
-        state => state.user.loading
+        state => state.user.loading,
+        state => state.auth.token
     ],
-    (isAuthenticated, loading1, _id, loading2) => ({
+    (isAuthenticated, loading1, _id, loading2, token) => ({
         isAuthenticated,
         loading1,
         loading2,
-        _id
+        _id,
+        token
     })
 );
 
@@ -40,20 +42,25 @@ const Course = () => {
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
-    const { data: course, error, mutate } = useSWR(`get-course-${courseId}`, () =>
-        courseApi.get(courseId)
-    );
-    const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
+    const { isAuthenticated, loading1, loading2, _id: id, token } = useSelector(sel);
     const loading = loading1 || loading2;
     const courseChanges = useRef({});
+    const { data: course, error, mutate } = useSWR(
+        !loading1 ? `get-course-${courseId}` : null,
+        () => {
+            return courseApi.get(courseId);
+        }
+    );
 
-    const isInstructor = !loading && isAuthenticated && course && course.instructor._id === id;
-    const isStudent = !loading && isAuthenticated && course && course.students.includes(id);
-
-    // error and loading
     if (error && navigator.onLine) return <div> Opps... not found </div>;
-    if (!course) return <Loading />;
+    if (!course || loading) return <Loading />;
+
+    const isInstructor = isAuthenticated && course.instructor._id === id;
+    const isStudent = isAuthenticated && course.students.includes(id);
     if (editing && !isInstructor) edit(false);
+    if (isStudent && course.courseProgress) {
+        dispatch(addCourseProgressIfNeeded(courseId, course.courseProgress));
+    }
 
     const onEnroll = async () => {
         if (!id) {
@@ -62,8 +69,8 @@ const Course = () => {
             return;
         }
         dispatch(
-            enroll(courseId, async () => {
-                await mutate({ ...course, students: [...course.students, id] });
+            enroll(courseId, async courseProgress => {
+                await mutate({ ...course, students: [...course.students, id], courseProgress });
             })
         );
     };
@@ -153,7 +160,12 @@ const Course = () => {
                     desc={course.description}
                     courseChanges={courseChanges}
                 />
-                <Content editing={editing} course={course} courseChanges={courseChanges} />
+                <Content
+                    editing={editing}
+                    course={course}
+                    courseChanges={courseChanges}
+                    isStudent={isStudent}
+                />
 
                 {!editing && course.reviews.length > 0 && <Feedback course={course} />}
                 {!editing && <Review />}

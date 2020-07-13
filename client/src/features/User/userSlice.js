@@ -53,7 +53,7 @@ const userSlice = createSlice({
             const { courseId, courseProgress } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
         },
-        enrollStart: (state, action) => {
+        loadStart: (state, action) => {
             state.loading = true;
         },
         enrollSuccess: (state, action) => {
@@ -61,7 +61,7 @@ const userSlice = createSlice({
             const { courseId, courseProgress } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
         },
-        enrollFail: (state, action) => {
+        loadStop: (state, action) => {
             state.loading = false;
         }
     }
@@ -72,10 +72,10 @@ const {
     fetchUserSuccess,
     addCreatedCourse,
     addCourseProgress,
-    enrollStart,
     enrollSuccess,
     fetchUserFail,
-    enrollFail
+    loadStart,
+    loadStop
 } = userSlice.actions;
 
 export { addCreatedCourse, fetchUserFail, addCourseProgress };
@@ -98,20 +98,26 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const enroll = (courseId, mutate) => async dispatch => {
-    dispatch(enrollStart());
+    dispatch(loadStart());
     try {
         const courseProgress = await courseStore.enroll(courseId);
-        await mutate();
+        await mutate(courseProgress);
         dispatch(enrollSuccess({ courseId, courseProgress }));
 
         dispatch(setAlert('Enrolled Successfully', 'success'));
     } catch (err) {
         dispatch(setAlert('Server Error Please try again', 'danger'));
-        dispatch(enrollFail());
+        dispatch(loadStop());
         if (err.errors) {
             const errors = [...err.errors];
             errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
         }
         console.error(err);
     }
+};
+
+export const addCourseProgressIfNeeded = (courseId, courseProgress) => (dispatch, getState) => {
+    const state = getState();
+    if (typeof state.user.coursesEnrolled[courseId] === 'string')
+        dispatch(addCourseProgress({ courseId, courseProgress }));
 };
