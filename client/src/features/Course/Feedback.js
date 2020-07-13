@@ -15,7 +15,7 @@ const Feedback = props => {
             <h2>Student Feedback</h2>
             <div className='feedback'>
                 <div className='feedback__big-rating'>
-                    <p className='feedback__big-text'>{course.avgRating}</p>
+                    <p className='feedback__big-text'>{course.avgRating.toFixed(1)}</p>
                     <Rating rating={course.avgRating} />
                 </div>
                 {[5, 4, 3, 2, 1].map(i => (
@@ -27,7 +27,7 @@ const Feedback = props => {
                         </div>
                         <div className='feedback__rating'>
                             <Rating rating={i} />
-                            <p>{percent(i)}%</p>
+                            <p>{percent(i).toFixed(1)}%</p>
                         </div>
                     </Fragment>
                 ))}

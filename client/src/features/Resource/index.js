@@ -51,6 +51,7 @@ const Resource = () => {
     };
     if (!resource) return <div>Opps</div>;
 
+    return <div className='main-content'>{templates['test']({ payload: resource })}</div>;
     return <div className='main-content'>{templates[resource.kind]({ payload: resource })}</div>;
 };
 

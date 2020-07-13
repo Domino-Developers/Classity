@@ -31,7 +31,7 @@ const Comments = props => {
                     <Comment key={i} comment={com} replies={com.reply} user={props.user} />
                 )
             )}
-            {toShow < props.comments.length + 10 && (
+            {toShow < props.comments.length && (
                 <li className='comment u-center-text'>
                     <Button text={seeMore} onClick={() => show(toShow + change)} />
                 </li>
