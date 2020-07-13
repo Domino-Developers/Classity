@@ -11,6 +11,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 const Topic = require('../../models/Topic');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
+const CourseProgress = require('../../models/CourseProgress');
 
 // Initialize router
 const router = express.Router();
@@ -216,6 +217,41 @@ router.post(
         }
     }
 );
+
+/**
+ * @route		PUT api/topic/:topicId/coreResource/:resId/completed
+ * @description Add complete resource status
+ * @access		private + studentOnly
+ */
+router.put('/:topicId/coreResource/:resId/completed', studentAuth, async (req, res) => {
+    const { topicId, resId } = req.params;
+
+    try {
+        const topic = await Topic.findById(topicId).lean();
+
+        const coreResource = topic.coreResources.find(res => res._id.toString() === resId);
+
+        if (!coreResource)
+            return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
+
+        const newCourseProgress = await CourseProgress.findOneAndUpdate(
+            {
+                user: req.user.id,
+                course: topic.course
+            },
+            { $addToSet: { [`topicStatus.${topicId}`]: resId } },
+            { new: true }
+        );
+
+        return res.json(newCourseProgress);
+    } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+        }
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
 
 /**
  * @route		DELETE api/topic/:topicId/comment/:commentId
