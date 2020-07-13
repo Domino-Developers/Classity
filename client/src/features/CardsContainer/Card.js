@@ -14,7 +14,8 @@ const CourseCard = props => {
         name,
         lastStudied,
         progress,
-        streak
+        streak,
+        tags
     } = props.course;
 
     return (
@@ -24,6 +25,11 @@ const CourseCard = props => {
             <Html tag='h4' className='card__title'>
                 {name}
             </Html>
+            <div className='card__tags'>
+                {tags.map(tag => (
+                    <span className='card__tag'>{tag}</span>
+                ))}
+            </div>
             <div className='card__instructor'>{instructor}</div>
             {props.normal ? (
                 <div className='card__rating'>

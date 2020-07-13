@@ -881,22 +881,33 @@ main {
     height: 20rem;
     display: block;
     object-fit: cover; }
-  .card__title, .card__instructor, .card__rating, .card__last-study {
+  .card__title, .card__instructor, .card__rating, .card__last-study, .card_tags {
     padding: 1rem; }
   .card__title {
-    font-size: 2.5rem;
-    height: 8rem;
     display: table-cell;
-    vertical-align: middle; }
+    vertical-align: middle;
+    font-size: 2.5rem;
+    height: 8rem; }
+  .card__tags {
+    height: 5.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; }
+  .card__tag {
+    font-size: 1.5rem;
+    padding: 2px 0.7rem;
+    margin: 2px 0.5rem;
+    border-radius: 10rem;
+    background-color: rgba(118, 25, 204, 0.8);
+    color: #fcfcfc; }
   .card__instructor, .card__last-study {
-    font-size: 2rem;
     color: #aaa; }
   .card__rating {
     display: flex;
     align-items: center;
     font-weight: 600;
-    padding-top: 2rem;
-    padding-bottom: 3rem; }
+    padding-top: 0.5rem;
+    padding-bottom: 1.5rem; }
   .card__progress {
     position: absolute;
     bottom: 0;
