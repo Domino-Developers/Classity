@@ -8,6 +8,7 @@ import Loading from '../Loading';
 
 //apis
 import courseApi from '../../api/course';
+import topicApi from '../../api/topic';
 
 const TopBar = ({ params, setExist }) => {
     const { courseId, topicId } = params;
@@ -18,6 +19,9 @@ const TopBar = ({ params, setExist }) => {
         courseId ? `get-course-${courseId}` : null,
         () => courseApi.get(courseId)
     );
+    const { data: topic, error: topicError } = useSWR(topicId ? `get-topic-${topicId}` : null, () =>
+        topicApi.get(topicId)
+    );
 
     if (match) resourceId = match.params.resourceId;
 
@@ -26,17 +30,13 @@ const TopBar = ({ params, setExist }) => {
         if (!exist) setExist(false);
     });
 
-    if (courseError && navigator.onLine) exist = false;
-    if (!course) return <Loading />;
+    if ((courseError || topicError) && navigator.onLine) exist = false;
+    if (!course || !topic) return <Loading />;
 
-    const navList = [{ name: course.name, link: `/course/${courseId}` }];
-
-    const topic = course.topics.find(top => top._id === topicId);
-    if (!topic) {
-        exist = false;
-        return <Loading />;
-    }
-    navList.push({ name: topic.name, link: `/course/${courseId}/topic/${topicId}` });
+    const navList = [
+        { name: course.name, link: `/course/${courseId}` },
+        { name: topic.name, link: `/course/${courseId}/topic/${topicId}` }
+    ];
 
     if (resourceId) {
         const resource = topic.coreResources.find(res => res._id === resourceId);
