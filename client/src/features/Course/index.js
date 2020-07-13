@@ -42,7 +42,7 @@ const Course = () => {
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
-    const { isAuthenticated, loading1, loading2, _id: id, token } = useSelector(sel);
+    const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
     const loading = loading1 || loading2;
     const courseChanges = useRef({});
     const { data: course, error, mutate } = useSWR(

@@ -1,39 +1,49 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
+
 import Button from '../../components/Button';
+import Test from './Test';
 
 const TestView = ({ payload }) => {
+    const [started, setStarted] = useState(false);
+
+    const start = () => {
+        setStarted(true);
+    };
+
     return (
-        <div className='test-container'>
-            <h2 className='test-heading'> {payload.name} </h2>
-            <div className='test-bottom'>
-                <div className='submit-test'>
-                    <div className='submit-test-left'>
-                        <h3>Submit Assignment</h3>
-                        <div className='small-text'>
-                            <b>ATTEMPTS</b> 3 every 8 hours
+        <Fragment>
+            {started && <Test payload={payload} />}
+            <div className='test-view'>
+                <h2 className='test-view__heading'> {payload.name} </h2>
+                <div className='test-view__content'>
+                    <div>
+                        <h3 className='test-view__text--bold'>Submit Assignment</h3>
+                        <div className='test-view__text--small'>
+                            <span className='test-view__text--bold'>ATTEMPTS</span> 3 every 8 hours
                         </div>
                     </div>
-                    <div className='submit-test-right'>
-                        <Button text='Attempt' full></Button>
+                    <div>
+                        <Button text='Attempt' full onClick={start}></Button>
                     </div>
                 </div>
-                <div className='student-score'>
-                    <div className='student-score-left'>
-                        <h3>Recieve grade</h3>
-                        <div className='small-text'>
-                            <b>TO PASS: </b> Score more than or equal to {payload.passScore}%
+                <div className='test-view__content'>
+                    <div>
+                        <h3 className='test-view__text--bold'>Recieve grade</h3>
+                        <div className='test-view__text--small'>
+                            <span className='test-view__text--bold'>TO PASS: </span> Score more than
+                            or equal to {payload.passScore}%
                         </div>
                     </div>
-                    <div className='student-score-right'>
-                        <div className='grade'>
-                            <h3>Grade</h3>
+                    <div className='test-view__grade'>
+                        <div className='u-center-text'>
+                            <div className='test-view__grade--text'>Grade</div>
                             {payload.score}%
                         </div>
-                        <Button text='View Feedback' full></Button>
+                        <Button text='View Feedback'></Button>
                     </div>
                 </div>
             </div>
-        </div>
+        </Fragment>
     );
 };
 

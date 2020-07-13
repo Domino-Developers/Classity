@@ -19,9 +19,11 @@
     }
 
     &__link {
+        margin: -1rem 0;
         margin-left: auto;
-        line-height: 1;
+        line-height: 4.5rem;
         font-size: 2.5rem;
+        font-weight: 600;
         color: $color-primary;
         transition: transform 0.2s;
 

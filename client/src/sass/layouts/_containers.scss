@@ -11,3 +11,19 @@ main {
     max-width: 1300px;
     margin: 14rem auto;
 }
+
+.main-content-area {
+    position: fixed;
+    display: flex;
+    top: 135px;
+    width: 100%;
+    height: calc(100% - 135px);
+    z-index: 101;
+}
+
+.main-content-area .main-content {
+    margin-top: 2rem;
+    overflow-y: scroll;
+    padding: 0 15%;
+    flex-grow: 1;
+}
