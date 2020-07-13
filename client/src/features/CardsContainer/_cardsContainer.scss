@@ -26,20 +26,36 @@
     &__title,
     &__instructor,
     &__rating,
-    &__last-study {
+    &__last-study,
+    &_tags {
         padding: 1rem;
     }
 
     &__title {
-        font-size: 2.5rem;
-        height: 8rem;
         display: table-cell;
         vertical-align: middle;
+        font-size: 2.5rem;
+        height: 8rem;
+    }
+
+    &__tags {
+        height: 5.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    &__tag {
+        font-size: 1.5rem;
+        padding: 2px 0.7rem;
+        margin: 2px 0.5rem;
+        border-radius: 10rem;
+        background-color: rgba($color-primary, 0.8);
+        color: $color-white;
     }
 
     &__instructor,
     &__last-study {
-        font-size: 2rem;
         color: $color-grey-3;
     }
 
@@ -47,8 +63,8 @@
         display: flex;
         align-items: center;
         font-weight: 600;
-        padding-top: 2rem;
-        padding-bottom: 3rem;
+        padding-top: 0.5rem;
+        padding-bottom: 1.5rem;
     }
 
     &__progress {
