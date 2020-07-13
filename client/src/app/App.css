@@ -79,6 +79,20 @@ main {
   max-width: 1300px;
   margin: 14rem auto; }
 
+.main-content-area {
+  position: fixed;
+  display: flex;
+  top: 135px;
+  width: 100%;
+  height: calc(100% - 135px);
+  z-index: 101; }
+
+.main-content-area .main-content {
+  margin-top: 2rem;
+  overflow-y: scroll;
+  padding: 0 15%;
+  flex-grow: 1; }
+
 .overlay {
   position: fixed;
   width: 100%;
@@ -530,19 +544,6 @@ main {
 .reviews__heading {
   border-bottom: 1px solid #d6d6d6; }
 
-.main-content-area {
-  position: fixed;
-  display: flex;
-  top: 135px;
-  width: 100%;
-  height: calc(100% - 135px); }
-
-.main-content-area .main-content {
-  margin-top: 2rem;
-  overflow-y: scroll;
-  padding: 0 15%;
-  flex-grow: 1; }
-
 .topic-content {
   font-size: 2.4rem; }
   .topic-content__link {
@@ -701,74 +702,74 @@ main {
   border-bottom: 0.8px solid #d6d6d6; }
 
 /* Test */
-.test__heading {
+.test-view__heading {
   font-size: 4rem; }
 
-.test__content {
+.test-view__content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #d6d6d6;
   padding: 2rem; }
 
-.test__text--small {
+.test-view__text--small {
   font-size: 1.4rem;
   color: #aaa; }
 
-.test__text--bold {
+.test-view__text--bold {
   font-weight: 600; }
 
-.test__grade {
+.test-view__grade {
   display: flex;
   align-items: center;
   gap: 4rem;
   padding: 2rem;
   border-left: 1px solid #d6d6d6; }
 
-.test-view {
+.test {
   position: absolute;
-  top: 0;
+  top: -135px;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
   background-color: #fcfcfc;
   overflow: scroll;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s; }
-  .test-view__start {
-    visibility: visible;
-    opacity: 1; }
-  .test-view__bar {
+  padding-top: 5.6rem; }
+  .test__bar {
     display: flex;
     gap: 2rem;
     padding: 1.5rem;
-    border-bottom: 1px solid #aaa; }
-  .test-view__back-icon {
+    border-bottom: 1px solid #aaa;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 102;
+    background-color: #fcfcfc; }
+  .test__back-icon {
     margin: -1.5rem 0;
     line-height: 5.5rem;
     font-size: 2.5rem;
     font-weight: 600;
     transition: transform 0.2s; }
-    .test-view__back-icon:hover {
+    .test__back-icon:hover {
       transform: scaleX(1.5); }
-  .test-view__content {
+  .test__content {
     max-width: 960px;
     margin: 4rem auto; }
-  .test-view__question-list {
+  .test__question-list {
     border-top: 1px solid #d6d6d6;
     border-bottom: 1px solid #d6d6d6;
     padding: 2rem;
     line-height: 1.5; }
-  .test-view__question {
+  .test__question {
     padding-left: 1rem;
     padding-right: 10rem;
     margin-bottom: 8rem;
     position: relative;
     border: 1px solid transparent;
     border-radius: 5px; }
-    .test-view__question::after {
+    .test__question::after {
       content: '1 score';
       font-size: 1.4rem;
       position: absolute;
@@ -777,7 +778,7 @@ main {
       border: 1px solid #d6d6d6;
       padding: 0rem 1rem;
       border-radius: 10rem; }
-    .test-view__question--true::marker, .test-view__question--false::marker {
+    .test__question--true::marker, .test__question--false::marker {
       font-size: 4rem;
       color: #7619cc;
       font-size: 4rem;
@@ -785,63 +786,63 @@ main {
       position: absolute;
       top: 0.5rem;
       right: 0.5rem; }
-    .test-view__question--true {
+    .test__question--true {
       border: 1px solid #28a745; }
-      .test-view__question--true::marker {
+      .test__question--true::marker {
         content: '\2713'; }
-    .test-view__question--false {
+    .test__question--false {
       border: 1px solid #dc3545; }
-      .test-view__question--false::marker {
+      .test__question--false::marker {
         content: '\2715'; }
-  .test-view__label {
+  .test__label {
     display: block;
     margin: 1rem 0;
     transition: color 0.2s; }
-    .test-view__label:hover {
+    .test__label:hover {
       color: #7619cc; }
-  .test-view__input {
+  .test__input {
     margin-right: 1rem; }
-    .test-view__input--text {
+    .test__input--text {
       margin: 1rem 0;
       padding: 0.5rem 1rem;
       border: 1px solid #d6d6d6;
       border-radius: 5px;
       transition: border 0.2s; }
-      .test-view__input--text:focus {
+      .test__input--text:focus {
         border: 1px solid #7619cc; }
-  .test-view__submit {
+  .test__submit {
     margin-top: 4rem;
     text-align: right; }
-  .test-view__score {
+  .test__score {
     padding: 1px 0; }
-    .test-view__score--true {
+    .test__score--true {
       background-color: rgba(40, 167, 69, 0.1); }
-    .test-view__score--false {
+    .test__score--false {
       background-color: rgba(220, 53, 69, 0.1); }
-    .test-view__score--grade {
+    .test__score--grade {
       padding-left: 4rem;
       border-left: 1px solid #d6d6d6;
       margin-left: 4rem; }
-    .test-view__score--true .test-view__score--result {
+    .test__score--true .test__score--result {
       margin-bottom: 1rem; }
-      .test-view__score--true .test-view__score--result::before {
+      .test__score--true .test__score--result::before {
         content: 'Congratulations! You passed!'; }
-    .test-view__score--false .test-view__score--result {
+    .test__score--false .test__score--result {
       margin-bottom: 1rem; }
-      .test-view__score--false .test-view__score--result::before {
+      .test__score--false .test__score--result::before {
         content: 'Try again once you are ready'; }
-  .test-view__score .test-view__content {
+  .test__score .test__content {
     display: flex; }
-    .test-view__score .test-view__content::before {
+    .test__score .test__content::before {
       font-size: 4rem;
       margin-right: 2rem; }
-  .test-view__score--true .test-view__content::before {
+  .test__score--true .test__content::before {
     content: '\2713';
     color: #28a745; }
-  .test-view__score--false .test-view__content::before {
+  .test__score--false .test__content::before {
     content: '\21';
     color: #dc3545; }
-  .test-view__right {
+  .test__right {
     margin-left: auto; }
 
 .dashboard__header {
