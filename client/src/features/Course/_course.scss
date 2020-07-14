@@ -33,6 +33,11 @@
     border-radius: 10px;
 }
 
+.course-content__complete-icon {
+    margin-left: 1rem;
+    color: $color-success;
+}
+
 .feedback {
     display: grid;
     grid-template-rows: repeat(5, min-content);

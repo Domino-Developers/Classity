@@ -520,6 +520,10 @@ main {
   padding: 2rem;
   border-radius: 10px; }
 
+.course-content__complete-icon {
+  margin-left: 1rem;
+  color: #28a745; }
+
 .feedback {
   display: grid;
   grid-template-rows: repeat(5, min-content);
