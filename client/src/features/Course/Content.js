@@ -27,7 +27,10 @@ const Content = props => {
                 {topics.map((topic, i) => (
                     <Collapse.Head
                         key={i}
-                        text={topic.name}
+                        text={
+                            topic.name +
+                            '<i class="fas fa-check-circle course-content__complete-icon"></i>'
+                        }
                         to={`/course/${course._id}/topic/${topic._id}`}
                         onChange={e => {
                             setTopics([
