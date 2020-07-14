@@ -9,7 +9,7 @@ export const addCourse = async (history, setLoading, addToState) => {
 
     setLoading(true);
     const courseRes = await courseStore.add(dummyCourse);
-    addToState(courseRes._id);
+    addToState(courseRes);
     setLoading(false);
     history.replace(`/course/${courseRes._id}?edit=true`);
 };

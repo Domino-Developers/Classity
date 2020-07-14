@@ -44,7 +44,7 @@ const Dashboard = () => {
         ];
     }
 
-    const { data, error } = useSWR(loading ? null : 'get-custom-course-min', () => {
+    const { data, error, mutate } = useSWR(loading ? null : 'get-custom-course-min', () => {
         console.log('fetching');
         return courseStore.getCustomCoursesMin(reqBody);
     });
@@ -86,9 +86,10 @@ const Dashboard = () => {
                 <Button
                     text='Create a course'
                     onClick={() =>
-                        addCourse(history, setCreating, id =>
-                            dispatch(addCreatedCourse({ courseId: id }))
-                        )
+                        addCourse(history, setCreating, course => {
+                            mutate({ ...data, [course._id]: course });
+                            dispatch(addCreatedCourse({ courseId: course._id }));
+                        })
                     }
                     loading={creating}
                 />
