@@ -1,22 +1,16 @@
-import React, { Fragment, useEffect, useMemo } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
 import Breadcrumb from '../Breadcrumb';
-import CircularProgress from '../CircularProgress';
 import Loading from '../Loading';
 
 //apis
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 import { createSelector } from '@reduxjs/toolkit';
+import ProgressCircle from './ProgressCircle';
 
-const makeSelector = courseId =>
-    createSelector(
-        state => state.user.coursesEnrolled[courseId],
-        // (_, courseId) => courseId,
-        courseEnrolled => courseEnrolled.precentageCompleted
-    );
 const CoursesCreatedSelector = createSelector(
     state => state.user.coursesCreated,
     coursesCreated => coursesCreated
@@ -33,11 +27,6 @@ const TopBar = ({ params, setExist }) => {
         topicApi.get(topicId)
     );
     const instructor = coursesCreated.includes(courseId);
-    const sel = useMemo(() => (!instructor ? makeSelector(courseId) : () => null), [
-        courseId,
-        instructor
-    ]);
-    const progress = useSelector(state => sel(state, courseId));
 
     let resourceId = null;
     if (match) resourceId = match.params.resourceId;
@@ -76,12 +65,7 @@ const TopBar = ({ params, setExist }) => {
                         ))}
                     </Breadcrumb.Container>
                 </div>
-                {!instructor && (
-                    <div className='topbar__right'>
-                        Your progress
-                        <CircularProgress size='50' progress={progress} />
-                    </div>
-                )}
+                {!instructor && <ProgressCircle instructor={instructor} course={course} />}
             </div>
         </Fragment>
     );

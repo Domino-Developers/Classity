@@ -69,11 +69,15 @@ const Dashboard = () => {
                 progressData = coursesEnrolled[id];
             }
 
+            const doneResources = Object.values(progressData.topicStatus).reduce(
+                (tot, res) => tot + res.length,
+                0
+            );
             return {
                 ...courseData,
                 lastStudied: progressData.lastStudied,
                 streak: progressData.streak,
-                progress: progressData.precentageCompleted
+                progress: (doneResources / courseData.totalCoreResources) * 100
             };
         });
         createdCourses = coursesCreated.map(id => data[id].course);
@@ -87,7 +91,7 @@ const Dashboard = () => {
                     text='Create a course'
                     onClick={() =>
                         addCourse(history, setCreating, course => {
-                            mutate({ ...data, [course._id]: course });
+                            mutate({ ...data, [course._id]: { course } }, false);
                             dispatch(addCreatedCourse({ courseId: course._id }));
                         })
                     }

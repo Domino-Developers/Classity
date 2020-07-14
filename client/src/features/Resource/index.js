@@ -13,8 +13,8 @@ import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 import Button from '../../components/Button';
 import { createSelector } from '@reduxjs/toolkit';
-import { useMemo } from 'react';
 import { completeCoreResource } from '../User/userSlice';
+import { useResourceStatus } from '../../utils/hooks';
 
 const userAndAuth = createSelector(
     [state => state.user.coursesCreated, state => state.user.resourseLoading],
@@ -24,29 +24,12 @@ const userAndAuth = createSelector(
     })
 );
 
-const makeCPrSelector = (courseId, topicId) =>
-    createSelector(
-        state => state.user.coursesEnrolled[courseId].topicStatus[topicId],
-        // (_, courseId, topicId) => {
-        //     console.log(courseId, topicId);
-        //     return {
-        //         courseId,
-        //         topicId
-        //     };
-        // },
-        courseProgress => courseProgress
-    );
-
 const Resource = () => {
     const dispatch = useDispatch();
     const { courseId, topicId, resourceId } = useParams();
     const { coursesCreated, loading } = useSelector(userAndAuth);
     const isInstructor = coursesCreated.includes(courseId);
-    const cPrSelector = useMemo(
-        () => (isInstructor ? () => null : makeCPrSelector(courseId, topicId)),
-        [isInstructor, courseId, topicId]
-    );
-    const resourcesDone = useSelector(state => cPrSelector(state, courseId, topicId)) || [];
+    const resourcesDone = useResourceStatus(isInstructor, courseId, topicId);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
     if (!course || !topic) return <Loading />;

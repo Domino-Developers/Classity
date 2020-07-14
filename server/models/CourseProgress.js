@@ -4,7 +4,6 @@ const { user, course, date, number } = require('./common');
 const CourseProgressSchema = new mongoose.Schema({
     user,
     course,
-    precentageCompleted: number,
     lastStudied: date,
     streak: number,
     testScores: {
