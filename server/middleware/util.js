@@ -17,9 +17,12 @@ const getCourse = async req => {
     if (courseId) {
         course = await Course.findById(courseId).select(toSelect);
     } else if (topicId) {
-        const topic = await Topic.findById(topicId)
-            .select('course')
-            .populate('course', toSelect);
+        const topic = await Topic.findById(topicId).select('course').populate('course', toSelect);
+        if (!topic) {
+            const e = new Error('Invalid Id');
+            e.kind = 'BadRequest';
+            throw e;
+        }
 
         course = topic.course;
     } else if (testId) {
@@ -31,6 +34,11 @@ const getCourse = async req => {
                 populate: { path: 'course', select: toSelect }
             })
             .select('topic');
+        if (!test) {
+            const e = new Error('Invalid Id');
+            e.kind = 'BadRequest';
+            throw e;
+        }
 
         course = test.topic.course;
     } else if (commentId) {
@@ -42,6 +50,11 @@ const getCourse = async req => {
                 populate: { path: 'course', select: toSelect }
             })
             .select('topic');
+        if (!comment) {
+            const e = new Error('Invalid Id');
+            e.kind = 'BadRequest';
+            throw e;
+        }
 
         course = comment.topic.course;
     } else {

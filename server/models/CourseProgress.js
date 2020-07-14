@@ -14,6 +14,11 @@ const CourseProgressSchema = new mongoose.Schema({
             lastAttemptDate: date
         },
         default: {}
+    },
+    topicStatus: {
+        type: Map,
+        of: [mongoose.Schema.Types.ObjectId],
+        default: {}
     }
 });
 
