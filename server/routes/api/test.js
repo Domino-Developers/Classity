@@ -22,9 +22,7 @@ const router = express.Router();
  */
 router.get('/:testId', classroomAuth, async (req, res) => {
     try {
-        const test = await Test.findById(req.params.testId)
-            .lean()
-            .select('-_id');
+        const test = await Test.findById(req.params.testId).lean().select('-_id');
         res.json(test);
     } catch (err) {
         console.error(err.message);
@@ -39,10 +37,7 @@ router.get('/:testId', classroomAuth, async (req, res) => {
  */
 router.patch(
     '/:testId',
-    [
-        instructorAuth,
-        check('questions', "questions can't be empty").not().isEmpty()
-    ],
+    [instructorAuth, check('questions', "questions can't be empty").not().isEmpty()],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -57,11 +52,11 @@ router.patch(
             // check for errors
             const ValidationErrors = test.validateSync();
             if (ValidationErrors) {
-                const error_messages = {},
-                    errors = ValidationErrors.errors;
-                for (let field in errors)
-                    error_messages[field] = errors[field].message;
-                return res.status(400).json({ errors: error_messages });
+                console.log(ValidationErrors.errors);
+                const errors = ValidationErrors.errors;
+                const errorMessages = [];
+                for (let field in errors) errorMessages.push({ msg: errors[field].message });
+                return res.status(400).json({ errors: errorMessages });
             }
 
             // save the test
@@ -93,10 +88,7 @@ router.put(
             return res.status(400).json(errors);
         }
         try {
-            const courseObj = await Test.findById(req.params.testId).populate(
-                'topic',
-                'course'
-            );
+            const courseObj = await Test.findById(req.params.testId).populate('topic', 'course');
             const courseId = courseObj.topic.course;
 
             const newProgress = await CourseProgress.findOneAndUpdate(

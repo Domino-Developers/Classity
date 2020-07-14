@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 import commentApi from '../../api/comment';
+import testApi from '../../api/test';
 
 import Editable from '../../components/Editable';
 import Tabs from '../../components/Tabs';
@@ -51,6 +52,28 @@ const Topic = () => {
         try {
             const promises = [];
 
+            for (let i = 0; i < resources.length; i++) {
+                if (!resources[i].payload) {
+                    if (resources[i].kind === 'text')
+                        resources[i].payload = 'Enter your reading material here.';
+                    if (resources[i].kind === 'video')
+                        resources[i].payload = 'https://www.youtube.com/watch?v=jNQXAC9IVRw';
+                    if (resources[i].kind === 'test') {
+                        const testId = await testApi.add(topic._id, {
+                            questions: [
+                                {
+                                    kind: 'short',
+                                    question: 'This is a sample question.',
+                                    answer: 'answer here'
+                                }
+                            ],
+                            passScore: 70
+                        });
+                        resources[i].payload = testId;
+                    }
+                }
+            }
+
             if (topic.coreResources !== resources)
                 promises.push(topicApi.setCoreResources(topic._id, resources));
 
@@ -64,6 +87,7 @@ const Topic = () => {
             edit(false);
         } catch (err) {
             if (err.errors) {
+                console.log(err);
                 const errors = err.errors;
                 errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
             }
@@ -150,11 +174,7 @@ const Topic = () => {
                                         <span
                                             onAdd={() => {
                                                 setResources([
-                                                    {
-                                                        kind: 'text',
-                                                        name: 'new',
-                                                        payload: ' '
-                                                    },
+                                                    { kind: 'text', name: 'New Text' },
                                                     ...resources
                                                 ]);
                                             }}>
@@ -163,12 +183,7 @@ const Topic = () => {
                                         <span
                                             onAdd={() => {
                                                 setResources([
-                                                    {
-                                                        kind: 'video',
-                                                        name: 'new',
-                                                        payload:
-                                                            'https://www.youtube.com/watch?v=I7CfaDYzTVM'
-                                                    },
+                                                    { kind: 'video', name: 'New Video' },
                                                     ...resources
                                                 ]);
                                             }}>
@@ -177,11 +192,7 @@ const Topic = () => {
                                         <span
                                             onAdd={() => {
                                                 setResources([
-                                                    {
-                                                        kind: 'test',
-                                                        name: 'new',
-                                                        payload: ' '
-                                                    },
+                                                    { kind: 'test', name: 'New Test' },
                                                     ...resources
                                                 ]);
                                             }}>
@@ -235,11 +246,7 @@ const Topic = () => {
                                                         onAdd={() => {
                                                             setResources([
                                                                 ...resources.slice(0, i + 1),
-                                                                {
-                                                                    kind: 'text',
-                                                                    name: 'new',
-                                                                    payload: ' '
-                                                                },
+                                                                { kind: 'text', name: 'New Text' },
                                                                 ...resources.slice(i + 1)
                                                             ]);
                                                         }}>
@@ -251,9 +258,7 @@ const Topic = () => {
                                                                 ...resources.slice(0, i + 1),
                                                                 {
                                                                     kind: 'video',
-                                                                    name: 'new',
-                                                                    payload:
-                                                                        'https://www.youtube.com/watch?v=I7CfaDYzTVM'
+                                                                    name: 'New Video'
                                                                 },
                                                                 ...resources.slice(i + 1)
                                                             ]);
@@ -264,11 +269,7 @@ const Topic = () => {
                                                         onAdd={() => {
                                                             setResources([
                                                                 ...resources.slice(0, i + 1),
-                                                                {
-                                                                    kind: 'test',
-                                                                    name: 'new',
-                                                                    payload: ' '
-                                                                },
+                                                                { kind: 'test', name: 'New Test' },
                                                                 ...resources.slice(i + 1)
                                                             ]);
                                                         }}>

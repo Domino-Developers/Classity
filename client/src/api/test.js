@@ -5,7 +5,7 @@ export default {
     async add(topicId, testData) {
         try {
             const res = await api.post(`/api/topic/${topicId}/test`, {
-                body: JSON.stringify(testData)
+                body: testData
             });
             return res.data;
         } catch (err) {
@@ -27,7 +27,7 @@ export default {
     async update(testId, testData) {
         try {
             const res = await api.patch(`/api/test/${testId}`, {
-                body: JSON.stringify(testData)
+                body: testData
             });
             return res.data;
         } catch (err) {
@@ -39,7 +39,7 @@ export default {
     async addScore(testId, scoreData) {
         try {
             const res = await api.put(`/api/test/${testId}`, {
-                body: JSON.stringify(scoreData)
+                body: scoreData
             });
             return res.data;
         } catch (err) {

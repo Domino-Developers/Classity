@@ -152,25 +152,13 @@ router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (re
  */
 router.post(
     '/:topicId/test',
-    [
-        instructorAuth,
-        [
-            check('name', "Can't be empty").not().isEmpty(),
-            check('questions', "questions can't be empty").not().isEmpty()
-        ]
-    ],
+    [instructorAuth, [check('questions', "questions can't be empty").not().isEmpty()]],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json(errors);
         }
         try {
-            const pos = req.body.position;
-            const name = req.body.name;
-            // now remove the postion
-            delete req.body.position;
-            delete req.body.name;
-
             // Create test object
             const test = new Test({
                 ...req.body,
@@ -180,35 +168,14 @@ router.post(
             // check for errors
             const ValidationErrors = test.validateSync();
             if (ValidationErrors) {
-                const error_messages = {},
-                    errors = ValidationErrors.errors;
-                for (let field in errors) error_messages[field] = errors[field].message;
-                return res.status(400).json({ errors: error_messages });
+                console.log(ValidationErrors.errors);
+                const errors = ValidationErrors.errors;
+                const errorMessages = [];
+                for (let field in errors) errorMessages.push({ msg: errors[field].message });
+                return res.status(400).json({ errors: errorMessages });
             }
 
-            // save the test
-            const testPromise = test.save();
-
-            // add test to topic
-            const topicPromise = Topic.findOneAndUpdate(
-                { _id: req.params.topicId },
-                {
-                    $push: {
-                        coreResources: {
-                            $each: [
-                                {
-                                    kind: 'test',
-                                    testId: test.id,
-                                    name
-                                }
-                            ],
-                            $position: pos
-                        }
-                    }
-                }
-            );
-
-            await Promise.all([testPromise, topicPromise]);
+            await test.save();
 
             res.json(test);
         } catch (err) {

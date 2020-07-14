@@ -2,39 +2,8 @@ import React, { useState, useRef } from 'react';
 
 import Button from '../../components/Button';
 
-const Test = ({ payload }) => {
-    // temp variables start
-    const questions = [
-        {
-            kind: 'smcq',
-            question:
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat unde officia assumenda expedita eius necessitatibus dolores autem maxime similique reprehenderit deleniti odit quis atque ipsam, ab qui. Blanditiis, dolore quidem.',
-            options: ['hi', 'hello', 'welcome'],
-            answer: 2
-        },
-        {
-            kind: 'mmcq',
-            question:
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat unde officia assumenda expedita eius necessitatibus dolores autem maxime similique reprehenderit deleniti odit quis atque ipsam, ab qui. Blanditiis, dolore quidem.',
-            options: ['hi', 'hello', 'welcome'],
-            answers: [1, 3]
-        },
-        {
-            kind: 'short',
-            question:
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat unde officia assumenda expedita eius necessitatibus dolores autem maxime similique reprehenderit deleniti odit quis atque ipsam, ab qui. Blanditiis, dolore quidem.',
-            answer: 'Hello'
-        },
-        {
-            kind: 'numerical',
-            question:
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat unde officia assumenda expedita eius necessitatibus dolores autem maxime similique reprehenderit deleniti odit quis atque ipsam, ab qui. Blanditiis, dolore quidem.',
-            answer: { from: 4.3, to: 4.7 }
-        }
-    ];
-
-    payload.passScore = 10;
-    // temp variables end
+const Test = ({ test }) => {
+    const { questions, passScore } = test;
 
     const answers = useRef({});
     const [result, setResult] = useState({});
@@ -67,10 +36,10 @@ const Test = ({ payload }) => {
 
         questions.forEach((q, i) => {
             if (q.kind === 'smcq') {
-                tempResult[`q${i}`] = answers.current[`q${i}`] === q.options[q.answer - 1];
+                tempResult[`q${i}`] = answers.current[`q${i}`] === q.options[q.answer];
             } else if (q.kind === 'mmcq') {
                 const correct = [];
-                q.answers.forEach(i => correct.push(q.options[i - 1]));
+                q.answers.forEach(i => correct.push(q.options[i]));
 
                 correct.sort();
                 (answers.current[`q${i}`] || []).sort();
@@ -100,13 +69,13 @@ const Test = ({ payload }) => {
             </div>
 
             {submitted && (
-                <div className={`test__score test__score--${scorePercent >= payload.passScore}`}>
+                <div className={`test__score test__score--${scorePercent >= passScore}`}>
                     <div className='test__content'>
                         <div>
                             <h4 className='test__score--result'>&nbsp;</h4>
                             <div className='test__text--small'>
                                 <span className='test__text--bold'>TO PASS: </span> Score more than
-                                or equal to {payload.passScore}%
+                                or equal to {passScore}%
                             </div>
                         </div>
                         <div className='test__right'>
