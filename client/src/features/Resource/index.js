@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Video from './Video';
 import TextRes from './TextRes';
 import TestView from './TestView';
+import TestEdit from './TestEdit';
 import topicApi from '../../api/topic';
 import courseApi from '../../api/course';
 import Loading from '../../components/Loading';
@@ -75,7 +76,7 @@ const Resource = () => {
     const templates = {
         video: props => <Video {...props} instructor={isInstructor} update={update} />,
         text: props => <TextRes {...props} instructor={isInstructor} update={update} />,
-        test: props => <TestView {...props} instructor={isInstructor} update={update} />
+        test: props => (isInstructor ? <TestEdit {...props} /> : <TestView {...props} />)
     };
     if (!resource) return <div>Opps</div>;
     const coreResources = topic.coreResources;

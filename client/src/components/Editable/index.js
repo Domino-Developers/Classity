@@ -16,7 +16,7 @@ const makeRich = (event, command, argument) => {
 };
 
 const Editable = props => {
-    const { html, onChange, disabled, tagName, rich, className } = props;
+    const { html, onChange, disabled, tagName, rich, className, block } = props;
 
     return (
         <Fragment>
@@ -26,7 +26,7 @@ const Editable = props => {
                 disabled={disabled}
                 tagName={tagName}
                 onPaste={pasteAsPlainText}
-                style={{ display: 'inline-block', minWidth: '20rem' }}
+                style={{ display: block ? 'block' : 'inline-block', minWidth: '20rem' }}
                 className={className}
             />
             {rich && !disabled && (
@@ -76,7 +76,8 @@ Editable.propTypes = {
     className: PropTypes.string,
     tagName: PropTypes.string,
     onChange: PropTypes.func,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    block: PropTypes.bool
 };
 
 export default Editable;

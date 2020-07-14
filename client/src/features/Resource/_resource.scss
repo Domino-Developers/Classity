@@ -1,3 +1,37 @@
+.resource {
+    &__complete {
+        margin: 5rem 1rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+
+        &-text {
+            display: inline-flex;
+            justify-content: space-between;
+            font-size: 2rem;
+            > * {
+                margin: 0 1rem;
+            }
+
+            .tick {
+                font-size: 4rem;
+                color: $color-success;
+                transform: scaleX(1.5);
+            }
+
+            .complete-text {
+                padding-top: 1rem;
+                font-weight: 300;
+            }
+
+            Button {
+                font-size: inherit;
+                border-radius: 1px;
+            }
+        }
+    }
+}
+
 .video {
     &__input {
         margin: 2rem;
@@ -52,9 +86,12 @@
     &__grade {
         display: flex;
         align-items: center;
-        gap: 4rem;
         padding: 2rem;
         border-left: 1px solid $color-grey-2;
+
+        &--text {
+            margin-right: 4rem;
+        }
     }
 }
 
@@ -70,7 +107,6 @@
 
     &__bar {
         display: flex;
-        gap: 2rem;
         padding: 1.5rem;
         border-bottom: 1px solid $color-grey-3;
         position: fixed;
@@ -79,6 +115,10 @@
         width: 100%;
         z-index: 102;
         background-color: $color-white;
+
+        a {
+            margin-right: 2rem;
+        }
     }
 
     &__back-icon {
@@ -239,36 +279,87 @@
     }
 }
 
-.resource {
-    &__complete {
-        margin: 5rem 1rem;
+.test-edit {
+    &__header {
         display: flex;
-        justify-content: flex-end;
-        align-items: baseline;
+        align-items: center;
 
-        &-text {
-            display: inline-flex;
-            justify-content: space-between;
-            font-size: 2rem;
-            > * {
-                margin: 0 1rem;
-            }
+        &--right {
+            margin-left: auto;
+        }
+    }
 
-            .tick {
-                font-size: 4rem;
-                color: $color-success;
-                transform: scaleX(1.5);
-            }
+    &__pass-score {
+        width: 5rem;
+        text-align: center;
+    }
 
-            .complete-text {
-                padding-top: 1rem;
-                font-weight: 300;
-            }
+    &__info {
+        display: inline-block;
+        font-size: 1.5rem;
+        margin-top: 0.5rem;
 
-            Button {
-                font-size: inherit;
-                border-radius: 1px;
+        &::before {
+            content: '\2139';
+            display: inline-block;
+            border: 1px solid $color-black;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+    }
+
+    &__list {
+        margin-top: 2rem;
+        margin-bottom: 7rem;
+        padding-top: 2rem;
+        border-top: 1px solid $color-grey-2;
+
+        li:first-child::marker {
+            content: '';
+        }
+    }
+
+    &__question {
+        position: relative;
+
+        &--new {
+            margin: 2rem 0;
+        }
+    }
+
+    &__option {
+        margin: 1rem 0;
+        display: block;
+
+        &--new {
+            cursor: pointer;
+            transition: color 0.2s;
+
+            &:hover {
+                color: $color-primary;
             }
+        }
+    }
+
+    &__num-input {
+        width: 7rem;
+        text-align: center;
+    }
+
+    &__delete-btn {
+        position: absolute;
+        right: 0;
+        transform: translateY(-4rem);
+        background-color: $color-danger;
+        color: $color-white;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: darken($color-danger, 10%);
         }
     }
 }
