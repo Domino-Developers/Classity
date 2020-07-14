@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import userStore from '../../api/user';
 import courseStore from '../../api/course';
 import { setAlert } from '../Alerts/alertSlice';
+import topicStore from '../../api/topic';
 
 const initialState = {
     _id: null,
@@ -10,7 +11,8 @@ const initialState = {
     avatar: null,
     coursesEnrolled: null,
     coursesCreated: null,
-    loading: true
+    loading: true,
+    resourceLoading: false
 };
 
 const userSlice = createSlice({
@@ -52,16 +54,23 @@ const userSlice = createSlice({
         addCourseProgress: (state, action) => {
             const { courseId, courseProgress } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
+            state.resourceLoading = false;
         },
-        loadStart: (state, action) => {
-            state.loading = true;
+        resourceLoadStart: (state, action) => {
+            state.resourceLoading = true;
+        },
+        resourceLoadStop: (state, action) => {
+            state.resourceLoading = false;
+        },
+        enrollStart: (state, action) => {
+            state.loading = false;
         },
         enrollSuccess: (state, action) => {
             state.loading = false;
             const { courseId, courseProgress } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
         },
-        loadStop: (state, action) => {
+        enrollFail: (state, action) => {
             state.loading = false;
         }
     }
@@ -74,8 +83,10 @@ const {
     addCourseProgress,
     enrollSuccess,
     fetchUserFail,
-    loadStart,
-    loadStop
+    enrollStart,
+    enrollFail,
+    resourceLoadStart,
+    resourceLoadStop
 } = userSlice.actions;
 
 export { addCreatedCourse, fetchUserFail, addCourseProgress };
@@ -98,7 +109,7 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const enroll = (courseId, mutate) => async dispatch => {
-    dispatch(loadStart());
+    dispatch(enrollStart());
     try {
         const courseProgress = await courseStore.enroll(courseId);
         await mutate(courseProgress);
@@ -107,7 +118,7 @@ export const enroll = (courseId, mutate) => async dispatch => {
         dispatch(setAlert('Enrolled Successfully', 'success'));
     } catch (err) {
         dispatch(setAlert('Server Error Please try again', 'danger'));
-        dispatch(loadStop());
+        dispatch(enrollFail());
         if (err.errors) {
             const errors = [...err.errors];
             errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
@@ -120,4 +131,20 @@ export const addCourseProgressIfNeeded = (courseId, courseProgress) => (dispatch
     const state = getState();
     if (typeof state.user.coursesEnrolled[courseId] === 'string')
         dispatch(addCourseProgress({ courseId, courseProgress }));
+};
+
+export const completeCoreResource = (courseId, topicId, resId) => async dispatch => {
+    dispatch(resourceLoadStart());
+    try {
+        const courseProgress = await topicStore.markComplete(topicId, resId);
+        dispatch(addCourseProgress({ courseId, courseProgress }));
+    } catch (err) {
+        dispatch(setAlert('Error completing! Try again', 'danger'));
+        dispatch(resourceLoadStop());
+        if (err.errors) {
+            const errors = [...err.errors];
+            errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+        }
+        console.error(err);
+    }
 };
