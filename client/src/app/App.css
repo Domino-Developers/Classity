@@ -848,6 +848,28 @@ main {
   .test__right {
     margin-left: auto; }
 
+.resource__complete {
+  margin: 5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline; }
+  .resource__complete-text {
+    display: inline-flex;
+    justify-content: space-between;
+    font-size: 2rem; }
+    .resource__complete-text > * {
+      margin: 0 1rem; }
+    .resource__complete-text .tick {
+      font-size: 4rem;
+      color: #06f006;
+      transform: scaleX(1.5); }
+    .resource__complete-text .complete-text {
+      padding-top: 1rem;
+      font-weight: 300; }
+    .resource__complete-text Button {
+      font-size: inherit;
+      border-radius: 1px; }
+
 .dashboard__header {
   display: flex;
   justify-content: space-between;

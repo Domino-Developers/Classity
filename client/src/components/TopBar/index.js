@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
@@ -9,20 +9,37 @@ import Loading from '../Loading';
 //apis
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
+import { createSelector } from '@reduxjs/toolkit';
+
+const makeSelector = courseId =>
+    createSelector(
+        state => state.user.coursesEnrolled[courseId],
+        // (_, courseId) => courseId,
+        courseEnrolled => courseEnrolled.precentageCompleted
+    );
+const CoursesCreatedSelector = createSelector(
+    state => state.user.coursesCreated,
+    coursesCreated => coursesCreated
+);
 
 const TopBar = ({ params, setExist }) => {
     const { courseId, topicId } = params;
-    let resourceId = null;
     const match = useRouteMatch('/course/:courseId/topic/:topicId/resource/:resourceId');
-    const id = useSelector(state => state.user._id);
-    const { data: course, error: courseError } = useSWR(
-        courseId ? `get-course-${courseId}` : null,
-        () => courseApi.get(courseId)
+    const coursesCreated = useSelector(CoursesCreatedSelector);
+    const { data: course, error: courseError } = useSWR(`get-course-${courseId}`, () =>
+        courseApi.get(courseId)
     );
-    const { data: topic, error: topicError } = useSWR(topicId ? `get-topic-${topicId}` : null, () =>
+    const { data: topic, error: topicError } = useSWR(`get-topic-${topicId}`, () =>
         topicApi.get(topicId)
     );
+    const instructor = coursesCreated.includes(courseId);
+    const sel = useMemo(() => (!instructor ? makeSelector(courseId) : () => null), [
+        courseId,
+        instructor
+    ]);
+    const progress = useSelector(state => sel(state, courseId));
 
+    let resourceId = null;
     if (match) resourceId = match.params.resourceId;
 
     let exist = true;
@@ -47,8 +64,6 @@ const TopBar = ({ params, setExist }) => {
         navList.push({ name: resource.name });
     }
 
-    const instructor = course.instructor._id === id;
-
     return (
         <Fragment>
             <div className='topbar'>
@@ -64,7 +79,7 @@ const TopBar = ({ params, setExist }) => {
                 {!instructor && (
                     <div className='topbar__right'>
                         Your progress
-                        <CircularProgress size='50' progress={80} />
+                        <CircularProgress size='50' progress={progress} />
                     </div>
                 )}
             </div>

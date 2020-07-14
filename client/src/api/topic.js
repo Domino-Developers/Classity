@@ -65,5 +65,14 @@ export default {
         } catch (err) {
             throw err.response.data;
         }
+    },
+
+    async markComplete(topicId, resId) {
+        try {
+            const res = await api.put(`/api/topic/${topicId}/coreResource/${resId}/completed`);
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
     }
 };

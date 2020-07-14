@@ -207,7 +207,10 @@ router.get('/:courseId', async (req, res) => {
         if (validToken) {
             const id = req.user.id;
             if (course.students.find(_id => _id.toString() === id)) {
-                const courseProgress = await CourseProgress.find({ user: id, course: course._id });
+                const courseProgress = await CourseProgress.findOne({
+                    user: id,
+                    course: course._id
+                });
                 course['courseProgress'] = courseProgress;
             }
         }

@@ -238,3 +238,37 @@
         margin-left: auto;
     }
 }
+
+.resource {
+    &__complete {
+        margin: 5rem 1rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+
+        &-text {
+            display: inline-flex;
+            justify-content: space-between;
+            font-size: 2rem;
+            > * {
+                margin: 0 1rem;
+            }
+
+            .tick {
+                font-size: 4rem;
+                color: $color-success;
+                transform: scaleX(1.5);
+            }
+
+            .complete-text {
+                padding-top: 1rem;
+                font-weight: 300;
+            }
+
+            Button {
+                font-size: inherit;
+                border-radius: 1px;
+            }
+        }
+    }
+}
