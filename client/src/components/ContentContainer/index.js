@@ -1,9 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import useSWR from 'swr';
+
 import Topic from '../../features/Topic';
 import Resource from '../../features/Resource';
 import TopBar from '../TopBar';
-import useSWR from 'swr';
 import courseApi from '../../api/course';
 import SideBar from '../SideBar';
 import Loading from '../Loading';
@@ -40,9 +42,18 @@ const SideBarContainer = ({ params: { courseId } }) => {
         <Fragment>
             <SideBar.Container>
                 {course.topics.map((topic, i) => (
-                    <SideBar.Tab text={topic.name} key={i}>
+                    <SideBar.Tab
+                        text={topic.name}
+                        key={i}
+                        to={`/course/${courseId}/topic/${topic._id}`}>
                         {topic.coreResources.map((res, i) => (
-                            <SideBar.Item key={i}>{res.name}</SideBar.Item>
+                            <SideBar.Item key={i}>
+                                <Link
+                                    className='sidebar__link'
+                                    to={`/course/${courseId}/topic/${topic._id}/resource/${res._id}`}>
+                                    {res.name}
+                                </Link>
+                            </SideBar.Item>
                         ))}
                     </SideBar.Tab>
                 ))}
