@@ -105,10 +105,14 @@
     }
 
     &__btn {
-        margin-left: 2rem;
+        display: inline-block;
+        margin-left: 1rem;
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.2s;
+        font-size: 3.5rem;
+        color: $color-primary;
+        transform: scaleX(0.7);
 
         &--active {
             opacity: 1;

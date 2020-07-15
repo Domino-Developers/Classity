@@ -35,7 +35,7 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
                     'comment__btn' + (text && (!review || rating) ? ' comment__btn--active' : '')
                 }
                 onClick={() => onAdd({ text, rating }, () => setText(''))}>
-                Submit
+                &#9654;
             </a>
         </div>
     );
