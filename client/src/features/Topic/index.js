@@ -9,6 +9,7 @@ import commentApi from '../../api/comment';
 import testApi from '../../api/test';
 
 import Editable from '../../components/Editable';
+import stripHtml from '../../utils/stripHtml';
 import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
 import Loading from '../../components/Loading';
@@ -64,6 +65,12 @@ const Topic = () => {
 
     const saveTopic = async () => {
         try {
+            const emptyResources = resources.filter(resource => stripHtml(resource.name) === '');
+            if (emptyResources.length) {
+                dispatch(setAlert("Resource name can't be empty", 'danger'));
+                return;
+            }
+
             const promises = [];
 
             for (let i = 0; i < resources.length; i++) {

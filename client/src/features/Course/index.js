@@ -80,16 +80,25 @@ const Course = () => {
             const promises = [];
 
             // For updating course name & description
-            if (courseChanges.current.name === course.name) delete courseChanges.current.name;
-            if (courseChanges.current.description === course.description)
-                delete courseChanges.current.description;
-
-            if (stripHtml(courseChanges.current.name) === '') {
+            if (courseChanges.current.name === course.name) {
+                delete courseChanges.current.name;
+            } else if (stripHtml(courseChanges.current.name) === '') {
                 dispatch(setAlert("Name can't be empty", 'danger'));
                 return;
             }
-            if (stripHtml(courseChanges.current.description) === '') {
+
+            if (courseChanges.current.description === course.description) {
+                delete courseChanges.current.description;
+            } else if (stripHtml(courseChanges.current.description) === '') {
                 dispatch(setAlert("Description can't be empty", 'danger'));
+                return;
+            }
+
+            const emptyTopics = courseChanges.current.topics.filter(
+                topic => stripHtml(topic.name) === ''
+            );
+            if (emptyTopics.length) {
+                dispatch(setAlert("Topic name can't be empty", 'danger'));
                 return;
             }
 
