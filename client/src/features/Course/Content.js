@@ -45,7 +45,14 @@ const Content = props => {
                             courseChanges.current.topics = topics;
                         }}>
                         {topic.coreResources.map((res, i) => (
-                            <Collapse.Item key={i}> {res.name} </Collapse.Item>
+                            <Collapse.Item
+                                key={i}
+                                to={
+                                    (isStudent || isInstructor) &&
+                                    `/course/${course._id}/topic/${topic._id}/resource/${res._id}`
+                                }>
+                                {res.name}
+                            </Collapse.Item>
                         ))}
                         <Collapse.Item
                             onAdd={() => {

@@ -65,7 +65,7 @@ const Head = props => {
                             }}
                         />
                         {to && (
-                            <Link className='collapse__link' to={to}>
+                            <Link className='collapse__link--icon' to={to}>
                                 &rarr;
                             </Link>
                         )}
@@ -85,7 +85,7 @@ const Head = props => {
 };
 
 const Item = props => {
-    const { children, editing, onAdd } = props;
+    const { children, editing, onAdd, to } = props;
 
     return (
         <li>
@@ -94,7 +94,18 @@ const Item = props => {
                     <span onAdd={onAdd}>{children}</span>
                 </AddNew>
             ) : (
-                !onAdd && <p className='collapse__text collapse__text--inner'>{children}</p>
+                !onAdd &&
+                (to ? (
+                    <Link to={to} className='collapse__link'>
+                        <Html tag='p' className='collapse__text collapse__text--inner'>
+                            {children}
+                        </Html>
+                    </Link>
+                ) : (
+                    <Html tag='p' className='collapse__text collapse__text--inner'>
+                        {children}
+                    </Html>
+                ))
             )}
         </li>
     );

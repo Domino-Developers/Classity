@@ -15,7 +15,6 @@ const Video = ({ payload, instructor, update }) => {
     const [editing, edit] = useEdit();
     if (editing && !instructor) edit(false);
 
-    // const videoUrl = new URL(payload.url);
     const [videoUrl, setVideoUrl] = useState(new URL(payload.url));
     let videoId = null;
     if (videoUrl.hostname === 'www.youtube.com') {
@@ -26,7 +25,7 @@ const Video = ({ payload, instructor, update }) => {
 
     const save = async () => {
         const newUrl = new URL(url);
-        if (!newUrl || newUrl.hostname !== 'www.youtube.com' || !newUrl.searchParams.get('v')) {
+        if (!newUrl) {
             dispatch(setAlert('Please enter a valid YouTube video url', 'danger'));
             return;
         }
@@ -44,11 +43,13 @@ const Video = ({ payload, instructor, update }) => {
     return (
         <Fragment>
             <h2 className='u-center-text'>{payload.name}</h2>
-            {instructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
+            {instructor && !editing && (
+                <Button text='Edit' onClick={() => edit(true)} className='u-margin-bottom-medium' />
+            )}
             {instructor && editing && (
                 <Fragment>
                     <Button text='Save Video' onClick={save} loading={isSaving ? 'Saving' : null} />
-                    <Button text='Cancel' onClick={cancel} />
+                    <Button text='Cancel' onClick={cancel} className='u-margin-left-small' />
                 </Fragment>
             )}
 

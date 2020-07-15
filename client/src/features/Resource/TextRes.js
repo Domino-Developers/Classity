@@ -34,10 +34,17 @@ const TextRes = ({ payload, instructor, update }) => {
     return (
         <Fragment>
             <h2 className='text__heading'> {payload.name} </h2>
-            {instructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
+            {instructor && !editing && (
+                <Button text='Edit' onClick={() => edit(true)} className='u-margin-bottom-medium' />
+            )}
             {instructor && editing && (
                 <Fragment>
-                    <Button text='Save Text' onClick={save} loading={isSaving ? 'Saving' : null} />
+                    <Button
+                        text='Save Text'
+                        onClick={save}
+                        loading={isSaving ? 'Saving' : null}
+                        className='u-margin-bottom-medium u-margin-right-small'
+                    />
                     <Button text='Cancel' onClick={cancel} />
                 </Fragment>
             )}
