@@ -44,7 +44,7 @@ const Header = props => {
             <div className='course-header__rating'>
                 <Rating rating={course.avgRating} />
                 <p>
-                    {course.avgRating.toFixed(1)}({course.reviews.length} reviews)
+                    {course.avgRating.toFixed(1)} ({course.reviews.length} reviews)
                 </p>
             </div>
             <div>{course.students.length} student(s) enrolled</div>
