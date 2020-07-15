@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import stripHtml from '../../utils/stripHtml';
-import Html from '../Html';
 
 const Container = props => {
     const { children } = props;

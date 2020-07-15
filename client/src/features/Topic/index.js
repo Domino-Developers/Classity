@@ -170,6 +170,7 @@ const Topic = () => {
                             text='Save Topic'
                             onClick={saveTopic}
                             loading={isSaving ? 'Saving' : null}
+                            className='u-margin-right-small'
                         />
                         <Button text='Cancel' onClick={cancel} />
                     </Fragment>

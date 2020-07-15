@@ -1,8 +1,7 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
 import { useResourceStatus } from '../../utils/hooks';
-import { Link } from 'react-router-dom';
 
 const Content = props => {
     const { editing, course, courseChanges, isStudent, isInstructor } = props;
@@ -50,15 +49,13 @@ const Content = props => {
                             courseChanges.current.topics = topics;
                         }}>
                         {topic.coreResources.map((res, i) => (
-                            <Collapse.Item key={i}>
-                                {isStudent || isInstructor ? (
-                                    <Link
-                                        to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}>
-                                        {res.name}
-                                    </Link>
-                                ) : (
-                                    <Fragment>{res.name}</Fragment>
-                                )}
+                            <Collapse.Item
+                                key={i}
+                                to={
+                                    (isStudent || isInstructor) &&
+                                    `/course/${course._id}/topic/${topic._id}/resource/${res._id}`
+                                }>
+                                {res.name}
                             </Collapse.Item>
                         ))}
                         <Collapse.Item
