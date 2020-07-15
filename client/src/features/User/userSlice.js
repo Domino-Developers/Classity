@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { setAlert } from '../Alerts/alertSlice';
 import userStore from '../../api/user';
 import courseStore from '../../api/course';
-import { setAlert } from '../Alerts/alertSlice';
 import topicStore from '../../api/topic';
+import testStore from '../../api/test';
 
 const initialState = {
     _id: null,
@@ -52,9 +53,9 @@ const userSlice = createSlice({
             state.coursesCreated.push(courseId);
         },
         addCourseProgress: (state, action) => {
-            const { courseId, courseProgress } = action.payload;
+            const { courseId, courseProgress, keepLoading } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
-            state.resourceLoading = false;
+            if (!keepLoading) state.resourceLoading = false;
         },
         resourceLoadStart: (state, action) => {
             state.resourceLoading = true;
@@ -112,8 +113,8 @@ export const enroll = (courseId, mutate) => async dispatch => {
     dispatch(enrollStart());
     try {
         const courseProgress = await courseStore.enroll(courseId);
-        await mutate(courseProgress);
         dispatch(enrollSuccess({ courseId, courseProgress }));
+        await mutate(courseProgress);
 
         dispatch(setAlert('Enrolled Successfully', 'success'));
     } catch (err) {
@@ -140,6 +141,30 @@ export const completeCoreResource = (courseId, topicId, resId) => async dispatch
         dispatch(addCourseProgress({ courseId, courseProgress }));
     } catch (err) {
         dispatch(setAlert('Error completing! Try again', 'danger'));
+        dispatch(resourceLoadStop());
+        if (err.errors) {
+            const errors = [...err.errors];
+            errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+        }
+        console.error(err);
+    }
+};
+
+export const addScore = (testId, score, courseId, topicId, resId, completed) => async dispatch => {
+    dispatch(resourceLoadStart());
+    try {
+        const courseProgress = await testStore.addScore(testId, { score });
+        dispatch(
+            addCourseProgress({
+                courseId: courseProgress.course,
+                courseProgress,
+                keepLoading: true
+            })
+        );
+        if (completed) dispatch(completeCoreResource(courseId, topicId, resId));
+        else dispatch(resourceLoadStop());
+    } catch (err) {
+        dispatch(setAlert('Some error! Please try again', 'danger'));
         dispatch(resourceLoadStop());
         if (err.errors) {
             const errors = [...err.errors];

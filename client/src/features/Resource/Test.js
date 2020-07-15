@@ -2,17 +2,23 @@ import React, { useState, useRef } from 'react';
 
 import Button from '../../components/Button';
 
+import { addScore } from '../User/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 const Test = ({ test }) => {
-    const { questions, passScore } = test;
+    const { questions, passScore, _id: id, courseId, topicId, resId } = test;
 
     const answers = useRef({});
     const [result, setResult] = useState({});
+    const dispatch = useDispatch();
+    const submitLoading = useSelector(state => state.user.resourceLoading);
 
     let score = 0;
     for (const q in result) score += Number(result[q]);
     const scorePercent = (100 * score) / questions.length;
 
     let submitted = Object.keys(result).length ? true : false;
+    submitted = submitted && !submitLoading;
 
     const handleChange = e => {
         e = e.target;
@@ -56,17 +62,16 @@ const Test = ({ test }) => {
             }
         });
 
+        let scoreSubmit = 0;
+        for (const q in tempResult) scoreSubmit += Number(tempResult[q]);
+        const percentScored = (100 * scoreSubmit) / questions.length;
+        dispatch(addScore(id, percentScored, courseId, topicId, resId, percentScored >= passScore));
         setResult(tempResult);
     };
 
     return (
         <div className='test'>
-            <div className='test__bar'>
-                <a href='#!' className='test__back-icon u-margin-right-small'>
-                    &larr;
-                </a>
-                Name
-            </div>
+            <div className='test__bar'>Name</div>
 
             {submitted && (
                 <div className={`test__score test__score--${scorePercent >= passScore}`}>
@@ -79,7 +84,7 @@ const Test = ({ test }) => {
                             </div>
                         </div>
                         <div className='test__right'>
-                            <Button text='Continue' />
+                            <Button text='Continue' to={`/course/${courseId}/topic/${topicId}`} />
                         </div>
                         <div className='u-center-text test__score--grade'>
                             <div className='test__text--bold'>Grade</div>
@@ -130,7 +135,11 @@ const Test = ({ test }) => {
 
                 {!submitted && (
                     <div className='test__submit'>
-                        <Button text='Submit' onClick={submit} />
+                        <Button
+                            text='Submit'
+                            onClick={submit}
+                            loading={submitLoading && 'Submiting'}
+                        />
                     </div>
                 )}
             </div>

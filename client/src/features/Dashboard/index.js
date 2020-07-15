@@ -45,7 +45,6 @@ const Dashboard = () => {
     }
 
     const { data, error, mutate } = useSWR(loading ? null : 'get-custom-course-min', () => {
-        console.log('fetching');
         return courseStore.getCustomCoursesMin(reqBody);
     });
     const [creating, setCreating] = useState(false);

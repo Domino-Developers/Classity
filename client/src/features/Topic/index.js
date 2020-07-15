@@ -108,7 +108,7 @@ const Topic = () => {
             edit(false);
         } catch (err) {
             if (err.errors) {
-                console.log(err);
+                console.error(err);
                 const errors = err.errors;
                 errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
             }

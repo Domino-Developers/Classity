@@ -39,7 +39,6 @@ const authSlice = createSlice({
 
             // remove token from other tabs if comunicate
             if (!action.payload || (action.payload && !action.payload.dontCommunicate)) {
-                console.log('sending logout');
                 sendFlushReq();
             }
 
