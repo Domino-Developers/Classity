@@ -62,7 +62,7 @@ const Test = ({ test }) => {
     return (
         <div className='test'>
             <div className='test__bar'>
-                <a href='#!' className='test__back-icon'>
+                <a href='#!' className='test__back-icon u-margin-right-small'>
                     &larr;
                 </a>
                 Name

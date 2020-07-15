@@ -25,6 +25,13 @@
         grid-row: 3/5;
         grid-column: 3/4;
     }
+
+    &__delete {
+        color: $color-danger;
+        font-size: 3rem;
+        margin-left: 2rem;
+        cursor: pointer;
+    }
 }
 
 .course-description {
