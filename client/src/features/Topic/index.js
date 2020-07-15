@@ -154,7 +154,7 @@ const Topic = () => {
     return (
         <Fragment>
             <div className='main-content'>
-                <h2>{topic.name}</h2>
+                <Html tag='h2'>{topic.name}</Html>
 
                 {isInstructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
                 {isInstructor && editing && (
@@ -247,9 +247,7 @@ const Topic = () => {
                                                     to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}
                                                     className='topic-content__link'>
                                                     {icons}
-                                                    <Html
-                                                        tag='span'
-                                                        className={`topic-content__${res.kind}`}>
+                                                    <Html className={`topic-content__${res.kind}`}>
                                                         {res.name}
                                                     </Html>
                                                 </Link>
