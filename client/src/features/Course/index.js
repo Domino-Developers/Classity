@@ -165,6 +165,7 @@ const Course = () => {
                     course={course}
                     courseChanges={courseChanges}
                     isStudent={isStudent}
+                    isInstructor={isInstructor}
                 />
 
                 {!editing && course.reviews.length > 0 && <Feedback course={course} />}

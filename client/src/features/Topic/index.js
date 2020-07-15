@@ -47,7 +47,7 @@ const Topic = () => {
     }, [topic]);
 
     const isInstructor = coursesCreated.includes(courseId);
-    const resourcesDone = useResourceStatus(isInstructor, courseId, topicId);
+    const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const isCompleted = {};
     if (resources) {
         resourcesDone.forEach(id => {

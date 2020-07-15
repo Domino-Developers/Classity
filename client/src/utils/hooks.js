@@ -25,13 +25,11 @@ const makeCPrSelector = (courseId, topicId) => {
     if (!topicId) {
         return createSelector(
             state => state.user.coursesEnrolled[courseId].topicStatus,
-            topicStatus => {
-                const ids = [];
-                Object.values(topicStatus).forEach(res => {
-                    ids.push(...res);
-                });
-                return ids;
-            }
+            topicStatus => topicStatus
+            // const ids = [];
+
+            // return ids;
+            // }
         );
     }
 
@@ -48,11 +46,15 @@ const makeCPrSelector = (courseId, topicId) => {
     );
 };
 
-export const useResourceStatus = (isInstructor, courseId, topicId) => {
+export const useResourceStatus = (isStudent, courseId, topicId) => {
     const cPrSelector = useMemo(
-        () => (isInstructor ? () => null : makeCPrSelector(courseId, topicId)),
-        [isInstructor, courseId, topicId]
+        () => (!isStudent ? () => null : makeCPrSelector(courseId, topicId)),
+        [isStudent, courseId, topicId]
     );
-    const resourcesDone = useSelector(cPrSelector) || [];
+    const resourcesDone = useSelector(cPrSelector);
+    if (!resourcesDone) {
+        if (topicId) return [];
+        return {};
+    }
     return resourcesDone;
 };
