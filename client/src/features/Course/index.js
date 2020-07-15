@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 import Header from './Header';
+import Tags from './Tags';
 import Description from './Description';
 import Content from './Content';
 import Feedback from './Feedback';
@@ -79,7 +80,10 @@ const Course = () => {
         try {
             const promises = [];
 
-            // For updating course name & description
+            // For updating course name & description & tags
+
+            if (courseChanges.current.tags === course.tags) delete courseChanges.current.tags;
+
             if (courseChanges.current.name === course.name) {
                 delete courseChanges.current.name;
             } else if (stripHtml(courseChanges.current.name) === '') {
@@ -102,7 +106,11 @@ const Course = () => {
                 return;
             }
 
-            if (courseChanges.current.name || courseChanges.current.description)
+            if (
+                courseChanges.current.name ||
+                courseChanges.current.description ||
+                courseChanges.current.tags
+            )
                 promises.push(courseApi.update(courseId, courseChanges.current));
 
             // For deleting/renaming topic
@@ -164,6 +172,7 @@ const Course = () => {
                 courseChanges={courseChanges}
             />
             <div className='container'>
+                <Tags courseChanges={courseChanges} tags={course.tags} />
                 <Description
                     editing={editing}
                     desc={course.description}
