@@ -43,7 +43,7 @@ const TestView = ({ payload }) => {
                     </div>
                     <div className='test-view__grade'>
                         <div className='u-center-text'>
-                            <div className='test-view__grade--text'>
+                            <div className='u-margin-right-medium'>
                                 Grade
                                 <br />
                                 {payload.score}%

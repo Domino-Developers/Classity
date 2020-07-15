@@ -50,6 +50,18 @@ input {
 .u-center-text {
   text-align: center !important; }
 
+.u-margin-left-small {
+  margin-left: 2rem !important; }
+
+.u-margin-right-small {
+  margin-right: 2rem !important; }
+
+.u-margin-left-medium {
+  margin-left: 4rem !important; }
+
+.u-margin-right-medium {
+  margin-right: 4rem !important; }
+
 @keyframes loading-dots {
   0% {
     width: 0; }
@@ -514,6 +526,11 @@ main {
   .course-header__enroll {
     grid-row: 3/5;
     grid-column: 3/4; }
+  .course-header__delete {
+    color: #dc3545;
+    font-size: 3rem;
+    margin-left: 2rem;
+    cursor: pointer; }
 
 .course-description {
   box-shadow: 0 0 10px #252227;
@@ -754,8 +771,6 @@ main {
   align-items: center;
   padding: 2rem;
   border-left: 1px solid #d6d6d6; }
-  .test-view__grade--text {
-    margin-right: 4rem; }
 
 .test {
   position: absolute;
@@ -776,8 +791,6 @@ main {
     width: 100%;
     z-index: 102;
     background-color: #fcfcfc; }
-    .test__bar a {
-      margin-right: 2rem; }
   .test__back-icon {
     margin: -1.5rem 0;
     line-height: 5.5rem;
@@ -931,12 +944,8 @@ main {
   position: absolute;
   right: 0;
   transform: translateY(-4rem);
-  background-color: #dc3545;
-  color: #fcfcfc;
-  padding: 0.5rem 1rem;
-  transition: background-color 0.2s; }
-  .test-edit__delete-btn:hover {
-    background-color: #bd2130; }
+  color: #dc3545;
+  cursor: pointer; }
 
 .dashboard__header {
   display: flex;

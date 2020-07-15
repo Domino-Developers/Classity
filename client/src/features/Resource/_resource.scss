@@ -88,10 +88,6 @@
         align-items: center;
         padding: 2rem;
         border-left: 1px solid $color-grey-2;
-
-        &--text {
-            margin-right: 4rem;
-        }
     }
 }
 
@@ -115,10 +111,6 @@
         width: 100%;
         z-index: 102;
         background-color: $color-white;
-
-        a {
-            margin-right: 2rem;
-        }
     }
 
     &__back-icon {
@@ -353,13 +345,7 @@
         position: absolute;
         right: 0;
         transform: translateY(-4rem);
-        background-color: $color-danger;
-        color: $color-white;
-        padding: 0.5rem 1rem;
-        transition: background-color 0.2s;
-
-        &:hover {
-            background-color: darken($color-danger, 10%);
-        }
+        color: $color-danger;
+        cursor: pointer;
     }
 }
