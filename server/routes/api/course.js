@@ -103,7 +103,13 @@ router.get('/custom', auth, async (req, res) => {
 
         const coursePromise = Course.find({ _id: { $in: courseIds } })
             .populate('instructor', 'name -_id')
-            .select(['name', 'instructor', 'tags', 'avgRating']);
+            .select(['name', 'instructor', 'tags', 'avgRating'])
+            .populate({
+                path: 'topics',
+                select: 'coreResources',
+                populate: { path: 'coreResources', select: 'name' }
+            })
+            .lean();
         const courseProgressesPromise = CourseProgress.find({ _id: { $in: courseProgressIds } });
 
         const [courses, courseProgresses] = await Promise.all([
@@ -114,10 +120,17 @@ router.get('/custom', auth, async (req, res) => {
         let response = {};
 
         coursesReq.forEach((c, i) => {
+            const courseData = courses.find(co => co._id.toString() === c._id);
+            const topics = courseData.topics;
+            delete courseData.topics;
             response[c._id] = {
-                course: courses.find(co => co._id.toString() === c._id)
+                course: courseData
             };
             if (c.courseProgressId) {
+                response[c._id]['course'].totalCoreResources = topics.reduce(
+                    (tot, top) => tot + top.coreResources.length,
+                    0
+                );
                 response[c._id]['courseProgress'] = courseProgresses.find(
                     cp => cp._id.toString() === c.courseProgressId
                 );

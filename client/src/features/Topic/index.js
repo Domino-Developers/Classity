@@ -16,14 +16,23 @@ import Comments from '../Comments';
 import AddNew from '../../components/AddNew';
 import Button from '../../components/Button';
 import Html from '../../components/Html';
-import { useEdit } from '../../utils/hooks';
+import { useEdit, useResourceStatus } from '../../utils/hooks';
 import { setAlert } from '../Alerts/alertSlice';
+import { createSelector } from '@reduxjs/toolkit';
+
+const userAndAuth = createSelector(
+    [state => state.user._id, state => state.user.loading, state => state.user.coursesCreated],
+    (id, loading, coursesCreated) => ({
+        id,
+        loading,
+        coursesCreated
+    })
+);
 
 const Topic = () => {
     const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
-    const { isAuthenticated, loading: loading1 } = useSelector(state => state.auth);
-    const { _id: id, loading: loading2 } = useSelector(state => state.user);
+    const { id, loading, coursesCreated } = useSelector(userAndAuth);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
@@ -37,11 +46,16 @@ const Topic = () => {
         if (topic) setResources([...topic.coreResources]);
     }, [topic]);
 
-    const loading = loading1 || loading2;
+    const isInstructor = coursesCreated.includes(courseId);
+    const resourcesDone = useResourceStatus(isInstructor, courseId, topicId);
+    const isCompleted = {};
+    if (resources) {
+        resourcesDone.forEach(id => {
+            isCompleted[id] = true;
+        });
+    }
 
-    if (!course || !topic) return <Loading />;
-
-    const isInstructor = !loading && isAuthenticated && course.instructor._id === id;
+    if (!course || !topic || loading) return <Loading />;
 
     if (editing && !isInstructor) edit(false);
 
@@ -205,7 +219,9 @@ const Topic = () => {
                                 resources.map((res, i) => (
                                     <Fragment key={i}>
                                         <li
-                                            className={`topic-content__item topic-content__item--${res.kind}`}>
+                                            className={`topic-content__item topic-content__item--${
+                                                isCompleted[res._id] ? 'completed' : res.kind
+                                            }`}>
                                             {editing && (
                                                 <i
                                                     className='fas fa-minus delete-btn'

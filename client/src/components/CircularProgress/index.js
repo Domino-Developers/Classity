@@ -34,7 +34,7 @@ const CircularProgress = props => {
                 strokeDashoffset={offset}
             />
             <text className='circular-progress__text' x={center} y={center}>
-                {progress}%
+                {progress.toFixed(1)}%
             </text>
         </svg>
     );
