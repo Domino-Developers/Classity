@@ -29,7 +29,7 @@ const Resource = () => {
     const { courseId, topicId, resourceId } = useParams();
     const { coursesCreated, loading } = useSelector(userAndAuth);
     const isInstructor = coursesCreated.includes(courseId);
-    const resourcesDone = useResourceStatus(isInstructor, courseId, topicId);
+    const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
     if (!course || !topic) return <Loading />;

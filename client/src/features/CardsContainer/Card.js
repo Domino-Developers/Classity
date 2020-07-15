@@ -26,8 +26,10 @@ const CourseCard = props => {
                 {name}
             </Html>
             <div className='card__tags'>
-                {tags.map(tag => (
-                    <span className='card__tag'>{tag}</span>
+                {tags.map((tag, i) => (
+                    <span key={i} className='card__tag'>
+                        {tag}
+                    </span>
                 ))}
             </div>
             <div className='card__instructor'>{instructor}</div>

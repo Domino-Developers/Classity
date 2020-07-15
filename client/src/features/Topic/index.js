@@ -9,6 +9,7 @@ import commentApi from '../../api/comment';
 import testApi from '../../api/test';
 
 import Editable from '../../components/Editable';
+import stripHtml from '../../utils/stripHtml';
 import Tabs from '../../components/Tabs';
 import FadeText from '../../components/FadeText';
 import Loading from '../../components/Loading';
@@ -47,7 +48,7 @@ const Topic = () => {
     }, [topic]);
 
     const isInstructor = coursesCreated.includes(courseId);
-    const resourcesDone = useResourceStatus(isInstructor, courseId, topicId);
+    const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const isCompleted = {};
     if (resources) {
         resourcesDone.forEach(id => {
@@ -64,6 +65,12 @@ const Topic = () => {
 
     const saveTopic = async () => {
         try {
+            const emptyResources = resources.filter(resource => stripHtml(resource.name) === '');
+            if (emptyResources.length) {
+                dispatch(setAlert("Resource name can't be empty", 'danger'));
+                return;
+            }
+
             const promises = [];
 
             for (let i = 0; i < resources.length; i++) {
@@ -154,7 +161,7 @@ const Topic = () => {
     return (
         <Fragment>
             <div className='main-content'>
-                <h2>{topic.name}</h2>
+                <Html tag='h2'>{topic.name}</Html>
 
                 {isInstructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
                 {isInstructor && editing && (
@@ -248,9 +255,7 @@ const Topic = () => {
                                                     to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}
                                                     className='topic-content__link'>
                                                     {icons}
-                                                    <Html
-                                                        tag='span'
-                                                        className={`topic-content__${res.kind}`}>
+                                                    <Html className={`topic-content__${res.kind}`}>
                                                         {res.name}
                                                     </Html>
                                                 </Link>

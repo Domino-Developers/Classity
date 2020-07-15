@@ -152,7 +152,7 @@ const Comment = props => {
                         href='#!'
                         className={'comment__btn' + (text ? ' comment__btn--active' : '')}
                         onClick={addReply}>
-                        Submit
+                        &#9654;
                     </a>
                 </div>
             </div>

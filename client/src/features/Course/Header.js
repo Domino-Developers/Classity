@@ -1,12 +1,19 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Button from '../../components/Button';
 import Rating from '../../components/Rating';
 import Editable from '../../components/Editable';
 import Html from '../../components/Html';
+import courseApi from '../../api/course';
+import { setAlert } from '../Alerts/alertSlice';
 
 const Header = props => {
+    const history = useHistory();
+    const dispatch = useDispatch();
+
     const {
         instructor,
         edit,
@@ -26,6 +33,21 @@ const Header = props => {
     const handleChange = e => {
         name.current = e.target.value;
         courseChanges.current.name = e.target.value;
+    };
+
+    const deleteCourse = async () => {
+        try {
+            if (window.confirm('Are you sure you want to delete course?')) {
+                await courseApi.delete(course._id);
+                history.replace('/dashboard');
+                dispatch(setAlert('Course deleted', 'success'));
+            }
+        } catch (err) {
+            if (err.errors) {
+                const errors = err.errors;
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+            }
+        }
     };
 
     return (
@@ -72,8 +94,12 @@ const Header = props => {
                             full
                             onClick={saveCourse}
                             loading={isSaving ? 'Saving' : null}
+                            className='u-margin-right-small'
                         />
                         <Button text='Cancel' full onClick={cancelSave} />
+                        <i
+                            className='fas fa-trash-alt course-header__delete'
+                            onClick={deleteCourse}></i>
                     </div>
                 )}
             </div>

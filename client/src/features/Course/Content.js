@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
+import { useResourceStatus } from '../../utils/hooks';
 
 const Content = props => {
-    const { editing, course, courseChanges } = props;
+    const { editing, course, courseChanges, isStudent, isInstructor } = props;
     const [topics, setTopics] = useState([...course.topics]);
     courseChanges.current.topics = topics;
-
+    const resourcesDoneByTopic = useResourceStatus(isStudent, course._id);
     useEffect(() => {
         setTopics([...course.topics]);
     }, [course.topics]);
@@ -29,7 +30,10 @@ const Content = props => {
                         key={i}
                         text={
                             topic.name +
-                            '<i class="fas fa-check-circle course-content__complete-icon"></i>'
+                            (resourcesDoneByTopic[topic._id] &&
+                            resourcesDoneByTopic[topic._id].length === topic.coreResources.length
+                                ? '<i class="fas fa-check-circle course-content__complete-icon"></i>'
+                                : '')
                         }
                         to={`/course/${course._id}/topic/${topic._id}`}
                         onChange={e => {
@@ -75,7 +79,9 @@ const Content = props => {
 Content.propTypes = {
     editing: PropTypes.bool.isRequired,
     course: PropTypes.object.isRequired,
-    courseChanges: PropTypes.object.isRequired
+    courseChanges: PropTypes.object.isRequired,
+    isStudent: PropTypes.bool.isRequired,
+    isInstructor: PropTypes.bool.isRequired
 };
 
 export default Content;

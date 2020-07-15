@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const Button = props => {
-    const { full, text, onClick, to, loading, value } = props;
+    const { full, text, onClick, to, loading, value, className } = props;
     return loading ? (
-        <div className='btn btn--disabled'>
+        <div className={'btn btn--disabled ' + (className ? className : '')}>
             <div className='btn__show'>
                 <span className='text'>{loading}</span>
                 <span className='btn__dots'>&nbsp;. . .</span>
@@ -13,13 +13,21 @@ const Button = props => {
             <span className='btn__hide'>{text || value}</span>
         </div>
     ) : value ? (
-        <input type='submit' value={value} className='btn btn--full' />
+        <input
+            type='submit'
+            value={value}
+            className={'btn btn--full ' + (className ? className : '')}
+        />
     ) : to ? (
-        <Link className={full ? 'btn btn--full' : 'btn btn--ghost'} to={to}>
+        <Link
+            className={(full ? 'btn btn--full ' : 'btn btn--ghost ') + (className ? className : '')}
+            to={to}>
             {text}
         </Link>
     ) : (
-        <button className={full ? 'btn btn--full' : 'btn btn--ghost'} onClick={onClick}>
+        <button
+            className={(full ? 'btn btn--full ' : 'btn btn--ghost ') + (className ? className : '')}
+            onClick={onClick}>
             {text}
         </button>
     );
@@ -28,6 +36,7 @@ const Button = props => {
 Button.propTypes = {
     full: PropTypes.bool,
     text: PropTypes.string,
+    className: PropTypes.string,
     onClick: PropTypes.func,
     to: PropTypes.string,
     value: PropTypes.string,

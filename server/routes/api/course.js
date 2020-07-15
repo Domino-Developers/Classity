@@ -434,7 +434,13 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
         const courseId = req.params.courseId;
 
         const course = await Course.findById(courseId);
-        await course.remove();
+        const coursePromise = course.remove();
+
+        // Remove from created courses
+        const instructorPromise = User.findOneAndUpdate(
+            { _id: req.user.id },
+            { $pull: { coursesCreated: courseId } }
+        );
 
         // Unenroll students
         const studentPromises = [];
@@ -455,7 +461,7 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
             courseProgressPromises.push(CourseProgress.findOneAndDelete({ _id: progressId }));
         });
 
-        await Promise.all(courseProgressPromises);
+        await Promise.all([...courseProgressPromises, coursePromise, instructorPromise]);
 
         res.json(course);
     } catch (err) {

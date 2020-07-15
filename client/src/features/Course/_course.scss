@@ -25,6 +25,50 @@
         grid-row: 3/5;
         grid-column: 3/4;
     }
+
+    &__delete {
+        color: $color-danger;
+        font-size: 3rem;
+        margin-left: 2rem;
+        cursor: pointer;
+    }
+}
+
+.add-tags {
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+
+    &__list {
+        display: flex;
+        align-items: center;
+        border: 1px solid $color-grey-2;
+        height: 4rem;
+        margin-left: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    &__tag {
+        padding: 2px 0.7rem;
+        margin: 2px 0.5rem;
+        border-radius: 10rem;
+        background-color: rgba($color-primary, 0.8);
+        color: $color-white;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+
+    &__delete {
+        margin-left: 1rem;
+        cursor: pointer;
+    }
+
+    &__input {
+        border: none;
+        background-color: $color-white;
+    }
 }
 
 .add-tags {

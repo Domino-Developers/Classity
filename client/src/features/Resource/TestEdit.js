@@ -106,17 +106,19 @@ const TestEdit = ({ payload }) => {
     );
 
     const NewOption = ({ index: i }) => (
-        <span
-            className='test-edit__option test-edit__option--new'
-            onClick={() =>
-                setQuestions(
-                    questions.map((que, j) =>
-                        i !== j ? que : { ...que, options: [...que.options, 'option'] }
+        <div className='test-edit__option'>
+            <span
+                className='test-edit__option--new'
+                onClick={() =>
+                    setQuestions(
+                        questions.map((que, j) =>
+                            i !== j ? que : { ...que, options: [...que.options, 'option'] }
+                        )
                     )
-                )
-            }>
-            <i className='fas fa-plus add-new__icon'></i> New Option
-        </span>
+                }>
+                <i className='fas fa-plus add-new__icon'></i> New Option
+            </span>
+        </div>
     );
 
     return (
@@ -291,17 +293,14 @@ const TestEdit = ({ payload }) => {
                                 )}
 
                                 <div>
-                                    <a
-                                        href='#!'
-                                        className='test-edit__delete-btn'
+                                    <i
+                                        className='fas fa-trash-alt test-edit__delete-btn'
                                         onClick={() =>
                                             setQuestions([
                                                 ...questions.slice(0, i),
                                                 ...questions.slice(i + 1)
                                             ])
-                                        }>
-                                        Delete
-                                    </a>
+                                        }></i>
                                 </div>
 
                                 <NewQuestion index={i} />

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AnimateHeight from 'react-animate-height';
 
+import Html from '../Html';
+
 const FadeText = props => {
     const lines = props.lines || 4;
     const isHtml = props.html;
@@ -19,7 +21,7 @@ const FadeText = props => {
     const contracted = (
         <div className={'fade-text' + (show ? ' fade-text--show' : '')}>
             <AnimateHeight height={show ? 'auto' : showHeight} duration={250}>
-                {isHtml ? <div dangerouslySetInnerHTML={{ __html: text }} /> : <div>{text}</div>}
+                {isHtml ? <Html tag='div'>{text}</Html> : <div>{text}</div>}
                 <div className='fade-text__hide' style={{ top: `${2.4 * (lines - 1)}rem` }}></div>
             </AnimateHeight>
             <a href='#!' onClick={() => toggle(!show)}>
@@ -37,7 +39,9 @@ const FadeText = props => {
     );
 
     const normal = isHtml ? (
-        <div dangerouslySetInnerHTML={{ __html: text }} ref={e => (element = e)} />
+        <Html tag='div' ref={e => (element = e)}>
+            {text}
+        </Html>
     ) : (
         <div ref={e => (element = e)}>{text}</div>
     );
