@@ -339,6 +339,12 @@ main {
     transition: width 0.25s ease 0s; }
     .sidebar__list--collapsed {
       width: 0; }
+  .sidebar__link {
+    display: inline-block;
+    width: 100%;
+    transition: color 0.2s; }
+    .sidebar__link:hover {
+      color: #7619cc; }
 
 .collapse__item {
   margin-bottom: 5px; }
