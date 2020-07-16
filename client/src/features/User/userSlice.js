@@ -73,6 +73,10 @@ const userSlice = createSlice({
         },
         enrollFail: (state, action) => {
             state.loading = false;
+        },
+        deleteCreatedCourse: (state, action) => {
+            const { courseId } = action.payload;
+            state.coursesCreated = state.coursesCreated.filter(id => id !== courseId);
         }
     }
 });
@@ -87,10 +91,11 @@ const {
     enrollStart,
     enrollFail,
     resourceLoadStart,
-    resourceLoadStop
+    resourceLoadStop,
+    deleteCreatedCourse
 } = userSlice.actions;
 
-export { addCreatedCourse, fetchUserFail, addCourseProgress };
+export { addCreatedCourse, fetchUserFail, addCourseProgress, deleteCreatedCourse };
 
 export default userSlice.reducer;
 
