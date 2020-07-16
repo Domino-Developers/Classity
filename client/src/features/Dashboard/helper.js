@@ -4,7 +4,7 @@ export const addCourse = async (history, setLoading, addToState) => {
     const dummyCourse = {
         name: 'Add course name here',
         description: 'What is your course majorly about ?',
-        imageURL: 'http://test.com'
+        imageURL: 'https://via.placeholder.com/280x200.png?text=A'
     };
 
     setLoading(true);

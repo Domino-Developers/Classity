@@ -106,6 +106,18 @@ const Course = () => {
                 return;
             }
 
+            const colors = ['9c32ff', 'e000e0', '1447f0', '1fbe27', '02b3b3', '7961ff'];
+
+            const rndInd = () => Math.floor(Math.random() * 6);
+
+            if (courseChanges.current.name) {
+                courseChanges.current.imageURL = `https://via.placeholder.com/280x200.png/${
+                    colors[rndInd()]
+                }/ffffff?text=${stripHtml(courseChanges.current.name).toUpperCase()[0]}`;
+            }
+
+            console.log(courseChanges);
+
             if (
                 courseChanges.current.name ||
                 courseChanges.current.description ||
