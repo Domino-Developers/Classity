@@ -65,7 +65,9 @@ const Topic = () => {
 
     const saveTopic = async () => {
         try {
-            const emptyResources = resources.filter(resource => stripHtml(resource.name) === '');
+            resources.forEach(resource => (resource.name = stripHtml(resource.name)));
+
+            const emptyResources = resources.filter(resource => resource.name === '');
             if (emptyResources.length) {
                 dispatch(setAlert("Resource name can't be empty", 'danger'));
                 return;

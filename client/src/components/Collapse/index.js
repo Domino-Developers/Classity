@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 import AddNew from '../AddNew';
 import Editable from '../Editable';
-import Html from '../Html';
 
 const Container = props => {
     const { editing, children } = props;
@@ -60,7 +59,7 @@ const Head = props => {
                     <p className='collapse__text collapse__text--outer' onClick={toggleShow}>
                         <i className='fas fa-plus collapse__btn collapse__btn--show'></i>
                         <i className='fas fa-minus collapse__btn collapse__btn--hide'></i>
-                        <Html>{text}</Html>
+                        {text}
                         {to && (
                             <Link className='collapse__link--icon' to={to}>
                                 &rarr;
@@ -94,14 +93,10 @@ const Item = props => {
                 !onAdd &&
                 (to ? (
                     <Link to={to} className='collapse__link'>
-                        <Html tag='p' className='collapse__text collapse__text--inner'>
-                            {children}
-                        </Html>
+                        <p className='collapse__text collapse__text--inner'>{children}</p>
                     </Link>
                 ) : (
-                    <Html tag='p' className='collapse__text collapse__text--inner'>
-                        {children}
-                    </Html>
+                    <p className='collapse__text collapse__text--inner'>{children}</p>
                 ))
             )}
         </li>

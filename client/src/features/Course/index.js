@@ -79,6 +79,7 @@ const Course = () => {
     const saveCourse = async () => {
         try {
             const promises = [];
+            courseChanges.current.name = stripHtml(courseChanges.current.name);
 
             // For updating course name & description & tags
 
@@ -86,7 +87,7 @@ const Course = () => {
 
             if (courseChanges.current.name === course.name) {
                 delete courseChanges.current.name;
-            } else if (stripHtml(courseChanges.current.name) === '') {
+            } else if (courseChanges.current.name === '') {
                 dispatch(setAlert("Name can't be empty", 'danger'));
                 return;
             }
@@ -116,14 +117,14 @@ const Course = () => {
                 }/ffffff?text=${stripHtml(courseChanges.current.name).toUpperCase()[0]}`;
             }
 
-            console.log(courseChanges);
-
             if (
                 courseChanges.current.name ||
                 courseChanges.current.description ||
                 courseChanges.current.tags
             )
                 promises.push(courseApi.update(courseId, courseChanges.current));
+
+            courseChanges.current.topics.forEach(topic => (topic.name = stripHtml(topic.name)));
 
             // For deleting/renaming topic
             course.topics.forEach(topic => {
