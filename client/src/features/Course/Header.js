@@ -29,6 +29,7 @@ const Header = props => {
     } = props;
 
     const name = useRef(course.name);
+    courseChanges.current.name = course.name;
 
     const shortDescription = course.description.slice(0, course.description.indexOf('<br>'));
 

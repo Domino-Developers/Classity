@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+
 import Rating from '../../components/Rating';
 import { Link } from 'react-router-dom';
 import FromNow from '../../components/FromNow';
-
-import Html from '../../components/Html';
 
 const CourseCard = props => {
     const {
@@ -23,9 +22,7 @@ const CourseCard = props => {
         <Link to={`/course/${_id}`} className='card'>
             <img className='card__img' src={imageURL} alt={name} />
 
-            <Html tag='h4' className='card__title'>
-                {name}
-            </Html>
+            <h4>{name}</h4>
             <div className='card__tags'>
                 {tags.map((tag, i) => (
                     <span key={i} className='card__tag'>
