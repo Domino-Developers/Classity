@@ -92,8 +92,9 @@ input {
 
 @keyframes loading-circle {
   0% {
-    transform: scale(0);
-    opacity: 1; } }
+    transform: rotate(0); }
+  100% {
+    transform: rotate(360deg); } }
 
 section {
   margin-bottom: 8rem; }
@@ -472,13 +473,16 @@ main {
       margin-right: 5px; }
 
 .loading {
-  width: 6rem;
-  height: 6rem;
+  display: block;
   margin: 0 auto;
-  border: 2px solid #7619cc;
-  border-radius: 50%;
-  opacity: 0.5;
-  animation: loading-circle 1s infinite; }
+  vertical-align: middle; }
+  .loading__circle {
+    fill: none;
+    stroke: #7619cc;
+    transform-origin: center;
+    animation: loading-circle 2s linear infinite; }
+  .loading--inline {
+    display: inline-block; }
 
 .nav {
   display: flex;
