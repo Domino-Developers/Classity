@@ -1,4 +1,4 @@
-import React, { useRef, Fragment } from 'react';
+import React, { useRef, useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ import Editable from '../../components/Editable';
 import Html from '../../components/Html';
 import courseApi from '../../api/course';
 import { setAlert } from '../Alerts/alertSlice';
+import { deleteCreatedCourse } from '../User/userSlice';
 
 const Header = props => {
     const history = useHistory();
@@ -32,6 +33,7 @@ const Header = props => {
     courseChanges.current.name = course.name;
 
     const shortDescription = course.description.slice(0, course.description.indexOf('<br>'));
+    const [deleting, setDeleting] = useState(false);
 
     const handleChange = e => {
         name.current = e.target.value;
@@ -41,14 +43,23 @@ const Header = props => {
     const deleteCourse = async () => {
         try {
             if (window.confirm('Are you sure you want to delete course?')) {
+                setDeleting(true);
                 await courseApi.delete(course._id);
+                dispatch(deleteCreatedCourse({ courseId: course._id }));
+                setDeleting(false);
                 history.replace('/dashboard');
-                dispatch(setAlert('Course deleted', 'success'));
+                dispatch(setAlert('Course deleted Successfully', 'success'));
             }
         } catch (err) {
             if (err.errors) {
-                const errors = err.errors;
-                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+                setDeleting(false);
+                history.replace('/dashboard');
+                dispatch(setAlert("Can't delete course! please try again", 'danger'));
+                if (err.errors) {
+                    const errors = [...err.errors];
+                    errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+                }
+                console.error(err);
             }
         }
     };
@@ -103,9 +114,15 @@ const Header = props => {
                     </Fragment>
                 )}
                 {instructor && (
-                    <i
-                        className='fas fa-trash-alt course-header__delete'
-                        onClick={deleteCourse}></i>
+                    <Fragment>
+                        {deleting ? (
+                            <span>Deleting ... </span>
+                        ) : (
+                            <i
+                                className='fas fa-trash-alt course-header__delete'
+                                onClick={deleteCourse}></i>
+                        )}
+                    </Fragment>
                 )}
             </div>
         </div>
