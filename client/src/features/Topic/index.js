@@ -313,6 +313,9 @@ const Topic = () => {
                                 onAdd={(comment, clear) =>
                                     addComment('resourceDump', comment, clear)
                                 }
+                                newComment={
+                                    isInstructor && 'To share something, add it to Topic content'
+                                }
                             />
                         </Tabs.Tab>
                     )}
@@ -323,6 +326,7 @@ const Topic = () => {
                                 user={id}
                                 newText='Ask a doubt'
                                 onAdd={(comment, clear) => addComment('doubt', comment, clear)}
+                                newComment={isInstructor && "Instructor can't ask a doubt"}
                             />
                         </Tabs.Tab>
                     )}

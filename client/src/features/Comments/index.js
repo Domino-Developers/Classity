@@ -16,13 +16,17 @@ const Comments = props => {
     return (
         <ul>
             <li className='comment'>
-                <NewComment
-                    review={props.review}
-                    comments={props.comments}
-                    onAdd={props.onAdd}
-                    user={props.user}
-                    newText={props.newText}
-                />
+                {typeof props.newComment !== 'string' ? (
+                    <NewComment
+                        review={props.review}
+                        comments={props.comments}
+                        onAdd={props.onAdd}
+                        user={props.user}
+                        newText={props.newText}
+                    />
+                ) : (
+                    props.newComment
+                )}
             </li>
             {comments.map((com, i) =>
                 props.review ? (
@@ -45,6 +49,7 @@ Comments.propTypes = {
     show: PropTypes.string,
     seeMore: PropTypes.string,
     newText: PropTypes.string,
+    newComment: PropTypes.string,
     review: PropTypes.bool,
     onAdd: PropTypes.func.isRequired,
     user: PropTypes.string.isRequired

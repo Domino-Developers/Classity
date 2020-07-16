@@ -172,7 +172,7 @@ const Course = () => {
                 courseChanges={courseChanges}
             />
             <div className='container'>
-                <Tags courseChanges={courseChanges} tags={course.tags} />
+                {editing && <Tags courseChanges={courseChanges} tags={course.tags} />}
                 <Description
                     editing={editing}
                     desc={course.description}
@@ -187,7 +187,7 @@ const Course = () => {
                 />
 
                 {!editing && course.reviews.length > 0 && <Feedback course={course} />}
-                {!editing && <Review />}
+                {!editing && <Review isStudent={isStudent} isInstructor={isInstructor} />}
             </div>
         </Fragment>
     );

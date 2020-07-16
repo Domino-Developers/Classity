@@ -8,7 +8,7 @@ import Comments from '../Comments';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 
-const Review = () => {
+const Review = ({ isStudent, isInstructor }) => {
     const dispatch = useDispatch();
 
     const id = useSelector(state => state.user._id);
@@ -42,10 +42,20 @@ const Review = () => {
         }
     };
 
+    let newComment;
+    if (!isStudent) newComment = 'Enroll to add a review';
+    if (isInstructor) newComment = "Instructor can't add review";
+
     return (
         <section className='reviews'>
             <h3 className='reviews__heading'>Reviews</h3>
-            <Comments review comments={course.reviews} onAdd={add} user={id} />
+            <Comments
+                review
+                comments={course.reviews}
+                onAdd={add}
+                user={id}
+                newComment={newComment}
+            />
         </section>
     );
 };
