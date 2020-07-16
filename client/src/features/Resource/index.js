@@ -59,7 +59,12 @@ const Resource = () => {
     const templates = {
         video: props => <Video {...props} instructor={isInstructor} update={update} />,
         text: props => <TextRes {...props} instructor={isInstructor} update={update} />,
-        test: props => (isInstructor ? <TestEdit {...props} /> : <TestView {...props} />)
+        test: props =>
+            isInstructor ? (
+                <TestEdit {...props} />
+            ) : (
+                <TestView {...props} courseId={courseId} topicId={topicId} resId={resourceId} />
+            )
     };
     if (!resource) return <div>Opps</div>;
     const coreResources = topic.coreResources;
@@ -68,29 +73,31 @@ const Resource = () => {
     return (
         <div className='main-content'>
             {templates[resource.kind]({ payload: resource })}
-            <div className='resource__complete'>
-                {!isInstructor &&
-                    (resourcesDone.includes(resourceId) ? (
-                        <div className='resource__complete-text'>
-                            <div className='tick'>&#10003;</div>
-                            <div className='complete-text'>Completed</div>
-                            {nextResId && (
-                                <Button
-                                    text={'Go to next Item'}
-                                    full
-                                    to={`/course/${courseId}/topic/${topicId}/resource/${nextResId}`}
-                                />
-                            )}
-                        </div>
-                    ) : (
-                        <Button
-                            text={'Mark Complete'}
-                            full
-                            onClick={complete}
-                            loading={loading && 'Loading'}
-                        />
-                    ))}
-            </div>
+            {resource.kind !== 'test' && (
+                <div className='resource__complete'>
+                    {!isInstructor &&
+                        (resourcesDone.includes(resourceId) ? (
+                            <div className='resource__complete-text'>
+                                <div className='tick'>&#10003;</div>
+                                <div className='complete-text'>Completed</div>
+                                {nextResId && (
+                                    <Button
+                                        text={'Go to next Item'}
+                                        full
+                                        to={`/course/${courseId}/topic/${topicId}/resource/${nextResId}`}
+                                    />
+                                )}
+                            </div>
+                        ) : (
+                            <Button
+                                text={'Mark Complete'}
+                                full
+                                onClick={complete}
+                                loading={loading && 'Loading'}
+                            />
+                        ))}
+                </div>
+            )}
         </div>
     );
 };

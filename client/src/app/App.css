@@ -588,6 +588,32 @@ main {
     border: none;
     background-color: #fcfcfc; }
 
+.add-tags {
+  margin-bottom: 4rem;
+  display: flex;
+  align-items: center; }
+  .add-tags__list {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d6d6d6;
+    height: 4rem;
+    margin-left: 1rem;
+    padding: 0 0.5rem; }
+  .add-tags__tag {
+    padding: 2px 0.7rem;
+    margin: 2px 0.5rem;
+    border-radius: 10rem;
+    background-color: rgba(118, 25, 204, 0.8);
+    color: #fcfcfc; }
+    .add-tags__tag:first-child {
+      margin-left: 0; }
+  .add-tags__delete {
+    margin-left: 1rem;
+    cursor: pointer; }
+  .add-tags__input {
+    border: none;
+    background-color: #fcfcfc; }
+
 .course-description {
   box-shadow: 0 0 10px #252227;
   padding: 2rem;
@@ -826,6 +852,9 @@ main {
 
 .test-view__text--small {
   font-size: 1.4rem;
+  color: #aaa; }
+
+.test-view__text--grey {
   color: #aaa; }
 
 .test-view__text--bold {

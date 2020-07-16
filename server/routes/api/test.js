@@ -97,10 +97,8 @@ router.put(
                     course: courseId
                 },
                 {
-                    [`testScores.${req.params.testId}`]: {
-                        score: req.body.score,
-                        lastAttemptDate: Date.now()
-                    }
+                    $max: { [`testScores.${req.params.testId}.score`]: req.body.score },
+                    [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
                 },
                 { new: true }
             );
