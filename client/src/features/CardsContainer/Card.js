@@ -15,12 +15,13 @@ const CourseCard = props => {
         lastStudied,
         progress,
         streak,
-        tags
+        tags,
+        imageURL
     } = props.course;
 
     return (
         <Link to={`/course/${_id}`} className='card'>
-            <img className='card__img' src={require('./img/course.jpeg')} alt={name} />
+            <img className='card__img' src={imageURL} alt={name} />
 
             <Html tag='h4' className='card__title'>
                 {name}

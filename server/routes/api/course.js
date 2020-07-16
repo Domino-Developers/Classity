@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
     try {
         const courses = await Course.find()
             .populate('instructor', 'name -_id')
-            .select(['name', 'instructor', 'tags', 'avgRating']);
+            .select(['name', 'instructor', 'tags', 'avgRating', 'imageURL']);
         res.json(courses);
     } catch (err) {
         console.error(err.message);
@@ -103,7 +103,7 @@ router.get('/custom', auth, async (req, res) => {
 
         const coursePromise = Course.find({ _id: { $in: courseIds } })
             .populate('instructor', 'name -_id')
-            .select(['name', 'instructor', 'tags', 'avgRating'])
+            .select(['name', 'instructor', 'tags', 'avgRating', 'imageURL'])
             .populate({
                 path: 'topics',
                 select: 'coreResources',
@@ -394,7 +394,7 @@ router.post(
             });
         }
         const body = {};
-        for (let key of ['name', 'description', 'tags', 'imageUrl']) {
+        for (let key of ['name', 'description', 'tags', 'imageURL']) {
             if (req.body[key]) body[key] = req.body[key];
         }
 
