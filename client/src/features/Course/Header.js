@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -88,7 +88,7 @@ const Header = props => {
                     <Button text='Edit Course' full onClick={() => edit(true)} />
                 )}
                 {instructor && editing && (
-                    <div>
+                    <Fragment>
                         <Button
                             text='Save Course'
                             full
@@ -97,10 +97,12 @@ const Header = props => {
                             className='u-margin-right-small'
                         />
                         <Button text='Cancel' full onClick={cancelSave} />
-                        <i
-                            className='fas fa-trash-alt course-header__delete'
-                            onClick={deleteCourse}></i>
-                    </div>
+                    </Fragment>
+                )}
+                {instructor && (
+                    <i
+                        className='fas fa-trash-alt course-header__delete'
+                        onClick={deleteCourse}></i>
                 )}
             </div>
         </div>
