@@ -30,6 +30,8 @@ const Header = props => {
 
     const name = useRef(course.name);
 
+    const shortDescription = course.description.slice(0, course.description.indexOf('<br>'));
+
     const handleChange = e => {
         name.current = e.target.value;
         courseChanges.current.name = e.target.value;
@@ -61,7 +63,7 @@ const Header = props => {
                 />
             </div>
             <div className='course-header__description'>
-                <Html tag='p'>{course.description}</Html>
+                <Html tag='p'>{shortDescription}</Html>
             </div>
             <div className='course-header__rating'>
                 <Rating rating={course.avgRating} />
