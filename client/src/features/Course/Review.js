@@ -7,6 +7,7 @@ import courseApi from '../../api/course';
 import Comments from '../Comments';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
+import { useResourceStatus } from '../../utils/hooks';
 
 const Review = ({ isStudent, isInstructor }) => {
     const dispatch = useDispatch();
@@ -16,6 +17,12 @@ const Review = ({ isStudent, isInstructor }) => {
     const { data: course, mutate } = useSWR(`get-course-${courseId}`, () =>
         courseApi.get(courseId)
     );
+
+    const resourcesDoneByTopic = useResourceStatus(isStudent, courseId);
+    const resourcesDone = [];
+    Object.values(resourcesDoneByTopic).forEach(res => {
+        resourcesDone.push(...res);
+    });
 
     if (!course) return <Loading />;
 
@@ -44,6 +51,8 @@ const Review = ({ isStudent, isInstructor }) => {
 
     let newComment;
     if (!isStudent) newComment = 'Enroll to add a review';
+    if (isStudent && !resourcesDone.length)
+        newComment = 'Complete some part of course to add a review';
     if (isInstructor) newComment = "Instructor can't add review";
 
     return (
