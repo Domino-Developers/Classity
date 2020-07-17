@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { course, text } = require('./common');
+const { course, text, number } = require('./common');
 
 const Course = require('./Course');
 const CourseProgress = require('./CourseProgress');
@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
         of: mongoose.Schema.Types.ObjectId,
         default: {}
     },
-    coursesCreated: [course]
+    coursesCreated: [course],
+    score: number
 });
 
 UserSchema.pre('remove', async function (next) {
@@ -26,10 +27,7 @@ UserSchema.pre('remove', async function (next) {
         _id: { $in: [...this.coursesEnrolled.values()] }
     });
 
-    const [coursesCreated, coursesProgress] = await Promise.all([
-        coursePromise,
-        progressPromise
-    ]);
+    const [coursesCreated, coursesProgress] = await Promise.all([coursePromise, progressPromise]);
 
     const coursePromises = [];
     for (let course of coursesCreated) {
@@ -44,16 +42,11 @@ UserSchema.pre('remove', async function (next) {
     const enrollPromises = [];
     for (let courseId of [...this.coursesEnrolled.keys()]) {
         enrollPromises.push(
-            Course.findOneAndUpdate(
-                { _id: courseId },
-                { $pull: { students: this.id } }
-            )
+            Course.findOneAndUpdate({ _id: courseId }, { $pull: { students: this.id } })
         );
     }
 
-    await Promise.all(
-        [].concat(coursePromises, progressPromises, enrollPromises)
-    );
+    await Promise.all([].concat(coursePromises, progressPromises, enrollPromises));
 
     next();
 });

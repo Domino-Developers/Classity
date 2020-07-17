@@ -8,6 +8,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Test = require('../../models/Test');
+const User = require('../../models/User');
 const CourseProgress = require('../../models/CourseProgress');
 
 // Initialize router
@@ -52,7 +53,6 @@ router.patch(
             // check for errors
             const ValidationErrors = test.validateSync();
             if (ValidationErrors) {
-                console.log(ValidationErrors.errors);
                 const errors = ValidationErrors.errors;
                 const errorMessages = [];
                 for (let field in errors) errorMessages.push({ msg: errors[field].message });
@@ -91,17 +91,25 @@ router.put(
             const courseObj = await Test.findById(req.params.testId).populate('topic', 'course');
             const courseId = courseObj.topic.course;
 
-            const newProgress = await CourseProgress.findOneAndUpdate(
+            const progressPromise = CourseProgress.findOneAndUpdate(
                 {
                     user: req.user.id,
                     course: courseId
                 },
                 {
-                    $max: { [`testScores.${req.params.testId}.score`]: req.body.score },
+                    $inc: { [`testScores.${req.params.testId}.score`]: req.body.score },
                     [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
                 },
                 { new: true }
             );
+
+            const userPromise = User.findOneAndUpdate(
+                { _id: req.user.id },
+                { $inc: { score: 2 * req.body.score } }
+            );
+
+            const [newProgress] = await Promise.all([progressPromise, userPromise]);
+
             res.json(newProgress);
         } catch (err) {
             console.error(err.message);
