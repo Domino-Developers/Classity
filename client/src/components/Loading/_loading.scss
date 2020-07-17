@@ -1,9 +1,16 @@
 .loading {
-    width: 6rem;
-    height: 6rem;
+    display: block;
     margin: 0 auto;
-    border: 2px solid $color-primary;
-    border-radius: 50%;
-    opacity: 0.5;
-    animation: loading-circle 1s infinite;
+    vertical-align: middle;
+
+    &__circle {
+        fill: none;
+        stroke: $color-primary;
+        transform-origin: center;
+        animation: loading-circle 2s linear infinite;
+    }
+
+    &--inline {
+        display: inline-block;
+    }
 }

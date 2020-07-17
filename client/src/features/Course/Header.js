@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 import Rating from '../../components/Rating';
 import Editable from '../../components/Editable';
 import Html from '../../components/Html';
@@ -116,7 +117,7 @@ const Header = props => {
                 {instructor && (
                     <Fragment>
                         {deleting ? (
-                            <span>Deleting ... </span>
+                            <Loading inline className='u-margin-left-small' size='4' />
                         ) : (
                             <i
                                 className='fas fa-trash-alt course-header__delete'
