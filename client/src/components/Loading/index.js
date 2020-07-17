@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Loading = props => {
     const sizeInRem = props.size || '5';
     const size = sizeInRem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-    const strokeWidth = 2;
+    const strokeWidth = 4;
     const center = size / 2;
     const radius = center - strokeWidth / 2;
     const circumference = 2 * Math.PI * radius;

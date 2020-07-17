@@ -136,7 +136,7 @@ const Comment = props => {
                     </span>
                     <p>{comment.reply && comment.reply.length}</p>
                 </div>
-                <p className='comment__name'>Sanchit Arora</p>
+                <p className='comment__name'>{comment.user.name}</p>
                 <div className='comment__text'>
                     <FadeText>{comment.text}</FadeText>
                 </div>
@@ -175,7 +175,7 @@ Comment.propTypes = {
     reply: PropTypes.bool,
     replies: PropTypes.array,
     comment: PropTypes.object.isRequired,
-    user: PropTypes.string
+    user: PropTypes.object
 };
 
 export default Comment;
