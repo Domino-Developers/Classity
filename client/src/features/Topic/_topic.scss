@@ -34,31 +34,5 @@
         content: 'Test: ';
     }
 
-    // Icon
-    &__icon {
-        display: none;
-        margin-right: 2rem;
-        width: 3rem;
-        text-align: center;
-    }
-
-    &__item--text &__icon--text {
-        display: inline-block;
-        color: orange;
-    }
-
-    &__item--video &__icon--video {
-        display: inline-block;
-        color: red;
-    }
-
-    &__item--test &__icon--test {
-        display: inline-block;
-        color: blue;
-    }
-
-    &__item--completed &__icon--completed {
-        display: inline-block;
-        color: $color-success;
-    }
+    @include resource-icons;
 }

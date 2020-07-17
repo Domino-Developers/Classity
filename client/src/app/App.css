@@ -15,6 +15,22 @@ body {
 ul {
   list-style: none; }
 
+.icon::before {
+  margin-right: 2rem;
+  width: 3rem;
+  text-align: center;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  /*
+        font-family: 'Font Awesome 5 Brands';
+        font-weight: 400;
+        */ }
+
 body {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
@@ -544,7 +560,7 @@ main {
   padding: 8rem 20%;
   display: grid;
   grid-template-rows: repeat(4, min-content);
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr minmax(max-content, 1fr);
   justify-items: center;
   align-items: center;
   grid-row-gap: 2rem;
@@ -592,32 +608,6 @@ main {
     border: none;
     background-color: #fcfcfc; }
 
-.add-tags {
-  margin-bottom: 4rem;
-  display: flex;
-  align-items: center; }
-  .add-tags__list {
-    display: flex;
-    align-items: center;
-    border: 1px solid #d6d6d6;
-    height: 4rem;
-    margin-left: 1rem;
-    padding: 0 0.5rem; }
-  .add-tags__tag {
-    padding: 2px 0.7rem;
-    margin: 2px 0.5rem;
-    border-radius: 10rem;
-    background-color: rgba(118, 25, 204, 0.8);
-    color: #fcfcfc; }
-    .add-tags__tag:first-child {
-      margin-left: 0; }
-  .add-tags__delete {
-    margin-left: 1rem;
-    cursor: pointer; }
-  .add-tags__input {
-    border: none;
-    background-color: #fcfcfc; }
-
 .course-description {
   box-shadow: 0 0 10px #252227;
   padding: 2rem;
@@ -625,6 +615,30 @@ main {
 
 .course-content__complete-icon {
   margin-left: 1rem;
+  color: #28a745; }
+
+.course-content__icon::before {
+  display: inline-block;
+  margin-right: 2rem;
+  width: 3rem;
+  text-align: center; }
+
+.course-content__icon--text::before {
+  content: '\f518';
+  color: orange; }
+
+.course-content__icon--video::before {
+  content: '\f167';
+  color: red;
+  font-family: 'Font Awesome 5 Brands';
+  font-weight: 400; }
+
+.course-content__icon--test::before {
+  content: '\f46d';
+  color: blue; }
+
+.course-content__icon--completed::before {
+  content: '\f058';
   color: #28a745; }
 
 .feedback {
@@ -673,22 +687,24 @@ main {
     content: 'Video: '; }
   .topic-content__item .topic-content__test::before {
     content: 'Test: '; }
-  .topic-content__icon {
-    display: none;
+  .topic-content__icon::before {
+    display: inline-block;
     margin-right: 2rem;
     width: 3rem;
     text-align: center; }
-  .topic-content__item--text .topic-content__icon--text {
-    display: inline-block;
+  .topic-content__icon--text::before {
+    content: '\f518';
     color: orange; }
-  .topic-content__item--video .topic-content__icon--video {
-    display: inline-block;
-    color: red; }
-  .topic-content__item--test .topic-content__icon--test {
-    display: inline-block;
+  .topic-content__icon--video::before {
+    content: '\f167';
+    color: red;
+    font-family: 'Font Awesome 5 Brands';
+    font-weight: 400; }
+  .topic-content__icon--test::before {
+    content: '\f46d';
     color: blue; }
-  .topic-content__item--completed .topic-content__icon--completed {
-    display: inline-block;
+  .topic-content__icon--completed::before {
+    content: '\f058';
     color: #28a745; }
 
 .comment:not(.comment--reply) {

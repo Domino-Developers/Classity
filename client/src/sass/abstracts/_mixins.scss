@@ -1,0 +1,32 @@
+@mixin resource-icons {
+    &__icon {
+        &::before {
+            display: inline-block;
+            margin-right: 2rem;
+            width: 3rem;
+            text-align: center;
+        }
+
+        &--text::before {
+            content: '\f518';
+            color: orange;
+        }
+
+        &--video::before {
+            content: '\f167';
+            color: red;
+            font-family: 'Font Awesome 5 Brands';
+            font-weight: 400;
+        }
+
+        &--test::before {
+            content: '\f46d';
+            color: blue;
+        }
+
+        &--completed::before {
+            content: '\f058';
+            color: $color-success;
+        }
+    }
+}
