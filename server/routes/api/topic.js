@@ -9,6 +9,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Topic = require('../../models/Topic');
+const User = require('../../models/User');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');
@@ -180,7 +181,6 @@ router.post(
             // check for errors
             const ValidationErrors = test.validateSync();
             if (ValidationErrors) {
-                console.log(ValidationErrors.errors);
                 const errors = ValidationErrors.errors;
                 const errorMessages = [];
                 for (let field in errors) errorMessages.push({ msg: errors[field].message });
@@ -213,7 +213,9 @@ router.put('/:topicId/coreResource/:resId/completed', studentAuth, async (req, r
         if (!coreResource)
             return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
 
-        const newCourseProgress = await CourseProgress.findOneAndUpdate(
+        const userPromise = User.findOneAndUpdate({ _id: req.user.id }, { $inc: { score: 5 } });
+
+        const progressPromise = CourseProgress.findOneAndUpdate(
             {
                 user: req.user.id,
                 course: topic.course
@@ -221,6 +223,8 @@ router.put('/:topicId/coreResource/:resId/completed', studentAuth, async (req, r
             { $addToSet: { [`topicStatus.${topicId}`]: resId } },
             { new: true }
         );
+
+        const [newCourseProgress] = await Promise.all([progressPromise, userPromise]);
 
         return res.json(newCourseProgress);
     } catch (err) {

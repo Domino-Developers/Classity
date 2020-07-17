@@ -39,7 +39,12 @@ const TestView = ({ payload, courseId, topicId, resId }) => {
 
     return (
         <Fragment>
-            {started && <Test test={{ ...test, _id: payload.testId, courseId, topicId, resId }} />}
+            {started && (
+                <Test
+                    test={{ ...test, _id: payload.testId, courseId, topicId, resId }}
+                    pastScore={testStatus && testStatus.score}
+                />
+            )}
             <div className='test-view'>
                 <h2 className='test-view__heading'> {payload.name} </h2>
                 <div className='test-view__content'>
@@ -74,7 +79,7 @@ const TestView = ({ payload, courseId, topicId, resId }) => {
                                     <div className='test-view__grade--text'>
                                         Grade
                                         <br />
-                                        {testStatus.score}%
+                                        {(100 * testStatus.score) / test.questions.length}%
                                     </div>
                                 </div>
                             </Fragment>

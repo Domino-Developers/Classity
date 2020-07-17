@@ -24,6 +24,7 @@ const TestEdit = ({ payload }) => {
             setSave(true);
             await testApi.update(payload.testId, { ...test, questions, passScore });
             setSave(false);
+            dispatch(setAlert('Test Saved Successfully', 'success'));
         } catch (err) {
             if (err.errors) {
                 const errors = err.errors;
@@ -148,7 +149,12 @@ const TestEdit = ({ payload }) => {
                     </label>
                 </div>
                 <div className='test-edit__header test-edit__header--right'>
-                    <Button text='Save Test' onClick={save} loading={isSaving ? 'Saving' : ''} />
+                    <Button
+                        text='Save Test'
+                        onClick={save}
+                        loading={isSaving ? 'Saving' : ''}
+                        className='u-margin-right-small'
+                    />
                     <Button text='Cancel' onClick={cancel} />
                 </div>
             </div>

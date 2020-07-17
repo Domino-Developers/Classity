@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import { addScore } from '../User/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Test = ({ test }) => {
+const Test = ({ test, pastScore }) => {
     const { questions, passScore, _id: id, courseId, topicId, resId } = test;
 
     const answers = useRef({});
@@ -65,7 +65,8 @@ const Test = ({ test }) => {
         let scoreSubmit = 0;
         for (const q in tempResult) scoreSubmit += Number(tempResult[q]);
         const percentScored = (100 * scoreSubmit) / questions.length;
-        dispatch(addScore(id, percentScored, courseId, topicId, resId, percentScored >= passScore));
+        const scoreChange = Math.max(scoreSubmit - (pastScore || 0), 0);
+        dispatch(addScore(id, scoreChange, courseId, topicId, resId, percentScored >= passScore));
         setResult(tempResult);
     };
 
