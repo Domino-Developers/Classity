@@ -12,6 +12,23 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
+    const hashChange = () => {
+        setTimeout(() => {
+            const { hash } = window.location;
+            if (hash !== '') {
+                const element = document.getElementById(hash.slice(1));
+                const offset = 100;
+
+                if (element) {
+                    window.scrollTo({
+                        top: element.getBoundingClientRect().top - offset,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }, 0);
+    };
+
     const authLinks = (
         <Fragment>
             <li className='nav__item'>
@@ -43,12 +60,14 @@ const Navbar = () => {
     return (
         <Fragment>
             <nav className='nav'>
-                <Link to={'/'} className='project-name'>
+                <Link to='/' className='project-name'>
                     Classity
                 </Link>
                 <ul className='nav__list'>
                     <li className='nav__item'>
-                        <a href='#!'>Explore</a>
+                        <Link to='/#explore' onClick={hashChange}>
+                            Explore
+                        </Link>
                     </li>
                     {isAuthenticated ? authLinks : guestLinks}
                 </ul>

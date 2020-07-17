@@ -22,7 +22,7 @@ const CourseCard = props => {
         <Link to={`/course/${_id}`} className='card'>
             <img className='card__img' src={imageURL} alt={name} />
 
-            <h4>{name}</h4>
+            <h4 className='card__title'>{name}</h4>
             <div className='card__tags'>
                 {tags.map((tag, i) => (
                     <span key={i} className='card__tag'>

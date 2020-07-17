@@ -17,7 +17,7 @@ const Landing = () => {
         <div>
             <Header />
             <Goals />
-            <div className='container'>
+            <div className='container' id='explore'>
                 {courses ? (
                     <CardsContainer courses={courses} fallback={<Loading />} normal />
                 ) : error ? (
