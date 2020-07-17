@@ -52,7 +52,7 @@ Comments.propTypes = {
     newComment: PropTypes.string,
     review: PropTypes.bool,
     onAdd: PropTypes.func.isRequired,
-    user: PropTypes.string.isRequired
+    user: PropTypes.string
 };
 
 export default Comments;

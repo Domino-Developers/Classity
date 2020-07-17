@@ -71,7 +71,7 @@ export const login = (email, password, remember) => async dispatch => {
         dispatch(fetchUser());
 
         // notify user
-        dispatch(setAlert('Logined Successfully', 'success', 2000));
+        dispatch(setAlert('Logged in Successfully', 'success', 2000));
     } catch (err) {
         const errors = err.errors;
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));

@@ -79,29 +79,29 @@ const Course = () => {
     const saveCourse = async () => {
         try {
             const promises = [];
-            courseChanges.current.name = stripHtml(courseChanges.current.name);
+            const changes = { ...courseChanges.current };
+
+            changes.name = stripHtml(changes.name);
 
             // For updating course name & description & tags
 
-            if (courseChanges.current.tags === course.tags) delete courseChanges.current.tags;
+            if (changes.tags === course.tags) delete changes.tags;
 
-            if (courseChanges.current.name === course.name) {
-                delete courseChanges.current.name;
-            } else if (courseChanges.current.name === '') {
+            if (changes.name === course.name) {
+                delete changes.name;
+            } else if (changes.name === '') {
                 dispatch(setAlert("Name can't be empty", 'danger'));
                 return;
             }
 
-            if (courseChanges.current.description === course.description) {
-                delete courseChanges.current.description;
-            } else if (stripHtml(courseChanges.current.description) === '') {
+            if (changes.description === course.description) {
+                delete changes.description;
+            } else if (stripHtml(changes.description) === '') {
                 dispatch(setAlert("Description can't be empty", 'danger'));
                 return;
             }
 
-            const emptyTopics = courseChanges.current.topics.filter(
-                topic => stripHtml(topic.name) === ''
-            );
+            const emptyTopics = changes.topics.filter(topic => stripHtml(topic.name) === '');
             if (emptyTopics.length) {
                 dispatch(setAlert("Topic name can't be empty", 'danger'));
                 return;
@@ -111,40 +111,36 @@ const Course = () => {
 
             const rndInd = () => Math.floor(Math.random() * 6);
 
-            if (courseChanges.current.name) {
-                courseChanges.current.imageURL = `https://via.placeholder.com/280x200.png/${
+            if (changes.name) {
+                changes.imageURL = `https://via.placeholder.com/280x200.png/${
                     colors[rndInd()]
-                }/ffffff?text=${stripHtml(courseChanges.current.name).toUpperCase()[0]}`;
+                }/ffffff?text=${changes.name.toUpperCase()[0]}`;
             }
 
-            if (
-                courseChanges.current.name ||
-                courseChanges.current.description ||
-                courseChanges.current.tags
-            )
-                promises.push(courseApi.update(courseId, courseChanges.current));
+            if (changes.name || changes.description || changes.tags)
+                promises.push(courseApi.update(courseId, changes));
 
-            courseChanges.current.topics.forEach(topic => (topic.name = stripHtml(topic.name)));
+            changes.topics.forEach(topic => (topic.name = stripHtml(topic.name)));
 
             // For deleting/renaming topic
             course.topics.forEach(topic => {
-                const newTopicIndex = courseChanges.current.topics.findIndex(
+                const newTopicIndex = changes.topics.findIndex(
                     newTopic => newTopic._id === topic._id
                 );
 
                 if (newTopicIndex === -1) {
                     promises.push(topicApi.delete(course._id, topic._id));
-                } else if (courseChanges.current.topics[newTopicIndex].name !== topic.name) {
+                } else if (changes.topics[newTopicIndex].name !== topic.name) {
                     promises.push(
                         topicApi.update(topic._id, {
-                            name: courseChanges.current.topics[newTopicIndex].name
+                            name: changes.topics[newTopicIndex].name
                         })
                     );
                 }
             });
 
             // For adding new topic
-            courseChanges.current.topics.forEach((topic, i) => {
+            changes.topics.forEach((topic, i) => {
                 if (!topic._id)
                     promises.push(topicApi.add(course._id, { name: topic.name, position: i }));
             });
