@@ -11,9 +11,9 @@ const Header = () => {
             <header className='landing-header'>
                 <div className='landing-header__box'>
                     <h1 className='landing-header__text'>
-                        Bunk Your Classes,
+                        Bunk Your Class
                         <br />
-                        Not your studies .
+                        Not The Studies!
                     </h1>
                     <Button
                         text='Join for Free'
