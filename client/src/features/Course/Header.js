@@ -31,7 +31,7 @@ const Header = props => {
     } = props;
 
     const name = useRef(course.name);
-    courseChanges.current.name = course.name;
+    courseChanges.current.name = name.current;
 
     const shortDescription = course.description.slice(0, course.description.indexOf('<br>'));
     const [deleting, setDeleting] = useState(false);
