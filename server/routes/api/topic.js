@@ -27,8 +27,20 @@ router.get('/:topicId', classroomAuth, async (req, res) => {
     try {
         const topic = await Topic.findById(req.params.topicId)
             .lean()
-            .populate('resourceDump')
-            .populate('doubt');
+            .populate({
+                path: 'resourceDump',
+                populate: [
+                    { path: 'user', select: 'name' },
+                    { path: 'reply.user', select: 'name' }
+                ]
+            })
+            .populate({
+                path: 'doubt',
+                populate: [
+                    { path: 'user', select: 'name' },
+                    { path: 'reply.user', select: 'name' }
+                ]
+            });
         if (!topic) {
             return res.status(400).json({ errors: [{ msg: 'Topic not found' }] });
         }
