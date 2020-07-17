@@ -2,7 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import rootReducer from './rootReducer';
 import { authRejected } from '../features/Auth/authSlice';
-import { fetchUserFail } from '../features/User/userSlice';
+import { fetchUserFail, fetchUserStart } from '../features/User/userSlice';
 
 // custom middleware
 
@@ -25,10 +25,19 @@ const rejecter = store => next => action => {
     }
 };
 
+const loadStarter = store => next => action => {
+    if (action.type === 'auth/authStart') {
+        const res = next(action);
+        store.dispatch(fetchUserStart());
+        return res;
+    }
+    return next(action);
+};
+
 const store = configureStore({
     reducer: rootReducer,
     devTools: process.env.NODE_ENV !== 'production',
-    middleware: [...getDefaultMiddleware(), rejecter]
+    middleware: [...getDefaultMiddleware(), loadStarter, rejecter]
 });
 
 export default store;

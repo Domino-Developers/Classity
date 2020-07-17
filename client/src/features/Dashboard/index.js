@@ -17,17 +17,19 @@ const sel = createSelector(
     [
         state => state.user.loading,
         state => state.user.coursesEnrolled,
-        state => state.user.coursesCreated
+        state => state.user.coursesCreated,
+        state => state.user._id
     ],
-    (loading, coursesEnrolled, coursesCreated) => ({
+    (loading, coursesEnrolled, coursesCreated, id) => ({
         loading,
         coursesEnrolled,
-        coursesCreated
+        coursesCreated,
+        id
     })
 );
 
 const Dashboard = () => {
-    const { loading, coursesEnrolled, coursesCreated } = useSelector(sel);
+    const { loading, coursesEnrolled, coursesCreated, id } = useSelector(sel);
     let reqBody;
     if (!loading) {
         reqBody = [
@@ -44,7 +46,7 @@ const Dashboard = () => {
         ];
     }
 
-    const { data, error, mutate } = useSWR(loading ? null : 'get-custom-course-min', () => {
+    const { data, error, mutate } = useSWR(loading ? null : `get-custom-course-min-${id}`, () => {
         return courseStore.getCustomCoursesMin(reqBody);
     });
     const [creating, setCreating] = useState(false);
