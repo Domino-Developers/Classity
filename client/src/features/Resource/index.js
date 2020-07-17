@@ -17,7 +17,7 @@ import { completeCoreResource } from '../User/userSlice';
 import { useResourceStatus } from '../../utils/hooks';
 
 const userAndAuth = createSelector(
-    [state => state.user.coursesCreated, state => state.user.resourseLoading],
+    [state => state.user.coursesCreated, state => state.user.resourceLoading],
     (coursesCreated, loading) => ({
         loading,
         coursesCreated
@@ -28,6 +28,7 @@ const Resource = () => {
     const dispatch = useDispatch();
     const { courseId, topicId, resourceId } = useParams();
     const { coursesCreated, loading } = useSelector(userAndAuth);
+    console.log(loading);
     const isInstructor = coursesCreated.includes(courseId);
     const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));

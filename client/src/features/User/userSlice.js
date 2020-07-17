@@ -95,7 +95,7 @@ const {
     deleteCreatedCourse
 } = userSlice.actions;
 
-export { addCreatedCourse, fetchUserFail, addCourseProgress, deleteCreatedCourse };
+export { addCreatedCourse, fetchUserFail, addCourseProgress, deleteCreatedCourse, fetchUserStart };
 
 export default userSlice.reducer;
 
