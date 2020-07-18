@@ -28,6 +28,11 @@ const CourseSchema = new mongoose.Schema({
     tags: {
         type: [String],
         default: []
+    },
+    points: number,
+    threshold: {
+        type: Number,
+        default: 100
     }
 });
 

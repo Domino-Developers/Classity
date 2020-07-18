@@ -28,7 +28,6 @@ const Resource = () => {
     const dispatch = useDispatch();
     const { courseId, topicId, resourceId } = useParams();
     const { coursesCreated, loading } = useSelector(userAndAuth);
-    console.log(loading);
     const isInstructor = coursesCreated.includes(courseId);
     const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
