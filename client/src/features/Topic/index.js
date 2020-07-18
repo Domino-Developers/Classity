@@ -16,7 +16,6 @@ import Loading from '../../components/Loading';
 import Comments from '../Comments';
 import AddNew from '../../components/AddNew';
 import Button from '../../components/Button';
-import Html from '../../components/Html';
 import { useEdit, useResourceStatus } from '../../utils/hooks';
 import { setAlert } from '../Alerts/alertSlice';
 import { createSelector } from '@reduxjs/toolkit';
@@ -151,19 +150,10 @@ const Topic = () => {
         }
     };
 
-    const icons = (
-        <Fragment>
-            <i className='fas fa-check-circle topic-content__icon topic-content__icon--completed'></i>
-            <i className='fab fa-youtube topic-content__icon topic-content__icon--video'></i>
-            <i className='fas fa-book-open topic-content__icon topic-content__icon--text'></i>
-            <i className='fas fa-clipboard-list topic-content__icon topic-content__icon--test'></i>
-        </Fragment>
-    );
-
     return (
         <Fragment>
             <div className='main-content'>
-                <Html tag='h2'>{topic.name}</Html>
+                <h2>{topic.name}</h2>
 
                 {isInstructor && !editing && <Button text='Edit' onClick={() => edit(true)} />}
                 {isInstructor && editing && (
@@ -228,10 +218,7 @@ const Topic = () => {
                             {resources &&
                                 resources.map((res, i) => (
                                     <Fragment key={i}>
-                                        <li
-                                            className={`topic-content__item topic-content__item--${
-                                                isCompleted[res._id] ? 'completed' : res.kind
-                                            }`}>
+                                        <li className='icon topic-content__item'>
                                             {editing && (
                                                 <i
                                                     className='fas fa-minus delete-btn'
@@ -256,10 +243,17 @@ const Topic = () => {
                                                 <Link
                                                     to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}
                                                     className='topic-content__link'>
-                                                    {icons}
-                                                    <Html className={`topic-content__${res.kind}`}>
-                                                        {res.name}
-                                                    </Html>
+                                                    <span
+                                                        className={`icon topic-content__icon--${
+                                                            isCompleted[res._id]
+                                                                ? 'completed'
+                                                                : res.kind
+                                                        }`}>
+                                                        <span
+                                                            className={`topic-content__${res.kind}`}>
+                                                            {res.name}
+                                                        </span>
+                                                    </span>
                                                 </Link>
                                             )}
                                         </li>

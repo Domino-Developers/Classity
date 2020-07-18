@@ -4,13 +4,19 @@ import Collapse from '../../components/Collapse';
 import { useResourceStatus } from '../../utils/hooks';
 
 const Content = props => {
-    const { editing, course, courseChanges, isStudent, isInstructor } = props;
+    const { editing, course, courseChanges, isStudent } = props;
     const [topics, setTopics] = useState([...course.topics]);
     courseChanges.current.topics = topics;
-    const resourcesDoneByTopic = useResourceStatus(isStudent, course._id);
+
     useEffect(() => {
         setTopics([...course.topics]);
     }, [course.topics]);
+
+    const resourcesDoneByTopic = useResourceStatus(isStudent, course._id);
+    const resourceDone = {};
+    for (const topic in resourcesDoneByTopic) {
+        resourcesDoneByTopic[topic].forEach(res => (resourceDone[res] = true));
+    }
 
     return (
         <section>
@@ -52,9 +58,12 @@ const Content = props => {
                             <Collapse.Item
                                 key={i}
                                 to={
-                                    (isStudent || isInstructor) &&
+                                    !editing &&
                                     `/course/${course._id}/topic/${topic._id}/resource/${res._id}`
-                                }>
+                                }
+                                className={`icon course-content__icon--${
+                                    resourceDone[res._id] ? 'completed' : res.kind
+                                }`}>
                                 {res.name}
                             </Collapse.Item>
                         ))}

@@ -18,3 +18,27 @@ body {
 ul {
     list-style: none;
 }
+
+.icon::before {
+    margin-right: 2rem;
+    width: 3rem;
+    text-align: center;
+
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+
+    // Styling in general
+
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+
+    // Styling for brand icons
+
+    /*
+        font-family: 'Font Awesome 5 Brands';
+        font-weight: 400;
+        */
+}
