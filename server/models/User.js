@@ -14,8 +14,17 @@ const UserSchema = new mongoose.Schema({
         of: mongoose.Schema.Types.ObjectId,
         default: {}
     },
+    coursesCompleted: {
+        type: Map,
+        of: mongoose.Schema.Types.ObjectId,
+        default: {}
+    },
     coursesCreated: [course],
-    score: number
+    score: number,
+    energy: {
+        type: Number,
+        default: 4
+    }
 });
 
 UserSchema.pre('remove', async function (next) {

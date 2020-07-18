@@ -202,39 +202,76 @@ router.post(
  * @description Add complete resource status
  * @access		private + studentOnly
  */
-router.put('/:topicId/coreResource/:resId/completed', studentAuth, async (req, res) => {
-    const { topicId, resId } = req.params;
-
-    try {
-        const topic = await Topic.findById(topicId).lean();
-
-        const coreResource = topic.coreResources.find(res => res._id.toString() === resId);
-
-        if (!coreResource)
-            return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
-
-        const userPromise = User.findOneAndUpdate({ _id: req.user.id }, { $inc: { score: 5 } });
-
-        const progressPromise = CourseProgress.findOneAndUpdate(
-            {
-                user: req.user.id,
-                course: topic.course
-            },
-            { $addToSet: { [`topicStatus.${topicId}`]: resId } },
-            { new: true }
-        );
-
-        const [newCourseProgress] = await Promise.all([progressPromise, userPromise]);
-
-        return res.json(newCourseProgress);
-    } catch (err) {
-        if (err.kind === 'ObjectId') {
-            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+router.put(
+    '/:topicId/coreResource/:resId/completed',
+    [studentAuth, [check('courseCompletedNow').not().isEmpty()]],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json(errors);
         }
-        console.error(err.message);
-        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        const { topicId, resId } = req.params;
+
+        try {
+            const topicPromise = Topic.findById(topicId).lean();
+            const progressFind = CourseProgress.findOne({
+                user: req.user.id,
+                course: req.course._id
+            });
+
+            const [topic, courseProgress] = await Promise.all([topicPromise, progressFind]);
+            const coreResource = topic.coreResources.find(res => res._id.toString() === resId);
+
+            if (!coreResource)
+                return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
+
+            let resDone = courseProgress.topicStatus.get(topicId) || [];
+
+            if (resDone.includes(resId))
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg: 'Resource already completed',
+                            warning: 'Trying to be smart ha? You underestimated us'
+                        }
+                    ]
+                });
+
+            resDone.push(mongoose.Types.ObjectId(resId));
+
+            courseProgress.set(`topicStatus.${topicId}`, resDone);
+
+            let userUpdateOpts = {
+                $inc: { score: 5 }
+            };
+
+            if (req.body.courseCompletedNow) {
+                userUpdateOpts = {
+                    ...userUpdateOpts,
+                    $rename: {
+                        [`coursesEnrolled.${topic.course}`]: `coursesCompleted.${topic.course}`
+                    },
+                    $inc: { energy: 1 }
+                };
+            }
+
+            const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts);
+            const progressPromise = courseProgress.updateOne({
+                $addToSet: { [`topicStatus.${topicId}`]: resId }
+            });
+
+            await Promise.all([userPromise, progressPromise]);
+
+            return res.json(courseProgress);
+        } catch (err) {
+            if (err.kind === 'ObjectId') {
+                return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+            }
+            console.error(err.message);
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        }
     }
-});
+);
 
 /**
  * @route		DELETE api/topic/:topicId/comment/:commentId
