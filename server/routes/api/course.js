@@ -267,6 +267,12 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
             return res.status(400).json({ errors: [{ msg: 'Already Enrolled' }] });
         }
 
+        // check if the student has energy
+        const user = await User.findById(req.user.id);
+        if (user.energy <= 0) {
+            return res.status(403).json({ eeors: [{ msg: 'Not enough energy' }] });
+        }
+
         // adding student to course
         course.students.push(req.user.id);
 
@@ -281,12 +287,10 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         const courseProgressPromise = courseProgress.save();
 
         // Add course to user enrolled courses
-        const userPromise = User.findOneAndUpdate(
-            { _id: req.user.id },
-            {
-                [`coursesEnrolled.${courseId}`]: courseProgress.id
-            }
-        );
+        user.energy -= 1;
+        user.coursesEnrolled.set(courseId, courseProgress.id);
+        console.log(user.coursesEnrolled);
+        const userPromise = user.save();
 
         await Promise.all([coursePromise, courseProgressPromise, userPromise]);
 
