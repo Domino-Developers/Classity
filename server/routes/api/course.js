@@ -11,7 +11,6 @@ const Course = require('../../models/Course');
 const User = require('../../models/User');
 const Topic = require('../../models/Topic');
 const CourseProgress = require('../../models/CourseProgress');
-const { course } = require('../../models/common');
 const { verifyToken } = require('../../utils/tokenVerifier');
 
 // Initialize router
@@ -289,7 +288,6 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
         // Add course to user enrolled courses
         user.energy -= 1;
         user.coursesEnrolled.set(courseId, courseProgress.id);
-        console.log(user.coursesEnrolled);
         const userPromise = user.save();
 
         await Promise.all([coursePromise, courseProgressPromise, userPromise]);
@@ -342,18 +340,23 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         const { text, rating } = req.body;
         const courseId = req.params.courseId;
 
-        if (!Number.isInteger(rating) || rating <= 0 || !text) {
+        if (!Number.isInteger(rating) || rating <= 0 || rating > 5 || !text) {
             return res.status(400).json({ errors: [{ msg: 'Bad Request' }] });
         }
 
-        const course = await Course.findById(courseId);
+        const course = await Course.findById(courseId).populate('topics', 'coreResources');
+
         let totalRating = course.avgRating * course.reviews.length;
 
         const index = course.reviews.findIndex(review => String(review.user) === req.user.id);
 
+        const contributionByRating = [-100, -5, 0, 5, 10, 20];
+        let contribution = contributionByRating[rating];
+
         if (index === -1) {
             course.reviews.push({ user: req.user.id, text, rating });
         } else {
+            contribution -= contributionByRating[course.reviews[index].rating];
             totalRating -= course.reviews[index].rating;
             course.reviews[index] = { user: req.user.id, text, rating };
         }
@@ -361,7 +364,23 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         totalRating += rating;
         course.avgRating = totalRating / course.reviews.length;
 
-        await course.save();
+        course.points += contribution;
+        if (course.points >= course.threshold) {
+            course.threshold *= 2;
+
+            let totalResources = 0;
+            course.topics.forEach(topic => (totalResources += topic.coreResources.length));
+            contribution += 50 * totalResources;
+        }
+
+        const coursePromise = course.save();
+        const userPromise = User.findOneAndUpdate(
+            { _id: course.instructor },
+            { $inc: { contribution } }
+        );
+
+        await Promise.all([coursePromise, userPromise]);
+
         res.json(course.reviews);
     } catch (err) {
         console.error(err.message);

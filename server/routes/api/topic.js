@@ -256,9 +256,9 @@ router.put(
             }
 
             const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts);
-            const progressPromise = courseProgress.updateOne({
-                $addToSet: { [`topicStatus.${topicId}`]: resId }
-            });
+
+            courseProgress.markModified(`topicStatus.${topicId}`);
+            const progressPromise = courseProgress.save();
 
             await Promise.all([userPromise, progressPromise]);
 

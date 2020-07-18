@@ -5,6 +5,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Comment = require('../../models/Comment');
+const User = require('../../models/User');
 
 // Initialize router
 const router = express.Router();
@@ -20,12 +21,16 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
 
-        if (
-            comment.likes.findIndex(user => String(user) === req.user.id) === -1
-        ) {
+        if (comment.likes.findIndex(user => String(user) === req.user.id) === -1) {
             comment.likes.push(req.user.id);
+            const commentPromise = comment.save();
 
-            await comment.save();
+            const userPromise = User.findOneAndUpdate(
+                { _id: comment.user },
+                { $inc: { contribution: 5 } }
+            );
+
+            await Promise.all([commentPromise, userPromise]);
 
             res.json(comment.likes);
         } else {
@@ -47,14 +52,19 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
 router.delete('/:commentId/like', classroomAuth, async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
-        const index = comment.likes.findIndex(
-            user => String(user) === req.user.id
-        );
+        const index = comment.likes.findIndex(user => String(user) === req.user.id);
 
         if (index !== -1) {
             comment.likes.splice(index, 1);
 
-            await comment.save();
+            const commentPromise = comment.save();
+
+            const userPromise = User.findOneAndUpdate(
+                { _id: comment.user },
+                { $inc: { contribution: -5 } }
+            );
+
+            await Promise.all([commentPromise, userPromise]);
 
             res.json(comment.likes);
         } else {
@@ -108,15 +118,11 @@ router.delete('/:commentId/reply/:replyId', classroomAuth, async (req, res) => {
         const index = replyArr.findIndex(reply => String(reply.id) === replyId);
 
         if (index === -1) {
-            return res
-                .status(400)
-                .json({ errors: [{ msg: 'Reply not found' }] });
+            return res.status(400).json({ errors: [{ msg: 'Reply not found' }] });
         }
 
         if (String(replyArr[index].user) !== req.user.id) {
-            return res
-                .status(401)
-                .json({ errors: [{ msg: 'Not authorized to delete reply' }] });
+            return res.status(401).json({ errors: [{ msg: 'Not authorized to delete reply' }] });
         }
 
         replyArr.splice(index, 1);

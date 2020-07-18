@@ -144,7 +144,7 @@ const Comment = props => {
                     <input
                         className='comment__input'
                         type='text'
-                        placeholder='Enter your comment'
+                        placeholder='Reply'
                         onChange={e => setText(e.target.value)}
                         value={text}
                     />

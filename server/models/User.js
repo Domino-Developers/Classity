@@ -24,7 +24,8 @@ const UserSchema = new mongoose.Schema({
     energy: {
         type: Number,
         default: 4
-    }
+    },
+    contribution: number
 });
 
 UserSchema.pre('remove', async function (next) {
