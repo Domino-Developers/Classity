@@ -49,7 +49,7 @@ Comments.propTypes = {
     show: PropTypes.string,
     seeMore: PropTypes.string,
     newText: PropTypes.string,
-    newComment: PropTypes.string,
+    newComment: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     review: PropTypes.bool,
     onAdd: PropTypes.func.isRequired,
     user: PropTypes.string

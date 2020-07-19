@@ -7,6 +7,9 @@
 
         &--inner {
             stroke: $color-primary;
+            transform-origin: center;
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 1s;
         }
 
         &--outer {

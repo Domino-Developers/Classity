@@ -280,7 +280,10 @@ main {
   .circular-progress__circle {
     fill: none; }
     .circular-progress__circle--inner {
-      stroke: #7619cc; }
+      stroke: #7619cc;
+      transform-origin: center;
+      transform: rotate(-90deg);
+      transition: stroke-dashoffset 1s; }
     .circular-progress__circle--outer {
       stroke: #d6d6d6; }
   .circular-progress__text {
