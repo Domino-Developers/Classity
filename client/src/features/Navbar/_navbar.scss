@@ -18,5 +18,26 @@
 
     &__item {
         padding: 0 2.4rem;
+
+        &:not(&--join) {
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -1rem;
+                left: 50%;
+                display: inline-block;
+                width: calc(100% - 4.8rem);
+                max-width: 0;
+                border-bottom: 3px solid $color-primary;
+                transition: max-width 0.2s;
+                transform: translate(-50%, -50%);
+            }
+
+            &:hover::after {
+                max-width: 10rem;
+            }
+        }
     }
 }

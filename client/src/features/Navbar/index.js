@@ -51,7 +51,7 @@ const Navbar = () => {
             <li className='nav__item'>
                 <Link to={`${location.pathname}?authMode=login`}>Log In</Link>
             </li>
-            <li className='nav__item'>
+            <li className='nav__item nav__item--join'>
                 <Button to={`${location.pathname}?authMode=register`} text='Join for Free' full />
             </li>
         </Fragment>
