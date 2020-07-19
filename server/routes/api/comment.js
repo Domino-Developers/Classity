@@ -1,5 +1,7 @@
 const express = require('express');
 
+const getDateString = require('../../utils/getDateString');
+
 // middlewares
 const classroomAuth = require('../../middleware/classroomAuth');
 
@@ -27,7 +29,7 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
 
             const userPromise = User.findOneAndUpdate(
                 { _id: comment.user },
-                { $inc: { contribution: 5 } }
+                { $inc: { [`contribution.${getDateString()}`]: 5 } }
             );
 
             await Promise.all([commentPromise, userPromise]);
@@ -61,7 +63,7 @@ router.delete('/:commentId/like', classroomAuth, async (req, res) => {
 
             const userPromise = User.findOneAndUpdate(
                 { _id: comment.user },
-                { $inc: { contribution: -5 } }
+                { $inc: { [`contribution.${getDateString()}`]: -5 } }
             );
 
             await Promise.all([commentPromise, userPromise]);

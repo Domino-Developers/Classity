@@ -1,6 +1,8 @@
 const express = require('express');
 const { check, oneOf, validationResult } = require('express-validator');
 
+const getDateString = require('../../utils/getDateString');
+
 // middlewares
 const auth = require('../../middleware/auth');
 const instructorAuth = require('../../middleware/instructorAuth');
@@ -376,7 +378,7 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         const coursePromise = course.save();
         const userPromise = User.findOneAndUpdate(
             { _id: course.instructor },
-            { $inc: { contribution } }
+            { $inc: { [`contribution.${getDateString()}`]: contribution } }
         );
 
         await Promise.all([coursePromise, userPromise]);
