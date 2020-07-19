@@ -134,6 +134,8 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
  * @access		private + studentOnly
  */
 router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const { type, topicId } = req.params;
         const user = req.user.id;
@@ -144,20 +146,26 @@ router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (re
         }
 
         const comment = new Comment({ user, topic: topicId, text });
-        const commentPromise = comment.save();
+        const commentPromise = comment.save({ session });
 
         const topicPromise = Topic.findOneAndUpdate(
             { _id: topicId },
             { $push: { [type]: comment.id } },
-            { new: true }
+            { new: true, session }
         ).populate(type);
 
         const [newTopic] = await Promise.all([topicPromise, commentPromise]);
 
         res.json(newTopic[type]);
+
+        await session.commitTransaction();
+        session.endSession();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+        await session.abortTransaction();
+        session.endSession();
     }
 });
 
@@ -215,6 +223,8 @@ router.put(
         }
         const { topicId, resId } = req.params;
 
+        const session = await mongoose.startSession();
+        session.startTransaction();
         try {
             const topicPromise = Topic.findById(topicId).lean();
             const progressFind = CourseProgress.findOne({
@@ -256,20 +266,29 @@ router.put(
                 courseProgress.completedOnce = true;
             }
 
-            const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts);
+            const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts, {
+                session
+            });
 
             courseProgress.markModified(`topicStatus.${topicId}`);
-            const progressPromise = courseProgress.save();
+            const progressPromise = courseProgress.save({ session });
 
             await Promise.all([userPromise, progressPromise]);
 
-            return res.json(courseProgress);
+            res.json(courseProgress);
+
+            await session.commitTransaction();
+            session.endSession();
         } catch (err) {
             if (err.kind === 'ObjectId') {
-                return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+                res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+            } else {
+                console.error(err.message);
+                res.status(500).json({ errors: [{ msg: 'Server Error' }] });
             }
-            console.error(err.message);
-            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+            await session.abortTransaction();
+            session.endSession();
         }
     }
 );
@@ -280,6 +299,8 @@ router.put(
  * @access		private + studentOnly
  */
 router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const { topicId, commentId } = req.params;
 
@@ -295,12 +316,12 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
             });
         }
 
-        const commentPromise = Comment.findOneAndDelete({ _id: commentId });
+        const commentPromise = Comment.findOneAndDelete({ _id: commentId }, { session });
 
         const topicPromise = Topic.findOneAndUpdate(
             { _id: topicId },
             { $pull: { doubt: commentId, resourceDump: commentId } },
-            { new: true }
+            { new: true, session }
         );
 
         const [newTopic] = Promise.all([topicPromise, commentPromise]);
@@ -309,12 +330,19 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
             doubt: newTopic.doubt,
             resourceDump: newTopic.resourceDump
         });
+
+        await session.commitTransaction();
+        session.endSession();
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+            res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
+        } else {
+            console.error(err.message);
+            res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
-        console.error(err.message);
-        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+        await session.abortTransaction();
+        session.endSession();
     }
 });
 
@@ -324,6 +352,8 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
  * @access		private + instructorOnly
  */
 router.delete('/:topicId/coreResource/:resourceId', instructorAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const { topicId, resourceId } = req.params;
 
@@ -337,20 +367,29 @@ router.delete('/:topicId/coreResource/:resourceId', instructorAuth, async (req, 
         }
 
         if (coreResources[index].kind === 'test') {
-            await Test.findOneAndDelete({
-                _id: coreResources[index].testId
-            });
+            await Test.findOneAndDelete(
+                {
+                    _id: coreResources[index].testId
+                },
+                { session }
+            );
         }
 
         coreResources.splice(index, 1);
 
         topic.coreResources = coreResources;
-        await topic.save();
+        await topic.save({ session });
 
         res.json({ coreResources });
+
+        await session.commitTransaction();
+        session.endSession();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+        await session.abortTransaction();
+        session.endSession();
     }
 });
 

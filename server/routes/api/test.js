@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator');
 
 const getDateString = require('../../utils/getDateString');
@@ -89,6 +90,8 @@ router.put(
         if (!errors.isEmpty()) {
             return res.status(400).json(errors);
         }
+        const session = await mongoose.startSession();
+        session.startTransaction();
         try {
             const courseObj = await Test.findById(req.params.testId).populate('topic', 'course');
             const courseId = courseObj.topic.course;
@@ -102,20 +105,27 @@ router.put(
                     $inc: { [`testScores.${req.params.testId}.score`]: req.body.score },
                     [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
                 },
-                { new: true }
+                { new: true, session }
             );
 
             const userPromise = User.findOneAndUpdate(
                 { _id: req.user.id },
-                { $inc: { [`score.${getDateString()}`]: 2 * req.body.score } }
+                { $inc: { [`score.${getDateString()}`]: 2 * req.body.score } },
+                { session }
             );
 
             const [newProgress] = await Promise.all([progressPromise, userPromise]);
 
             res.json(newProgress);
+
+            await session.commitTransaction();
+            session.endSession();
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+            await session.abortTransaction();
+            session.endSession();
         }
     }
 );
