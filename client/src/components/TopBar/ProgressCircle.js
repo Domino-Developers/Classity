@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import CircularProgress from '../CircularProgress';
 import { useResourceStatus } from '../../utils/hooks';
 
-const ProgressCircle = ({ course, instructor }) => {
-    const resourcesDoneByTopic = useResourceStatus(!instructor, course._id);
+const ProgressCircle = ({ course }) => {
+    const resourcesDoneByTopic = useResourceStatus(true, course._id);
     const resourcesDone = [];
     Object.values(resourcesDoneByTopic).forEach(res => {
         resourcesDone.push(...res);
@@ -21,8 +21,7 @@ const ProgressCircle = ({ course, instructor }) => {
 };
 
 ProgressCircle.propTypes = {
-    course: PropTypes.object.isRequired,
-    instructor: PropTypes.bool.isRequired
+    course: PropTypes.object.isRequired
 };
 
 export default ProgressCircle;

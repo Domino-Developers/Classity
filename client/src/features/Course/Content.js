@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Collapse from '../../components/Collapse';
-import { useResourceStatus } from '../../utils/hooks';
 
 const Content = props => {
-    const { editing, course, courseChanges, isStudent } = props;
+    const { editing, course, courseChanges } = props;
     const [topics, setTopics] = useState([...course.topics]);
     courseChanges.current.topics = topics;
 
@@ -12,7 +11,7 @@ const Content = props => {
         setTopics([...course.topics]);
     }, [course.topics]);
 
-    const resourcesDoneByTopic = useResourceStatus(isStudent, course._id);
+    const resourcesDoneByTopic = course.courseProgress && course.courseProgress.topicStatus;
     const resourceDone = {};
     for (const topic in resourcesDoneByTopic) {
         resourcesDoneByTopic[topic].forEach(res => (resourceDone[res] = true));
@@ -89,7 +88,6 @@ Content.propTypes = {
     editing: PropTypes.bool.isRequired,
     course: PropTypes.object.isRequired,
     courseChanges: PropTypes.object.isRequired,
-    isStudent: PropTypes.bool.isRequired,
     isInstructor: PropTypes.bool.isRequired
 };
 

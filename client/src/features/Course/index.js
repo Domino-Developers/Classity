@@ -191,7 +191,6 @@ const Course = () => {
                     editing={editing}
                     course={course}
                     courseChanges={courseChanges}
-                    isStudent={isStudent}
                     isInstructor={isInstructor}
                 />
 

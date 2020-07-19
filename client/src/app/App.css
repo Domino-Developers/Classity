@@ -377,18 +377,37 @@ main {
     background-color: #d6d6d6; }
   .sidebar__list {
     margin-top: 5px;
-    width: 280px;
+    width: 30rem;
     padding: 0 5px;
     overflow-y: scroll;
     transition: width 0.25s ease 0s; }
     .sidebar__list--collapsed {
-      width: 0; }
-  .sidebar__link {
+      width: 0;
+      padding: 0; }
+  .sidebar__icon::before {
     display: inline-block;
-    width: 100%;
-    transition: color 0.2s; }
-    .sidebar__link:hover {
-      color: #7619cc; }
+    margin-right: 2rem;
+    width: 3rem;
+    text-align: center; }
+  .sidebar__icon--text::before {
+    content: '\f518';
+    color: orange; }
+  .sidebar__icon--video::before {
+    content: '\f167';
+    color: red;
+    font-family: 'Font Awesome 5 Brands';
+    font-weight: 400; }
+  .sidebar__icon--test::before {
+    content: '\f46d';
+    color: blue; }
+  .sidebar__icon--completed::before {
+    content: '\f058';
+    color: #28a745; }
+  .sidebar .icon::before {
+    margin-right: 0; }
+  .sidebar__complete-icon {
+    margin-left: 1rem;
+    color: #28a745; }
 
 .collapse__item {
   margin-bottom: 5px; }

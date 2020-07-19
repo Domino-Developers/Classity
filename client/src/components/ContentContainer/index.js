@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import useSWR from 'swr';
+import { createSelector } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
 import Topic from '../../features/Topic';
 import Resource from '../../features/Resource';
@@ -9,6 +10,7 @@ import TopBar from '../TopBar';
 import courseApi from '../../api/course';
 import SideBar from '../SideBar';
 import Loading from '../Loading';
+import { useResourceStatus } from '../../utils/hooks';
 
 const ContentContainer = props => {
     const [exist, setExist] = useState(true);
@@ -33,26 +35,49 @@ const ContentContainer = props => {
     );
 };
 
+const sel = createSelector(
+    state => state.user._id,
+    id => id
+);
+
 const SideBarContainer = ({ params: { courseId } }) => {
     const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
+    const id = useSelector(sel);
+
+    const resourcesDoneByTopic = useResourceStatus(
+        course && course.students.includes(id),
+        courseId
+    );
 
     if (!course) return <Loading />;
+
+    const resourceDone = {};
+    for (const topic in resourcesDoneByTopic) {
+        resourcesDoneByTopic[topic].forEach(res => (resourceDone[res] = true));
+    }
 
     return (
         <Fragment>
             <SideBar.Container>
                 {course.topics.map((topic, i) => (
                     <SideBar.Tab
-                        text={topic.name}
+                        text={
+                            topic.name +
+                            (resourcesDoneByTopic[topic._id] &&
+                            resourcesDoneByTopic[topic._id].length === topic.coreResources.length
+                                ? '<i class="fas fa-check-circle sidebar__complete-icon"></i>'
+                                : '')
+                        }
                         key={i}
                         to={`/course/${courseId}/topic/${topic._id}`}>
                         {topic.coreResources.map((res, i) => (
-                            <SideBar.Item key={i}>
-                                <Link
-                                    className='sidebar__link'
-                                    to={`/course/${courseId}/topic/${topic._id}/resource/${res._id}`}>
-                                    {res.name}
-                                </Link>
+                            <SideBar.Item
+                                key={i}
+                                to={`/course/${courseId}/topic/${topic._id}/resource/${res._id}`}
+                                className={`icon sidebar__icon--${
+                                    resourceDone[res._id] ? 'completed' : res.kind
+                                }`}>
+                                {res.name}
                             </SideBar.Item>
                         ))}
                     </SideBar.Tab>

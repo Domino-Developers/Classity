@@ -17,23 +17,25 @@
 
     &__list {
         margin-top: 5px;
-        width: 280px;
+        width: 30rem;
         padding: 0 5px;
         overflow-y: scroll;
         transition: width 0.25s ease 0s;
 
         &--collapsed {
             width: 0;
+            padding: 0;
         }
     }
 
-    &__link {
-        display: inline-block;
-        width: 100%;
-        transition: color 0.2s;
+    @include resource-icons;
 
-        &:hover {
-            color: $color-primary;
-        }
+    .icon::before {
+        margin-right: 0;
+    }
+
+    &__complete-icon {
+        margin-left: 1rem;
+        color: $color-success;
     }
 }

@@ -7,7 +7,6 @@ import courseApi from '../../api/course';
 import Comments from '../Comments';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
-import { useResourceStatus } from '../../utils/hooks';
 
 const Review = ({ isStudent, isInstructor }) => {
     const dispatch = useDispatch();
@@ -18,9 +17,9 @@ const Review = ({ isStudent, isInstructor }) => {
         courseApi.get(courseId)
     );
 
-    const resourcesDoneByTopic = useResourceStatus(isStudent, courseId);
+    const resourcesDoneByTopic = course.courseProgress && course.courseProgress.topicStatus;
     const resourcesDone = [];
-    Object.values(resourcesDoneByTopic).forEach(res => {
+    Object.values(resourcesDoneByTopic || {}).forEach(res => {
         resourcesDone.push(...res);
     });
 
