@@ -8,7 +8,7 @@ import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { addCourse } from './helper';
-import { addCreatedCourse, addCourseProgress } from '../User/userSlice';
+import { addCreatedCourse, addCourseProgress, completeCoreResource } from '../User/userSlice';
 
 import CardsContainer from '../CardsContainer';
 import { createSelector } from '@reduxjs/toolkit';
@@ -55,7 +55,7 @@ const Dashboard = () => {
 
     if (error && navigator.onLine) return <div>Opps</div>;
 
-    let enrolledCourses, createdCourses;
+    let enrolledCourses, createdCourses, completedCourses;
     if (data) {
         enrolledCourses = Object.keys(coursesEnrolled).map(id => {
             const courseData = data[id].course;
@@ -74,13 +74,19 @@ const Dashboard = () => {
                 (tot, res) => tot + res.length,
                 0
             );
-            return {
+            const progress = doneResources / courseData.totalCoreResources;
+            const cardData = {
                 ...courseData,
                 lastStudied: progressData.lastStudied,
                 streak: progressData.streak,
-                progress: (doneResources / courseData.totalCoreResources) * 100
+                progress: progress * 100
             };
+
+            return cardData;
         });
+
+        completedCourses = enrolledCourses.filter(c => c.progress === 100);
+        enrolledCourses = enrolledCourses.filter(c => c.progress !== 100);
         createdCourses = coursesCreated.map(id => data[id].course);
     }
 
@@ -103,8 +109,11 @@ const Dashboard = () => {
                 <Loading />
             ) : (
                 <Tabs.Container>
-                    <Tabs.Tab name='Enrolled'>
+                    <Tabs.Tab name='In progress'>
                         <CardsContainer courses={enrolledCourses} />
+                    </Tabs.Tab>
+                    <Tabs.Tab name='Completed'>
+                        <CardsContainer courses={completedCourses} />
                     </Tabs.Tab>
                     <Tabs.Tab name='Created'>
                         <CardsContainer courses={createdCourses} normal />

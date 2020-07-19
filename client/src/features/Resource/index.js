@@ -53,7 +53,14 @@ const Resource = () => {
     };
 
     const complete = async () => {
-        dispatch(completeCoreResource(courseId, topicId, resourceId));
+        dispatch(
+            completeCoreResource(
+                courseId,
+                topicId,
+                resourceId,
+                resourcesDone + 1 === topic.coreResources.length
+            )
+        );
     };
 
     const templates = {
@@ -63,7 +70,14 @@ const Resource = () => {
             isInstructor ? (
                 <TestEdit {...props} />
             ) : (
-                <TestView {...props} courseId={courseId} topicId={topicId} resId={resourceId} />
+                <TestView
+                    {...props}
+                    courseId={courseId}
+                    topicId={topicId}
+                    resId={resourceId}
+                    resDoneSize={resourcesDone.length}
+                    totResSize={topic.coreResources.length}
+                />
             )
     };
     if (!resource) return <div>Opps</div>;

@@ -139,10 +139,15 @@ export const addCourseProgressIfNeeded = (courseId, courseProgress) => (dispatch
         dispatch(addCourseProgress({ courseId, courseProgress }));
 };
 
-export const completeCoreResource = (courseId, topicId, resId) => async dispatch => {
+export const completeCoreResource = (
+    courseId,
+    topicId,
+    resId,
+    courseCompleted
+) => async dispatch => {
     dispatch(resourceLoadStart());
     try {
-        const courseProgress = await topicStore.markComplete(topicId, resId);
+        const courseProgress = await topicStore.markComplete(topicId, resId, courseCompleted);
         dispatch(addCourseProgress({ courseId, courseProgress }));
     } catch (err) {
         dispatch(setAlert('Error completing! Try again', 'danger'));
@@ -155,7 +160,15 @@ export const completeCoreResource = (courseId, topicId, resId) => async dispatch
     }
 };
 
-export const addScore = (testId, score, courseId, topicId, resId, completed) => async dispatch => {
+export const addScore = (
+    testId,
+    score,
+    courseId,
+    topicId,
+    resId,
+    completed,
+    courseCompleted
+) => async dispatch => {
     dispatch(resourceLoadStart());
     try {
         const courseProgress = await testStore.addScore(testId, { score });
@@ -166,7 +179,7 @@ export const addScore = (testId, score, courseId, topicId, resId, completed) => 
                 keepLoading: true
             })
         );
-        if (completed) dispatch(completeCoreResource(courseId, topicId, resId));
+        if (completed) dispatch(completeCoreResource(courseId, topicId, resId, courseCompleted));
         else dispatch(resourceLoadStop());
     } catch (err) {
         dispatch(setAlert('Some error! Please try again', 'danger'));

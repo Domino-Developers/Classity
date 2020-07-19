@@ -14,11 +14,6 @@ const UserSchema = new mongoose.Schema({
         of: mongoose.Schema.Types.ObjectId,
         default: {}
     },
-    coursesCompleted: {
-        type: Map,
-        of: mongoose.Schema.Types.ObjectId,
-        default: {}
-    },
     coursesCreated: [course],
     energy: {
         type: Number,

@@ -67,9 +67,11 @@ export default {
         }
     },
 
-    async markComplete(topicId, resId) {
+    async markComplete(topicId, resId, courseCompleted) {
         try {
-            const res = await api.put(`/api/topic/${topicId}/coreResource/${resId}/completed`);
+            const res = await api.put(`/api/topic/${topicId}/coreResource/${resId}/completed`, {
+                body: { courseCompleted }
+            });
             return res.data;
         } catch (err) {
             throw err.response.data;
