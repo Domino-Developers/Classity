@@ -520,6 +520,21 @@ main {
     align-items: center; }
   .nav__item {
     padding: 0 2.4rem; }
+    .nav__item:not(.nav__item--join) {
+      position: relative; }
+      .nav__item:not(.nav__item--join)::after {
+        content: '';
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        display: inline-block;
+        width: calc(100% - 4.8rem);
+        max-width: 0;
+        border-bottom: 3px solid #7619cc;
+        transition: max-width 0.2s;
+        transform: translate(-50%, -50%); }
+      .nav__item:not(.nav__item--join):hover::after {
+        max-width: 10rem; }
 
 .auth {
   display: flex;

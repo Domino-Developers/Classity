@@ -1,10 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Button from '../Button';
 
 const Header = () => {
     const history = useHistory();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
     return (
         <section>
@@ -15,13 +17,15 @@ const Header = () => {
                         <br />
                         Not The Studies!
                     </h1>
-                    <Button
-                        text='Join for Free'
-                        full
-                        onClick={() => {
-                            history.push('?authMode=register');
-                        }}
-                    />
+                    {!isAuthenticated && (
+                        <Button
+                            text='Join for Free'
+                            full
+                            onClick={() => {
+                                history.push('?authMode=register');
+                            }}
+                        />
+                    )}
                 </div>
             </header>
         </section>
