@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const getDateString = require('../../utils/getDateString');
 
@@ -20,16 +21,19 @@ const router = express.Router();
  * @access		private + classroomOnly
  */
 router.put('/:commentId/like', classroomAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const comment = await Comment.findById(req.params.commentId);
 
         if (comment.likes.findIndex(user => String(user) === req.user.id) === -1) {
             comment.likes.push(req.user.id);
-            const commentPromise = comment.save();
+            const commentPromise = comment.save({ session });
 
             const userPromise = User.findOneAndUpdate(
                 { _id: comment.user },
-                { $inc: { [`contribution.${getDateString()}`]: 5 } }
+                { $inc: { [`contribution.${getDateString()}`]: 5 } },
+                { session }
             );
 
             await Promise.all([commentPromise, userPromise]);
@@ -40,9 +44,15 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
                 errors: [{ msg: 'Comment already liked' }]
             });
         }
+
+        await session.commitTransaction();
+        session.endSession();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+        await session.abortTransaction();
+        session.endSession();
     }
 });
 
@@ -52,6 +62,8 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
  * @access		private + classroomOnly
  */
 router.delete('/:commentId/like', classroomAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const comment = await Comment.findById(req.params.commentId);
         const index = comment.likes.findIndex(user => String(user) === req.user.id);
@@ -59,11 +71,12 @@ router.delete('/:commentId/like', classroomAuth, async (req, res) => {
         if (index !== -1) {
             comment.likes.splice(index, 1);
 
-            const commentPromise = comment.save();
+            const commentPromise = comment.save({ session });
 
             const userPromise = User.findOneAndUpdate(
                 { _id: comment.user },
-                { $inc: { [`contribution.${getDateString()}`]: -5 } }
+                { $inc: { [`contribution.${getDateString()}`]: -5 } },
+                { session }
             );
 
             await Promise.all([commentPromise, userPromise]);
@@ -72,9 +85,15 @@ router.delete('/:commentId/like', classroomAuth, async (req, res) => {
         } else {
             res.status(400).json({ errors: [{ msg: 'Comment not liked' }] });
         }
+
+        await session.commitTransaction();
+        session.endSession();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+
+        await session.abortTransaction();
+        session.endSession();
     }
 });
 
