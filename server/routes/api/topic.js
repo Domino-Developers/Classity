@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator');
 
+const getDateString = require('../../utils/getDateString');
+
 // middlewares
 const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
@@ -242,7 +244,7 @@ router.put(
             courseProgress.set(`topicStatus.${topicId}`, resDone);
 
             let userUpdateOpts = {
-                $inc: { score: 5 }
+                $inc: { [`score.${getDateString()}`]: 5 }
             };
 
             if (req.body.courseCompletedNow) {

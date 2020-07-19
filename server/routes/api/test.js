@@ -1,6 +1,8 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 
+const getDateString = require('../../utils/getDateString');
+
 // middlewares
 const instructorAuth = require('../../middleware/instructorAuth');
 const studentAuth = require('../../middleware/studentAuth');
@@ -105,7 +107,7 @@ router.put(
 
             const userPromise = User.findOneAndUpdate(
                 { _id: req.user.id },
-                { $inc: { score: 2 * req.body.score } }
+                { $inc: { [`score.${getDateString()}`]: 2 * req.body.score } }
             );
 
             const [newProgress] = await Promise.all([progressPromise, userPromise]);

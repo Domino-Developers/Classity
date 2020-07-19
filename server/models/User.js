@@ -20,12 +20,20 @@ const UserSchema = new mongoose.Schema({
         default: {}
     },
     coursesCreated: [course],
-    score: number,
     energy: {
         type: Number,
         default: 4
     },
-    contribution: number
+    score: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    contribution: {
+        type: Map,
+        of: Number,
+        default: {}
+    }
 });
 
 UserSchema.pre('remove', async function (next) {
