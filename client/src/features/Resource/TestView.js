@@ -15,7 +15,7 @@ const makeSelector = (courseId, testId) =>
         state => state.user.coursesEnrolled[courseId].testScores[testId],
         test => test
     );
-const TestView = ({ payload, courseId, topicId, resId }) => {
+const TestView = ({ payload, courseId, topicId, resId, resDoneSize, totResSize }) => {
     const [started, setStarted] = useState(false);
     const sel = useMemo(() => makeSelector(courseId, payload.testId), [payload.testId, courseId]);
 
@@ -41,8 +41,16 @@ const TestView = ({ payload, courseId, topicId, resId }) => {
         <Fragment>
             {started && (
                 <Test
-                    test={{ ...test, _id: payload.testId, courseId, topicId, resId }}
+                    test={{
+                        ...test,
+                        _id: payload.testId,
+                        courseId,
+                        topicId,
+                        resId
+                    }}
                     pastScore={testStatus && testStatus.score}
+                    resDoneSize={resDoneSize}
+                    totResSize={totResSize}
                 />
             )}
             <div className='test-view'>

@@ -15,6 +15,7 @@ const User = require('../../models/User');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');
+const { course } = require('../../models/common');
 
 // Initialize router
 const router = express.Router();
@@ -206,7 +207,7 @@ router.post(
  */
 router.put(
     '/:topicId/coreResource/:resId/completed',
-    [studentAuth, [check('courseCompletedNow').not().isEmpty()]],
+    [studentAuth, [check('courseCompleted').not().isEmpty()]],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -247,14 +248,12 @@ router.put(
                 $inc: { [`score.${getDateString()}`]: 5 }
             };
 
-            if (req.body.courseCompletedNow) {
+            if (req.body.courseCompleted && !courseProgress.completedOnce) {
                 userUpdateOpts = {
                     ...userUpdateOpts,
-                    $rename: {
-                        [`coursesEnrolled.${topic.course}`]: `coursesCompleted.${topic.course}`
-                    },
                     $inc: { energy: 1 }
                 };
+                courseProgress.completedOnce = true;
             }
 
             const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts);
