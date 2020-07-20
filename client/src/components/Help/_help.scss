@@ -1,0 +1,22 @@
+.help {
+    &__item {
+        margin-bottom: 3rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid $color-grey-1;
+        line-height: 1.4;
+
+        &--focus {
+            animation: grow 1s;
+        }
+    }
+
+    &__question {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    &__answer p {
+        margin: 1rem 0;
+    }
+}

@@ -112,6 +112,10 @@ input {
   100% {
     transform: rotate(360deg); } }
 
+@keyframes grow {
+  50% {
+    transform: scale(1.05); } }
+
 section {
   margin-bottom: 8rem; }
 
@@ -455,7 +459,8 @@ main {
   transition-delay: 0.1s;
   border: 1px solid #eee;
   border-left: none;
-  border-right: none; }
+  border-right: none;
+  position: relative; }
   .add-new:hover {
     max-height: 10rem; }
   .add-new:hover .add-new__link {
@@ -474,6 +479,9 @@ main {
       color: #7619cc; }
   .add-new__icon {
     margin-right: 5px; }
+  .add-new__guide {
+    position: absolute;
+    left: -3rem; }
 
 [contenteditable='true'] {
   outline: none;
@@ -521,6 +529,22 @@ main {
     animation: loading-circle 2s linear infinite; }
   .loading--inline {
     display: inline-block; }
+
+.help__item {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid #eee;
+  line-height: 1.4; }
+  .help__item--focus {
+    animation: grow 1s; }
+
+.help__question {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  position: relative; }
+
+.help__answer p {
+  margin: 1rem 0; }
 
 .nav {
   display: flex;

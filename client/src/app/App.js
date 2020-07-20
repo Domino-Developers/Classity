@@ -25,7 +25,11 @@ const ContentContainer = loadable(() => import('../components/ContentContainer')
 });
 
 const Dashboard = loadable(() => import('../features/Dashboard'), {
-    fallback: <div>Dashboard Loading ... </div>
+    fallback: <Loading />
+});
+
+const Help = loadable(() => import('../components/Help'), {
+    fallback: <Loading />
 });
 
 function App() {
@@ -53,6 +57,7 @@ function App() {
                             render={props => <ContentContainer {...props} />}
                         />
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                        <Route exact path='/help' component={Help} />
                     </Switch>
                 </main>
             </Router>
