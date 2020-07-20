@@ -12,7 +12,8 @@ const TopicSchema = new mongoose.Schema({
     course,
     coreResources: [coreResourceSchema],
     resourceDump: [comment],
-    doubt: [comment]
+    doubt: [comment],
+    deadline: { type: Number, default: 7 }
 });
 TopicSchema.path('coreResources').discriminator(
     'text',

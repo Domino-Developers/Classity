@@ -768,6 +768,14 @@ main {
     content: '\f058';
     color: #28a745; }
 
+.topic__deadline-input {
+  width: 3rem;
+  text-align: center;
+  border: 1px solid #d6d6d6;
+  border-radius: 3px; }
+  .topic__deadline-input:focus {
+    border: 1px solid #7619cc; }
+
 .comment:not(.comment--reply) {
   border-bottom: 1px solid #d6d6d6;
   padding: 5rem 0; }

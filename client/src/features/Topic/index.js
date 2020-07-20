@@ -39,6 +39,7 @@ const Topic = () => {
 
     const [resources, setResources] = useState();
     const description = useRef();
+    const deadline = useRef();
 
     useEffect(() => {
         if (topic) setResources([...topic.coreResources]);
@@ -59,9 +60,15 @@ const Topic = () => {
 
     if (!resources) setResources([...topic.coreResources]);
     if (!description.current) description.current = topic.description || 'No description yet.';
+    if (!deadline.current) deadline.current = topic.deadline;
 
     const saveTopic = async () => {
         try {
+            if (deadline.current <= 0 || !Number.isInteger(deadline.current)) {
+                dispatch(setAlert('Enter valid deadline', 'danger'));
+                return;
+            }
+
             resources.forEach(resource => (resource.name = stripHtml(resource.name)));
 
             const emptyResources = resources.filter(resource => resource.name === '');
@@ -97,8 +104,13 @@ const Topic = () => {
             if (topic.coreResources !== resources)
                 promises.push(topicApi.setCoreResources(topic._id, resources));
 
-            if (topic.description !== description.current)
-                promises.push(topicApi.update(topic._id, { description: description.current }));
+            if (topic.description !== description.current || topic.deadline !== deadline.current)
+                promises.push(
+                    topicApi.update(topic._id, {
+                        description: description.current,
+                        deadline: deadline.current
+                    })
+                );
 
             setSave(true);
             await Promise.all(promises);
@@ -165,6 +177,20 @@ const Topic = () => {
                         <Button text='Cancel' onClick={cancel} />
                     </Fragment>
                 )}
+                <div className='u-margin-top-small u-margin-bottom-medium'>
+                    Deadline:&nbsp;
+                    {editing ? (
+                        <input
+                            type='text'
+                            defaultValue={deadline.current}
+                            onChange={e => (deadline.current = Number(e.target.value))}
+                            className='topic__deadline-input'
+                        />
+                    ) : (
+                        topic.deadline
+                    )}
+                    &nbsp;days
+                </div>
 
                 <h3>Description</h3>
 
