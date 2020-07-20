@@ -32,6 +32,8 @@ const Help = loadable(() => import('../components/Help'), {
     fallback: <Loading />
 });
 
+const Profile = loadable(() => import('../features/Profile'), { fallback: <Loading /> });
+
 function App() {
     useEffect(() => {
         initTokenCom(
@@ -57,6 +59,7 @@ function App() {
                             render={props => <ContentContainer {...props} />}
                         />
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                        <PrivateRoute exact path='/profile' component={Profile} />
                         <Route exact path='/help' component={Help} />
                     </Switch>
                 </main>
