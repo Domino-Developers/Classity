@@ -65,7 +65,7 @@ const TopBar = ({ params, setExist }) => {
                         ))}
                     </Breadcrumb.Container>
                 </div>
-                {!instructor && <ProgressCircle instructor={instructor} course={course} />}
+                {!instructor && <ProgressCircle course={course} />}
             </div>
         </Fragment>
     );

@@ -8,7 +8,6 @@ import TextRes from './TextRes';
 import TestView from './TestView';
 import TestEdit from './TestEdit';
 import topicApi from '../../api/topic';
-import courseApi from '../../api/course';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 import Button from '../../components/Button';
@@ -30,9 +29,8 @@ const Resource = () => {
     const { coursesCreated, loading } = useSelector(userAndAuth);
     const isInstructor = coursesCreated.includes(courseId);
     const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
-    const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
-    if (!course || !topic) return <Loading />;
+    if (!topic) return <Loading />;
 
     const resource = topic.coreResources.find(res => res._id === resourceId);
 

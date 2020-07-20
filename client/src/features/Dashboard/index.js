@@ -8,7 +8,7 @@ import Tabs from '../../components/Tabs';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { addCourse } from './helper';
-import { addCreatedCourse, addCourseProgress, completeCoreResource } from '../User/userSlice';
+import { addCreatedCourse, addCourseProgress } from '../User/userSlice';
 
 import CardsContainer from '../CardsContainer';
 import { createSelector } from '@reduxjs/toolkit';

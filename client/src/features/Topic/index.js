@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useSelector, useDispatch } from 'react-redux';
 
-import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 import commentApi from '../../api/comment';
 import testApi from '../../api/test';
@@ -33,7 +32,6 @@ const Topic = () => {
     const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
     const { id, loading, coursesCreated } = useSelector(userAndAuth);
-    const { data: course } = useSWR(`get-course-${courseId}`, () => courseApi.get(courseId));
     const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
 
     const [editing, edit] = useEdit();
@@ -55,7 +53,7 @@ const Topic = () => {
         });
     }
 
-    if (!course || !topic || loading) return <Loading />;
+    if (!topic || loading) return <Loading />;
 
     if (editing && !isInstructor) edit(false);
 
@@ -241,7 +239,7 @@ const Topic = () => {
                                                 />
                                             ) : (
                                                 <Link
-                                                    to={`/course/${course._id}/topic/${topic._id}/resource/${res._id}`}
+                                                    to={`/course/${topic.course}/topic/${topic._id}/resource/${res._id}`}
                                                     className='topic-content__link'>
                                                     <span
                                                         className={`icon topic-content__icon--${
