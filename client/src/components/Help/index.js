@@ -78,10 +78,15 @@ const Help = () => {
                                 <li>
                                     <p>
                                         Course contribution is equal to 50 * number of resources
-                                        (including reading resources, videos and tests). Each course
-                                        starts with a threshold of 100 and as soon as you get enough
-                                        contribution points from review to break that threshold, you
-                                        get the course contribution and the threshold is doubled.
+                                        (including reading resources, videos and tests). But you'll
+                                        not get these contribution points immediately after creating
+                                        the course.
+                                    </p>
+                                    <p>
+                                        But don't worry you'll get these points whenever you cross
+                                        checkpoints which at the start is 100 review contribution
+                                        points. Next checkpoint is always the double of the previous
+                                        one.
                                     </p>
                                 </li>
                             </ol>
