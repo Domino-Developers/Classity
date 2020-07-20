@@ -1203,3 +1203,9 @@ main {
       font-size: 1rem;
       line-height: 1;
       padding-bottom: 1.6rem; }
+
+.profile__chart {
+  position: relative;
+  width: 80vw;
+  height: 40vh;
+  margin: auto; }

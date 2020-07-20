@@ -35,6 +35,9 @@ const Navbar = () => {
                 <Link to='/dashboard'>Dashboard</Link>
             </li>
             <li className='nav__item'>
+                <Link to='/profile'>Profile</Link>
+            </li>
+            <li className='nav__item'>
                 <a
                     href='#!'
                     onClick={() => {
