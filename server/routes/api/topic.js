@@ -66,10 +66,11 @@ router.get('/:topicId', classroomAuth, async (req, res) => {
  */
 router.patch('/:topicId', instructorAuth, async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, deadline } = req.body;
         const change = {};
         if (name) change.name = name;
         if (description) change.description = description;
+        if (deadline) change.deadline = deadline;
 
         const topic = await Topic.findOneAndUpdate({ _id: req.params.topicId }, change, {
             new: true

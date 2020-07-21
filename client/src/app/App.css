@@ -287,7 +287,7 @@ main {
       stroke: #7619cc;
       transform-origin: center;
       transform: rotate(-90deg);
-      transition: stroke-dashoffset 1s; }
+      transition: stroke-dashoffset 0.7s; }
     .circular-progress__circle--outer {
       stroke: #d6d6d6; }
   .circular-progress__text {
@@ -459,8 +459,7 @@ main {
   transition-delay: 0.1s;
   border: 1px solid #eee;
   border-left: none;
-  border-right: none;
-  position: relative; }
+  border-right: none; }
   .add-new:hover {
     max-height: 10rem; }
   .add-new:hover .add-new__link {
@@ -479,9 +478,6 @@ main {
       color: #7619cc; }
   .add-new__icon {
     margin-right: 5px; }
-  .add-new__guide {
-    position: absolute;
-    left: -3rem; }
 
 [contenteditable='true'] {
   outline: none;
@@ -678,6 +674,10 @@ main {
   margin-left: 1rem;
   color: #28a745; }
 
+.course-content__expire-icon {
+  margin-left: 1rem;
+  color: #dc3545; }
+
 .course-content__icon::before {
   display: inline-block;
   margin-right: 2rem;
@@ -701,6 +701,20 @@ main {
 .course-content__icon--completed::before {
   content: '\f058';
   color: #28a745; }
+
+.course-content__reset {
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 2.2rem; }
+  .course-content__reset--link {
+    display: inline-block;
+    transition: color 0.2s;
+    text-decoration: underline;
+    text-transform: uppercase;
+    margin-top: 1rem; }
+    .course-content__reset--link:hover {
+      color: #7619cc; }
 
 .feedback {
   display: grid;
@@ -767,6 +781,14 @@ main {
   .topic-content__icon--completed::before {
     content: '\f058';
     color: #28a745; }
+
+.topic__deadline-input {
+  width: 3rem;
+  text-align: center;
+  border: 1px solid #d6d6d6;
+  border-radius: 3px; }
+  .topic__deadline-input:focus {
+    border: 1px solid #7619cc; }
 
 .comment:not(.comment--reply) {
   border-bottom: 1px solid #d6d6d6;

@@ -5,6 +5,7 @@ const CourseProgressSchema = new mongoose.Schema({
     user,
     course,
     lastStudied: date,
+    startedOn: date,
     streak: number,
     testScores: {
         type: Map,

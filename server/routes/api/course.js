@@ -117,7 +117,7 @@ router.get('/custom', auth, async (req, res) => {
             .select(['name', 'instructor', 'tags', 'avgRating', 'imageURL'])
             .populate({
                 path: 'topics',
-                select: 'coreResources',
+                select: 'coreResources deadline',
                 populate: { path: 'coreResources', select: 'name' }
             })
             .lean();
@@ -228,7 +228,7 @@ router.get('/:courseId', async (req, res) => {
             .populate('reviews.user', 'name')
             .populate({
                 path: 'topics',
-                select: 'name coreResources',
+                select: 'name coreResources deadline',
                 populate: { path: 'coreResources', select: 'name' }
             });
         if (!course) {
@@ -350,6 +350,34 @@ router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
             { _id: courseProgressId },
             {
                 $set: { lastStudied: Date.now() }
+            }
+        );
+        res.json(courseProgressId);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
+ * @route		PUT api/course/:courseId/resetDeadline
+ * @description Reset Deadline
+ * @access		private + studentOnly
+ */
+router.put('/:courseId/resetDeadline', studentAuth, async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+        let coursesEnrolled = await User.findById(req.user.id)
+            .lean()
+            .select('coursesEnrolled -_id');
+        coursesEnrolled = coursesEnrolled['coursesEnrolled'];
+        const courseProgressId = String(coursesEnrolled[courseId]);
+
+        // update course progress
+        await CourseProgress.findOneAndUpdate(
+            { _id: courseProgressId },
+            {
+                $set: { startedOn: Date.now() }
             }
         );
         res.json(courseProgressId);

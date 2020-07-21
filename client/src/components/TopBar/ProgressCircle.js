@@ -15,7 +15,7 @@ const ProgressCircle = ({ course }) => {
     return (
         <div className='topbar__right'>
             Your progress
-            <CircularProgress size='50' progress={progress} />
+            <CircularProgress size='50' progress={progress || 0} />
         </div>
     );
 };

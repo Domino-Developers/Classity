@@ -61,6 +61,16 @@ export default {
         }
     },
 
+    // Reset Deadline
+    async resetDeadline(courseId) {
+        try {
+            const res = await api.put(`/api/course/${courseId}/resetDeadline`);
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
+    },
+
     // Add / update review
     async review(courseId, reviewData) {
         try {

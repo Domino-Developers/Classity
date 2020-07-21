@@ -36,3 +36,14 @@
 
     @include resource-icons;
 }
+
+.topic__deadline-input {
+    width: 3rem;
+    text-align: center;
+    border: 1px solid $color-grey-2;
+    border-radius: 3px;
+
+    &:focus {
+        border: 1px solid $color-primary;
+    }
+}
