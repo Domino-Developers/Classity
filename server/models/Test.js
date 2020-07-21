@@ -33,10 +33,7 @@ TestSchema.path('questions').discriminator(
     new mongoose.Schema({
         options: {
             type: [String],
-            validate: [
-                opts => opts.length >= 2,
-                'Number of options should be >= 2'
-            ]
+            validate: [opts => opts.length >= 2, 'Number of options should be >= 2']
         },
         answer: {
             type: Number,
@@ -50,18 +47,13 @@ TestSchema.path('questions').discriminator(
     new mongoose.Schema({
         options: {
             type: [String],
-            validate: [
-                opts => opts.length >= 2,
-                'Number of options should be >= 2'
-            ]
+            validate: [opts => opts.length >= 2, 'Number of options should be >= 2']
         },
         answers: {
             type: [Number],
             validate: [
                 function (ans) {
-                    return (
-                        ans.length <= this.options.length && ans.length !== 0
-                    );
+                    return ans.length <= this.options.length && ans.length !== 0;
                 },
                 'Answers should be there and <= number of options'
             ]
@@ -95,7 +87,7 @@ TestSchema.path('questions').discriminator(
     })
 );
 
-const removeTracking = async (test, next) => {
+const removeTracking = async function (test, next) {
     try {
         // populate to get students
         await test.execPopulate({
@@ -112,7 +104,7 @@ const removeTracking = async (test, next) => {
         await CourseProgress.updateMany(
             { user: { $in: students }, course: courseId },
             { $unset: { [`testScores.${test.id}`]: '' } },
-            { new: true }
+            { new: true, session: this.$session() }
         );
         next();
     } catch (err) {
@@ -121,6 +113,6 @@ const removeTracking = async (test, next) => {
 };
 
 TestSchema.post('remove', removeTracking);
-
 TestSchema.post('findOneAndDelete', removeTracking);
+
 module.exports = mongoose.model('test', TestSchema);

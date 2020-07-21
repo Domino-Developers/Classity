@@ -38,7 +38,7 @@ const CourseSchema = new mongoose.Schema({
 
 CourseSchema.pre('remove', async function (next) {
     try {
-        const topics = await Topic.find({ _id: { $in: this.topics } });
+        const topics = await Topic.find({ _id: { $in: this.topics } }).session(this.$session());
 
         const topicPromises = [];
         for (let topic of topics) {
