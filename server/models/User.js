@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const { course, text, number } = require('./common');
+const { course, text } = require('./common');
 
 const Course = require('./Course');
 const CourseProgress = require('./CourseProgress');
+const getDateString = require('./../utils/getDateString');
 
 const UserSchema = new mongoose.Schema({
     name: text,
@@ -22,12 +23,12 @@ const UserSchema = new mongoose.Schema({
     score: {
         type: Map,
         of: Number,
-        default: {}
+        default: { [getDateString()]: 0 }
     },
     contribution: {
         type: Map,
         of: Number,
-        default: {}
+        default: { [getDateString()]: 0 }
     }
 });
 
