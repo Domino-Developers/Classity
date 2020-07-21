@@ -27,7 +27,10 @@ const LineChart = ({ xyData, label }) => {
                 title: {
                     display: true,
                     text: label,
-                    fontSize: '50'
+                    fontSize: '30',
+                    fontFamily: 'Lato',
+                    fontStyle: 'normal',
+                    fontColor: '#252227'
                 },
                 legend: {
                     display: false
@@ -68,6 +71,9 @@ const LineChart = ({ xyData, label }) => {
                             scaleLabel: {
                                 display: true,
                                 labelString: label
+                            },
+                            ticks: {
+                                precision: 0
                             }
                         }
                     ]
@@ -75,7 +81,12 @@ const LineChart = ({ xyData, label }) => {
             }
         });
     });
-    return <canvas ref={chartRef} />;
+
+    return (
+        <div className='profile__chart'>
+            <canvas ref={chartRef} />
+        </div>
+    );
 };
 LineChart.propTypes = {
     xyData: PropTypes.arrayOf(PropTypes.object).isRequired,
