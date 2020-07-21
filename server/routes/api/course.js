@@ -191,8 +191,7 @@ router.put(
                             $each: [topic.id],
                             $position: position
                         }
-                    },
-                    modifiedDate: Date.now()
+                    }
                 },
                 { session }
             );

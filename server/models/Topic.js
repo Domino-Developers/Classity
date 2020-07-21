@@ -67,7 +67,8 @@ async function updateCourse(topic, next) {
             { _id: topic.course },
             {
                 modifiedDate: Date.now()
-            }
+            },
+            { session: this.$session() }
         );
         next();
     } catch (err) {

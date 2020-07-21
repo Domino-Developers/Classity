@@ -34,11 +34,11 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('remove', async function (next) {
     const coursePromise = Course.find({
         _id: { $in: this.coursesCreated }
-    });
+    }).session(this.$session());
 
     const progressPromise = CourseProgress.find({
         _id: { $in: [...this.coursesEnrolled.values()] }
-    });
+    }).session(this.$session());
 
     const [coursesCreated, coursesProgress] = await Promise.all([coursePromise, progressPromise]);
 
@@ -55,7 +55,11 @@ UserSchema.pre('remove', async function (next) {
     const enrollPromises = [];
     for (let courseId of [...this.coursesEnrolled.keys()]) {
         enrollPromises.push(
-            Course.findOneAndUpdate({ _id: courseId }, { $pull: { students: this.id } })
+            Course.findOneAndUpdate(
+                { _id: courseId },
+                { $pull: { students: this.id } },
+                { session: this.$session() }
+            )
         );
     }
 
