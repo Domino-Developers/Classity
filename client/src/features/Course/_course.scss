@@ -83,7 +83,31 @@
         color: $color-success;
     }
 
+    &__expire-icon {
+        margin-left: 1rem;
+        color: $color-danger;
+    }
+
     @include resource-icons;
+
+    &__reset {
+        background-color: rgba($color-danger, 0.1);
+        padding: 1.5rem 0;
+        text-align: center;
+        font-size: 2.2rem;
+
+        &--link {
+            display: inline-block;
+            transition: color 0.2s;
+            text-decoration: underline;
+            text-transform: uppercase;
+            margin-top: 1rem;
+
+            &:hover {
+                color: $color-primary;
+            }
+        }
+    }
 }
 
 .feedback {

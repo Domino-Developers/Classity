@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { useSelector, useDispatch } from 'react-redux';
 
 import topicApi from '../../api/topic';
+import courseApi from '../../api/course';
 import commentApi from '../../api/comment';
 import testApi from '../../api/test';
 
@@ -32,7 +33,12 @@ const Topic = () => {
     const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
     const { id, loading, coursesCreated } = useSelector(userAndAuth);
+    const isInstructor = coursesCreated.includes(courseId);
+
     const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
+    const { data: course } = useSWR(isInstructor ? null : `get-course-${courseId}`, () =>
+        courseApi.get(courseId)
+    );
 
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
@@ -45,7 +51,6 @@ const Topic = () => {
         if (topic) setResources([...topic.coreResources]);
     }, [topic]);
 
-    const isInstructor = coursesCreated.includes(courseId);
     const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
     const isCompleted = {};
     if (resources) {
@@ -54,13 +59,19 @@ const Topic = () => {
         });
     }
 
-    if (!topic || loading) return <Loading />;
+    if (!course || !topic || loading) return <Loading />;
 
     if (editing && !isInstructor) edit(false);
 
     if (!resources) setResources([...topic.coreResources]);
     if (!description.current) description.current = topic.description || 'No description yet.';
     if (!deadline.current) deadline.current = topic.deadline;
+
+    let completeBy = new Date(course.courseProgress && course.courseProgress.startedOn);
+    for (let i = 0; i < course.topics.length; i++) {
+        completeBy.setTime(completeBy.getTime() + course.topics[i].deadline * 24 * 60 * 60 * 1000);
+        if (course.topics[i]._id === topicId) break;
+    }
 
     const saveTopic = async () => {
         try {
@@ -178,18 +189,24 @@ const Topic = () => {
                     </Fragment>
                 )}
                 <div className='u-margin-top-small u-margin-bottom-medium'>
-                    Deadline:&nbsp;
-                    {editing ? (
-                        <input
-                            type='text'
-                            defaultValue={deadline.current}
-                            onChange={e => (deadline.current = Number(e.target.value))}
-                            className='topic__deadline-input'
-                        />
+                    {isInstructor ? (
+                        <Fragment>
+                            Deadline:&nbsp;
+                            {editing ? (
+                                <input
+                                    type='text'
+                                    defaultValue={deadline.current}
+                                    onChange={e => (deadline.current = Number(e.target.value))}
+                                    className='topic__deadline-input'
+                                />
+                            ) : (
+                                topic.deadline
+                            )}
+                            &nbsp;days
+                        </Fragment>
                     ) : (
-                        topic.deadline
+                        <Fragment>Complete the topic by {completeBy.toDateString()}</Fragment>
                     )}
-                    &nbsp;days
                 </div>
 
                 <h3>Description</h3>
