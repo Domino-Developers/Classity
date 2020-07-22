@@ -5,10 +5,16 @@ import PropTypes from 'prop-types';
 
 import Register from './Register';
 import Login from './Login';
+import { createSelector } from '@reduxjs/toolkit';
+
+const sel = createSelector(
+    [state => state.auth.isAuthenticated, state => state.auth.inactive],
+    (isAuthenticated, inactive) => ({ isAuthenticated, inactive })
+);
 
 const Auth = props => {
     const { path, mode } = props;
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const { isAuthenticated, inactive } = useSelector(sel);
 
     return (
         <Fragment>
@@ -41,6 +47,10 @@ const Auth = props => {
                         </ul>
                         <div className='auth__card'>
                             {mode === 'login' ? <Login /> : <Register />}
+                            {inactive &&
+                                (mode === 'login'
+                                    ? 'Please verify your email before logging in'
+                                    : 'Please check your email for verification. Make sure to check your spam and junk mail to! It may take upto 15 mins')}
                         </div>
                     </div>
                 </div>

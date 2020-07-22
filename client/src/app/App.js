@@ -12,6 +12,7 @@ import { initAuth, authRejected } from '../features/Auth/authSlice';
 import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
 import PrivateRoute from '../components/PrivateRoute';
+import EmailVerify from '../features/EmailVerify';
 
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
@@ -61,6 +62,7 @@ function App() {
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
                         <PrivateRoute exact path='/profile' component={Profile} />
                         <Route exact path='/help' component={Help} />
+                        <Route exact path='/email-verify' component={EmailVerify} />
                     </Switch>
                 </main>
             </Router>

@@ -2,11 +2,11 @@ const express = require('express');
 const { check, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 // Models
 const User = require('../../models/User');
 const getToken = require('../../utils/tokenGenerator');
+const emailSend = require('../../utils/emailSend');
 
 // Init router
 const router = express.Router();
@@ -49,40 +49,25 @@ router.post(
                 password,
                 avatar
             });
-
             const salt = await bcrypt.genSalt(10);
-
             user.password = await bcrypt.hash(password, salt);
             let secretToken;
             [user.password, secretToken] = await Promise.all([
                 bcrypt.hash(password, salt),
-                getToken(70)
+                getToken(256)
             ]);
-
             user.verifyingToken = {
                 for: 'email-verify',
                 token: secretToken,
-                expDate: Date.now() + 2
+                expDate: Date.now() + 2 * 60 * 60 * 1000
             };
-
             await user.save();
-            const payload = {
-                user: {
-                    id: user.id
-                }
-            };
-
-            jwt.sign(
-                payload,
-                process.env.SECRET_KEY,
-                {
-                    expiresIn: 36000000
-                },
-                (err, token) => {
-                    if (err) throw err;
-                    res.json({ token });
-                }
-            );
+            emailSend(
+                email,
+                'Please verify your email for Classity',
+                `<h1>Please verify you email</h1><a href="http://localhost:3000/email-verify?_tk_=${secretToken}&_id_=${user.id}"> Click here to verify </a>`
+            ).catch(err => console.error(err));
+            return res.json({ success: true });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
@@ -117,7 +102,6 @@ router.put('/email-verify', async (req, res) => {
             return res.status(403).json({ errors: [{ msg: 'Not allowed' }] });
         }
 
-        user.inactive = false;
         user.verifyingToken = null;
         await user.save();
 

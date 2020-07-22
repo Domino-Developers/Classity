@@ -8,13 +8,11 @@ var transport = nodemailer.createTransport({
     }
 });
 
-module.exports = {
-    sendMail: async (to, subject, html, text) =>
-        transport.sendMail({
-            from: '"Classity" <dominodevelopers@outlook.com>',
-            to: to,
-            subject: subject,
-            text: text,
-            html: html
-        })
-};
+module.exports = sendMail = async (to, subject, html, text) =>
+    transport.sendMail({
+        from: '"Classity" <dominodevelopers@outlook.com>',
+        to: to,
+        subject: subject,
+        text: text,
+        html: html
+    });
