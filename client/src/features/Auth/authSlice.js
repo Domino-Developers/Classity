@@ -104,21 +104,3 @@ export const initAuth = ({ dontCommunicate }) => dispatch => {
         dispatch(fetchUser());
     }
 };
-
-// function to register user
-export const register = (name, email, password) => async dispatch => {
-    dispatch(authStart());
-
-    try {
-        const token_res = await user.register({ name, email, password });
-        dispatch(setInactive());
-        dispatch(setAlert('Registered Successfully', 'success', 2000));
-    } catch (err) {
-        const errors = err.errors;
-        errors.forEach(error => {
-            dispatch(setAlert(error.msg, 'danger'));
-        });
-        dispatch(authRejected());
-        console.error(err);
-    }
-};

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { setAlert } from '../Alerts/alertSlice';
-import { register } from './authSlice';
 import Button from '../../components/Button';
+import userStore from '../../api/user';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const Register = () => {
     });
 
     const dispatch = useDispatch();
-    const loading = useSelector(state => state.auth.loading);
+    const [warning, setWarning] = useState({ show: false, loading: false });
 
     const onChange = e => {
         setFormData({
@@ -28,14 +28,31 @@ const Register = () => {
             dispatch(setAlert("passwords don't match", 'danger', 2000));
             return;
         } else {
-            dispatch(register(name, email, password));
+            register(name, email, password);
         }
-        setFormData({
-            name: '',
-            email: '',
-            password: '',
-            password2: ''
-        });
+    };
+
+    const register = async (name, email, password) => {
+        try {
+            setWarning({ show: false, loading: true });
+            await userStore.register({ name, email, password });
+            setWarning({ show: true, loading: false });
+            dispatch(setAlert('Registered Successfully', 'success', 2000));
+        } catch (err) {
+            const errors = err.errors;
+            errors.forEach(error => {
+                dispatch(setAlert(error.msg, 'danger'));
+            });
+            setWarning({ show: false, loading: false });
+            console.error(err);
+        } finally {
+            setFormData({
+                name: '',
+                email: '',
+                password: '',
+                password2: ''
+            });
+        }
     };
 
     const { name, email, password, password2 } = formData;
@@ -92,8 +109,14 @@ const Register = () => {
                 />
             </label>
             <div className='auth__input'>
-                <Button value='Submit' loading={loading && 'Loading'} />
+                <Button value='Submit' loading={warning.loading && 'Loading'} />
             </div>
+            {warning.show && (
+                <div className='auth__card__info'>
+                    'Please check your email for verification. Make sure to check your spam and junk
+                    mail too! It may take upto 15 mins'
+                </div>
+            )}
         </form>
     );
 };
