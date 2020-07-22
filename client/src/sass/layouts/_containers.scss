@@ -13,12 +13,8 @@ main {
 }
 
 .main-content-area {
-    position: fixed;
     display: flex;
-    top: 135px;
-    width: 100%;
-    height: calc(100% - 135px);
-    z-index: 101;
+    height: calc(100vh - 135px);
 }
 
 .main-content-area .main-content {

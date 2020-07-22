@@ -15,7 +15,8 @@ const initialState = {
     loading: true,
     resourceLoading: false,
     score: null,
-    contribution: null
+    contribution: null,
+    energy: null
 };
 
 const userSlice = createSlice({
@@ -42,6 +43,7 @@ const userSlice = createSlice({
             state.coursesCreated = user.coursesCreated;
             state.score = user.score;
             state.contribution = user.contribution;
+            state.energy = user.energy;
         },
         fetchUserFail: (state, action) => {
             state.loading = false;
@@ -53,6 +55,7 @@ const userSlice = createSlice({
             state.coursesCreated = null;
             state.score = null;
             state.contribution = null;
+            state.energy = null;
         },
         addCreatedCourse: (state, action) => {
             const { courseId } = action.payload;
