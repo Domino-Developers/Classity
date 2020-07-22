@@ -31,6 +31,10 @@ const userSlice = createSlice({
             state.email = null;
             state.coursesEnrolled = null;
             state.coursesCreated = null;
+            state.resourceLoading = false;
+            state.score = null;
+            state.contribution = null;
+            state.energy = null;
         },
         fetchUserSuccess: (state, action) => {
             const user = action.payload;
@@ -44,6 +48,7 @@ const userSlice = createSlice({
             state.score = user.score;
             state.contribution = user.contribution;
             state.energy = user.energy;
+            state.resourceLoading = false;
         },
         fetchUserFail: (state, action) => {
             state.loading = false;
@@ -56,6 +61,7 @@ const userSlice = createSlice({
             state.score = null;
             state.contribution = null;
             state.energy = null;
+            state.resourceLoading = false;
         },
         addCreatedCourse: (state, action) => {
             const { courseId } = action.payload;
@@ -79,6 +85,7 @@ const userSlice = createSlice({
             state.loading = false;
             const { courseId, courseProgress } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
+            state.energy -= 1;
         },
         enrollFail: (state, action) => {
             state.loading = false;
@@ -86,6 +93,9 @@ const userSlice = createSlice({
         deleteCreatedCourse: (state, action) => {
             const { courseId } = action.payload;
             state.coursesCreated = state.coursesCreated.filter(id => id !== courseId);
+        },
+        setScore(state, action) {
+            state.score = action.payload;
         }
     }
 });
@@ -101,7 +111,8 @@ const {
     enrollFail,
     resourceLoadStart,
     resourceLoadStop,
-    deleteCreatedCourse
+    deleteCreatedCourse,
+    setScore
 } = userSlice.actions;
 
 export { addCreatedCourse, fetchUserFail, addCourseProgress, deleteCreatedCourse, fetchUserStart };
@@ -156,8 +167,13 @@ export const completeCoreResource = (
 ) => async dispatch => {
     dispatch(resourceLoadStart());
     try {
-        const courseProgress = await topicStore.markComplete(topicId, resId, courseCompleted);
+        const { courseProgress, newScore } = await topicStore.markComplete(
+            topicId,
+            resId,
+            courseCompleted
+        );
         dispatch(addCourseProgress({ courseId, courseProgress }));
+        dispatch(setScore(newScore));
     } catch (err) {
         dispatch(setAlert('Error completing! Try again', 'danger'));
         dispatch(resourceLoadStop());

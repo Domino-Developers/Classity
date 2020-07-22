@@ -59,6 +59,7 @@ const Dashboard = () => {
     if (data) {
         enrolledCourses = Object.keys(coursesEnrolled).map(id => {
             const courseData = data[id].course;
+
             let progressData;
 
             if (data[id].courseProgress && typeof coursesEnrolled[id] === 'string') {
@@ -75,6 +76,7 @@ const Dashboard = () => {
                 0
             );
             const progress = doneResources / courseData.totalCoreResources;
+            console.log(courseData);
             const cardData = {
                 ...courseData,
                 lastStudied: progressData.lastStudied,
@@ -89,6 +91,8 @@ const Dashboard = () => {
         enrolledCourses = enrolledCourses.filter(c => c.progress !== 100);
         createdCourses = coursesCreated.map(id => data[id].course);
     }
+
+    if (loading) return <Loading />;
 
     return (
         <div className='container'>
@@ -105,7 +109,7 @@ const Dashboard = () => {
                     loading={creating}
                 />
             </div>
-            {loading || !data ? (
+            {!data ? (
                 <Loading />
             ) : (
                 <Tabs.Container>

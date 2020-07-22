@@ -14,15 +14,22 @@ const sel = createSelector(
         state => state.auth.isAuthenticated,
         state => state.user.name,
         state => state.user.email,
-        state => state.user.energy
+        state => state.user.energy,
+        state => state.user.loading
     ],
-    (isAuthenticated, name, email, energy) => ({ isAuthenticated, name, email, energy })
+    (isAuthenticated, name, email, energy, loading) => ({
+        isAuthenticated,
+        name,
+        email,
+        energy,
+        loading
+    })
 );
 
 const Navbar = () => {
     let [query, location] = useQuery();
     const dispatch = useDispatch();
-    const { isAuthenticated, name, email, energy } = useSelector(sel);
+    const { isAuthenticated, name, email, energy, loading } = useSelector(sel);
 
     const hashChange = () => {
         setTimeout(() => {
@@ -41,7 +48,7 @@ const Navbar = () => {
         }, 0);
     };
 
-    const authLinks = isAuthenticated && (
+    const authLinks = isAuthenticated && !loading && (
         <Fragment>
             <li>
                 <Link className='nav__link' to='/dashboard'>
