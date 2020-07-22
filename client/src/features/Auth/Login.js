@@ -3,6 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { login } from './authSlice';
 import Button from '../../components/Button';
+import { createSelector } from '@reduxjs/toolkit';
+
+const sel = createSelector(
+    [state => state.auth.inactive, state => state.auth.loading],
+    (inactive, loading) => ({ inactive, loading })
+);
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -11,7 +17,7 @@ const Login = () => {
         remember: false
     });
     const dispatch = useDispatch();
-    const loading = useSelector(state => state.auth.loading);
+    const { loading, inactive } = useSelector(sel);
 
     const onChange = e => {
         setFormData({
@@ -71,6 +77,13 @@ const Login = () => {
             <div className='auth__input'>
                 <Button value='Submit' loading={loading && 'Loading'} />
             </div>
+            {inactive && (
+                <div className='auth__card__info'>
+                    <span className='auth__card__info--warning'>
+                        Please verify your email before logging in
+                    </span>
+                </div>
+            )}
         </form>
     );
 };
