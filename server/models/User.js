@@ -29,6 +29,17 @@ const UserSchema = new mongoose.Schema({
         type: Map,
         of: Number,
         default: { [getDateString()]: 0 }
+    },
+    inactive: {
+        type: Boolean,
+        default: true
+    },
+    verifyingToken: {
+        type: {
+            for: String,
+            token: String,
+            expDate: Date
+        }
     }
 });
 
