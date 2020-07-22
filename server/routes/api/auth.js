@@ -39,9 +39,11 @@ router.post(
 
             // if there is no user
             if (!user) {
-                return res
-                    .status(401)
-                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
+                return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
+            }
+
+            if (user.verifyingToken && user.verifyingToken.for === 'email-verify') {
+                return res.json({ inactive: true });
             }
 
             // check the password
@@ -49,9 +51,7 @@ router.post(
 
             // if password doesnt match
             if (!isMatch) {
-                return res
-                    .status(401)
-                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
+                return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
             // Send back token if credentials are correct

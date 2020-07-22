@@ -33,5 +33,14 @@ export default {
         } catch (err) {
             throw err.response.data;
         }
+    },
+
+    async verifyEmailToken(token, id) {
+        try {
+            const res = await api.put('/api/users/email-verify', { body: { token, id } });
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
     }
 };

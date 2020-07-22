@@ -11,7 +11,8 @@ const authSlice = createSlice({
     initialState: {
         token: null,
         isAuthenticated: false,
-        loading: true
+        loading: true,
+        inactive: false
     },
     reducers: {
         authStart: (state, action) => {
@@ -32,6 +33,7 @@ const authSlice = createSlice({
             state.token = action.payload.token;
             state.isAuthenticated = true;
             state.loading = false;
+            state.inactive = false;
         },
         authRejected: (state, action) => {
             localStorage.removeItem('GTS_TOKEN');
@@ -48,11 +50,24 @@ const authSlice = createSlice({
             state.token = null;
             state.isAuthenticated = false;
             state.loading = false;
+            state.inactive = false;
+        },
+        setInactive: (state, action) => {
+            localStorage.removeItem('GTS_TOKEN');
+            sessionStorage.removeItem('GTS_TOKEN');
+            if (!action.payload || (action.payload && !action.payload.dontCommunicate)) {
+                sendFlushReq();
+            }
+            removeAuthToken();
+            state.token = null;
+            state.isAuthenticated = false;
+            state.loading = false;
+            state.inactive = true;
         }
     }
 });
 
-const { authRejected, authStart, authSuccess } = authSlice.actions;
+const { authRejected, authStart, authSuccess, setInactive } = authSlice.actions;
 
 export { authRejected, authSuccess };
 
@@ -64,14 +79,15 @@ export const login = (email, password, remember) => async dispatch => {
     try {
         const token_res = await user.login({ email, password });
 
+        if (token_res.inactive) {
+            dispatch(setInactive());
+        } else {
+            dispatch(authSuccess({ token: token_res.token, remember }));
+            dispatch(fetchUser());
+            dispatch(setAlert('Logged in Successfully', 'success', 2000));
+        }
+
         // success
-        dispatch(authSuccess({ token: token_res.token, remember }));
-
-        // fetchUser
-        dispatch(fetchUser());
-
-        // notify user
-        dispatch(setAlert('Logged in Successfully', 'success', 2000));
     } catch (err) {
         const errors = err.errors;
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
@@ -84,10 +100,7 @@ export const login = (email, password, remember) => async dispatch => {
 export const initAuth = ({ dontCommunicate }) => dispatch => {
     const token = sessionStorage.getItem('GTS_TOKEN');
     if (token) {
-        // auth success will be failed if token not valid later
         dispatch(authSuccess({ token, dontCommunicate }));
-
-        // fetch user
         dispatch(fetchUser());
     }
 };
@@ -98,14 +111,7 @@ export const register = (name, email, password) => async dispatch => {
 
     try {
         const token_res = await user.register({ name, email, password });
-
-        // success
-        dispatch(authSuccess({ token: token_res.token, remember: false }));
-
-        // fetchUser
-        dispatch(fetchUser());
-
-        // Notify user
+        dispatch(setInactive());
         dispatch(setAlert('Registered Successfully', 'success', 2000));
     } catch (err) {
         const errors = err.errors;

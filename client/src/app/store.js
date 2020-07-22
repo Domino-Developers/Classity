@@ -8,8 +8,9 @@ import { fetchUserFail, fetchUserStart } from '../features/User/userSlice';
 
 const rejecter = store => next => action => {
     if (
-        action.type === 'auth/authRejected' &&
-        (!action.payload || (action.payload && !action.payload.dontGoOn))
+        (action.type === 'auth/authRejected' &&
+            (!action.payload || (action.payload && !action.payload.dontGoOn))) ||
+        action.type === 'auth/setInactive'
     ) {
         store.dispatch(fetchUserFail({ dontGoOn: true }));
         return next(action);
