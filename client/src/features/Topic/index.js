@@ -59,7 +59,7 @@ const Topic = () => {
         });
     }
 
-    if (!course || !topic || loading) return <Loading />;
+    if ((!course && !isInstructor) || !topic || loading) return <Loading />;
 
     if (editing && !isInstructor) edit(false);
 
@@ -67,11 +67,14 @@ const Topic = () => {
     if (!description.current) description.current = topic.description || 'No description yet.';
     if (!deadline.current) deadline.current = topic.deadline;
 
-    let completeBy = new Date(course.courseProgress && course.courseProgress.startedOn);
-    for (let i = 0; i < course.topics.length; i++) {
-        completeBy.setTime(completeBy.getTime() + course.topics[i].deadline * 24 * 60 * 60 * 1000);
-        if (course.topics[i]._id === topicId) break;
-    }
+    let completeBy = new Date(course && course.courseProgress.startedOn);
+    if (course)
+        for (let i = 0; i < course.topics.length; i++) {
+            completeBy.setTime(
+                completeBy.getTime() + course.topics[i].deadline * 24 * 60 * 60 * 1000
+            );
+            if (course.topics[i]._id === topicId) break;
+        }
 
     const saveTopic = async () => {
         try {

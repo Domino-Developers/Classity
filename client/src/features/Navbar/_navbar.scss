@@ -9,7 +9,7 @@
     padding: 2rem 10%;
     z-index: 100;
     background-color: $color-white;
-    border-bottom: 1px solid $color-grey-3;
+    box-shadow: 0px 1px 2px 1px rgba($color-black, 0.5);
 
     &__list {
         display: flex;
@@ -17,27 +17,62 @@
     }
 
     &__item {
-        padding: 0 2.4rem;
+        padding: 3rem 2.4rem;
 
-        &:not(&--join) {
-            position: relative;
+        &--border {
+            border-bottom: 1px solid $color-grey-1;
+        }
+    }
 
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -1rem;
-                left: 50%;
-                display: inline-block;
-                width: calc(100% - 4.8rem);
-                max-width: 0;
-                border-bottom: 3px solid $color-primary;
-                transition: max-width 0.2s;
-                transform: translate(-50%, -50%);
-            }
+    &__link {
+        transition: color 0.2s;
+        cursor: pointer;
+        display: inline-block;
+        padding: 3rem 2.4rem;
 
-            &:hover::after {
-                max-width: 10rem;
-            }
+        &:hover {
+            color: $color-primary;
+        }
+    }
+
+    &__auth-list-container {
+        position: relative;
+    }
+
+    &__auth-list-container:hover &__auth-list {
+        max-height: 50rem;
+        box-shadow: 0px 1px 2px 1px rgba($color-black, 0.5);
+    }
+
+    &__auth-list {
+        position: absolute;
+        right: 0;
+        top: calc(9rem - 4px);
+        min-width: 20rem;
+        background-color: $color-white;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        overflow: hidden;
+        transition: all 0.5s linear;
+        max-height: 0;
+    }
+
+    &__auth-list &__link,
+    &__auth-list &__item {
+        padding: 1rem 2.4rem;
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    &__user {
+        &--name {
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        &--email {
+            font-size: 1.5rem;
+            color: $color-grey-3;
         }
     }
 }

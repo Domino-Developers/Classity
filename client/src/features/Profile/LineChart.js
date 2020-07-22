@@ -24,14 +24,6 @@ const LineChart = ({ xyData, label }) => {
             },
             options: {
                 maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: label,
-                    fontSize: '30',
-                    fontFamily: 'Lato',
-                    fontStyle: 'normal',
-                    fontColor: '#252227'
-                },
                 legend: {
                     display: false
                 },

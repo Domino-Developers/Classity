@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import loadable from '@loadable/component';
+import { Link } from 'react-router-dom';
 
 import Loading from '../../components/Loading';
 import { getxycoordinates } from './helper';
@@ -89,7 +90,19 @@ const Profile = () => {
                     />
                 </div>
             </div>
+            <p className='profile__title'>
+                Score&nbsp;
+                <Link to='/help#score' className='profile__learn-more'>
+                    (Learn more)
+                </Link>
+            </p>
             <LineChart xyData={getxycoordinates(user.score)} label='Score' />
+            <p className='profile__title'>
+                Contributions&nbsp;
+                <Link to='/help#contribution' className='profile__learn-more'>
+                    (Learn more)
+                </Link>
+            </p>
             <LineChart xyData={getxycoordinates(user.contribution)} label='Contributions' />
         </div>
     );

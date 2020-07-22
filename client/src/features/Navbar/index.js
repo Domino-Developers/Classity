@@ -1,16 +1,28 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 
 import Button from '../../components/Button';
+import Battery from '../../components/Battery';
 import Auth from '../Auth';
 import { authRejected } from '../Auth/authSlice';
 import { useQuery } from '../../utils/hooks';
 
+const sel = createSelector(
+    [
+        state => state.auth.isAuthenticated,
+        state => state.user.name,
+        state => state.user.email,
+        state => state.user.energy
+    ],
+    (isAuthenticated, name, email, energy) => ({ isAuthenticated, name, email, energy })
+);
+
 const Navbar = () => {
     let [query, location] = useQuery();
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const { isAuthenticated, name, email, energy } = useSelector(sel);
 
     const hashChange = () => {
         setTimeout(() => {
@@ -29,32 +41,64 @@ const Navbar = () => {
         }, 0);
     };
 
-    const authLinks = (
+    const authLinks = isAuthenticated && (
         <Fragment>
-            <li className='nav__item'>
-                <Link to='/dashboard'>Dashboard</Link>
+            <li>
+                <Link className='nav__link' to='/dashboard'>
+                    My Courses
+                </Link>
             </li>
-            <li className='nav__item'>
-                <Link to='/profile'>Profile</Link>
-            </li>
-            <li className='nav__item'>
-                <a
-                    href='#!'
-                    onClick={() => {
-                        dispatch(authRejected());
-                    }}>
-                    Logout
-                </a>
+            <li className='nav__auth-list-container'>
+                <span className='nav__item nav__link'>{name}</span>
+
+                <ul className='nav__auth-list'>
+                    <li className='nav__item nav__item--border'>
+                        <p className='nav__user--name'>{name}</p>
+                        <p className='nav__user--email'>{email}</p>
+                    </li>
+                    <li className='nav__item nav__item--border'>
+                        <Link to='/help#energy'>
+                            <Battery power={energy} />
+                        </Link>
+                    </li>
+                    <li>
+                        <Link className='nav__link' to='/profile'>
+                            Profile
+                        </Link>
+                    </li>
+                    <li className='nav__item--border'>
+                        <Link className='nav__link' to='/dashboard'>
+                            My Courses
+                        </Link>
+                    </li>
+                    <li>
+                        <Link className='nav__link' to='/help'>
+                            Help
+                        </Link>
+                    </li>
+                    <li>
+                        <a
+                            className='nav__link'
+                            href='#!'
+                            onClick={() => {
+                                dispatch(authRejected());
+                            }}>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
             </li>
         </Fragment>
     );
 
-    const guestLinks = (
+    const guestLinks = !isAuthenticated && (
         <Fragment>
-            <li className='nav__item'>
-                <Link to={`${location.pathname}?authMode=login`}>Log In</Link>
+            <li>
+                <Link className='nav__link' to={`${location.pathname}?authMode=login`}>
+                    Log In
+                </Link>
             </li>
-            <li className='nav__item nav__item--join'>
+            <li className='nav__item'>
                 <Button to={`${location.pathname}?authMode=register`} text='Join for Free' full />
             </li>
         </Fragment>
@@ -67,12 +111,13 @@ const Navbar = () => {
                     Classity
                 </Link>
                 <ul className='nav__list'>
-                    <li className='nav__item'>
-                        <Link to='/#explore' onClick={hashChange}>
+                    <li>
+                        <Link className='nav__link' to='/#explore' onClick={hashChange}>
                             Explore
                         </Link>
                     </li>
-                    {isAuthenticated ? authLinks : guestLinks}
+                    {authLinks}
+                    {guestLinks}
                 </ul>
             </nav>
             {query.get('authMode') && (
