@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
 const getToken = require('../../utils/tokenGenerator');
 const emailSend = require('../../utils/emailSend');
+const { verifyEmailHTML } = require('../../utils/getHtmlBody');
 
 // Init router
 const router = express.Router();
@@ -54,18 +55,22 @@ router.post(
             let secretToken;
             [user.password, secretToken] = await Promise.all([
                 bcrypt.hash(password, salt),
-                getToken(256)
+                getToken(100)
             ]);
             user.verifyingToken = {
                 for: 'email-verify',
                 token: secretToken,
                 expDate: Date.now() + 2 * 60 * 60 * 1000
             };
+
             await user.save();
             emailSend(
                 email,
-                'Please verify your email for Classity',
-                `<h1>Please verify you email</h1><a href="http://localhost:3000/email-verify?_tk_=${secretToken}&_id_=${user.id}"> Click here to verify </a>`
+                'Verify your email',
+                verifyEmailHTML(
+                    name,
+                    `http://localhost:3000/email-verify?_tk_=${secretToken}&_id_=${user.id}`
+                )
             ).catch(err => console.error(err));
             return res.json({ success: true });
         } catch (err) {
@@ -79,27 +84,37 @@ router.put('/email-verify', async (req, res) => {
     try {
         const { token, id } = req.body;
         if (!token || !id) {
-            return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
 
         const user = await User.findById(id);
 
         if (!user) {
-            return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
 
         if (!user.verifyingToken || user.verifyingToken.for !== 'email-verify') {
-            return res.status(403).json({ errors: [{ msg: 'Not allowed' }] });
+            return res
+                .status(403)
+                .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
 
         const [token_, expDate_] = [user.verifyingToken.token, user.verifyingToken.expDate];
 
         if (expDate_ <= Date.now()) {
-            return res.status(400).json({ errors: [{ msg: 'Token expired' }] });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Link expired! Please rerequest verification email' }] });
         }
 
         if (token !== token_) {
-            return res.status(403).json({ errors: [{ msg: 'Not allowed' }] });
+            return res
+                .status(403)
+                .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
 
         user.verifyingToken = null;
@@ -108,7 +123,9 @@ router.put('/email-verify', async (req, res) => {
         return res.json({ msg: 'Email verification Success !' });
     } catch (err) {
         if (err.kind === 'ObjectId') {
-            return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+            return res
+                .status(400)
+                .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
         return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }

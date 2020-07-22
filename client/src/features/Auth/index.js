@@ -47,10 +47,17 @@ const Auth = props => {
                         </ul>
                         <div className='auth__card'>
                             {mode === 'login' ? <Login /> : <Register />}
-                            {inactive &&
-                                (mode === 'login'
-                                    ? 'Please verify your email before logging in'
-                                    : 'Please check your email for verification. Make sure to check your spam and junk mail to! It may take upto 15 mins')}
+                            {inactive && (
+                                <div className='auth__card__info'>
+                                    {mode === 'login' ? (
+                                        <span className='auth__card__info--warning'>
+                                            Please verify your email before logging in
+                                        </span>
+                                    ) : (
+                                        'Please check your email for verification. Make sure to check your spam and junk mail to! It may take upto 15 mins'
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

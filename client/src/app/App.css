@@ -589,6 +589,15 @@ main {
     padding: 2rem 2rem;
     border-radius: 10px;
     color: #252227; }
+    .auth__card__info {
+      border: 1px solid #aaa;
+      padding: 1rem;
+      font-size: 1.8rem;
+      margin: 1rem;
+      border-radius: 1rem;
+      margin-left: 0; }
+      .auth__card__info--warning {
+        color: #dc3545; }
   .auth__heading {
     margin-top: 2rem;
     margin-bottom: 8rem; }
