@@ -135,13 +135,15 @@ router.get('/custom', auth, async (req, res) => {
             const topics = courseData.topics;
             delete courseData.topics;
             response[c._id] = {
-                course: courseData
+                course: {
+                    ...courseData,
+                    totalCoreResources: topics.reduce(
+                        (tot, top) => tot + top.coreResources.length,
+                        0
+                    )
+                }
             };
             if (c.courseProgressId) {
-                response[c._id]['course'].totalCoreResources = topics.reduce(
-                    (tot, top) => tot + top.coreResources.length,
-                    0
-                );
                 response[c._id]['courseProgress'] = courseProgresses.find(
                     cp => cp._id.toString() === c.courseProgressId
                 );

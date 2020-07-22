@@ -268,15 +268,16 @@ router.put(
             }
 
             const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts, {
+                new: true,
                 session
             });
 
             courseProgress.markModified(`topicStatus.${topicId}`);
             const progressPromise = courseProgress.save({ session });
 
-            await Promise.all([userPromise, progressPromise]);
+            const [newUser] = await Promise.all([userPromise, progressPromise]);
 
-            res.json(courseProgress);
+            res.json({ courseProgress, newScore: newUser.score });
 
             await session.commitTransaction();
             session.endSession();
