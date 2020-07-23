@@ -47,32 +47,42 @@ router.patch(
         if (!errors.isEmpty()) {
             return res.status(400).json(errors);
         }
+
+        const session = await mongoose.startSession();
+
         try {
-            // Create test object to validate for errors
-            const test = new Test({
-                ...req.body
-            });
-
-            // check for errors
-            const ValidationErrors = test.validateSync();
-            if (ValidationErrors) {
-                const errors = ValidationErrors.errors;
-                const errorMessages = [];
-                for (let field in errors) errorMessages.push({ msg: errors[field].message });
-                return res.status(400).json({ errors: errorMessages });
-            }
-
-            // save the test
-            await Test.findOneAndUpdate(
-                { _id: req.params.testId },
-                {
+            session.withTransaction(async () => {
+                // Create test object to validate for errors
+                const test = new Test({
                     ...req.body
+                });
+
+                // check for errors
+                const ValidationErrors = test.validateSync();
+                if (ValidationErrors) {
+                    const errors = ValidationErrors.errors;
+                    const errorMessages = [];
+                    for (let field in errors) errorMessages.push({ msg: errors[field].message });
+
+                    return res.status(400).json({ errors: errorMessages });
                 }
-            );
-            res.json(test);
+
+                // save the test
+                await Test.findOneAndUpdate(
+                    { _id: req.params.testId },
+                    {
+                        ...req.body
+                    },
+                    { session }
+                );
+
+                res.json(test);
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        } finally {
+            session.endSession();
         }
     }
 );
@@ -90,41 +100,43 @@ router.put(
         if (!errors.isEmpty()) {
             return res.status(400).json(errors);
         }
+
         const session = await mongoose.startSession();
-        session.startTransaction();
+
         try {
-            const courseObj = await Test.findById(req.params.testId).populate('topic', 'course');
-            const courseId = courseObj.topic.course;
+            session.withTransaction(async () => {
+                const courseObj = await Test.findById(req.params.testId).populate(
+                    'topic',
+                    'course'
+                );
+                const courseId = courseObj.topic.course;
 
-            const progressPromise = CourseProgress.findOneAndUpdate(
-                {
-                    user: req.user.id,
-                    course: courseId
-                },
-                {
-                    $inc: { [`testScores.${req.params.testId}.score`]: req.body.score },
-                    [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
-                },
-                { new: true, session }
-            );
+                const progressPromise = CourseProgress.findOneAndUpdate(
+                    {
+                        user: req.user.id,
+                        course: courseId
+                    },
+                    {
+                        $inc: { [`testScores.${req.params.testId}.score`]: req.body.score },
+                        [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
+                    },
+                    { new: true, session }
+                );
 
-            const userPromise = User.findOneAndUpdate(
-                { _id: req.user.id },
-                { $inc: { [`score.${getDateString()}`]: 2 * req.body.score } },
-                { session }
-            );
+                const userPromise = User.findOneAndUpdate(
+                    { _id: req.user.id },
+                    { $inc: { [`score.${getDateString()}`]: 2 * req.body.score } },
+                    { session }
+                );
 
-            const [newProgress] = await Promise.all([progressPromise, userPromise]);
+                const [newProgress] = await Promise.all([progressPromise, userPromise]);
 
-            res.json(newProgress);
-
-            await session.commitTransaction();
-            session.endSession();
+                res.json(newProgress);
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-            await session.abortTransaction();
+        } finally {
             session.endSession();
         }
     }
