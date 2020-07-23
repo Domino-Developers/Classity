@@ -3,6 +3,8 @@ const { check, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 
+const auth = require('../../middleware/auth');
+
 // Models
 const User = require('../../models/User');
 const getToken = require('../../utils/tokenGenerator');
@@ -12,13 +14,13 @@ const { verifyEmailHTML } = require('../../utils/getHtmlBody');
 // Init router
 const router = express.Router();
 
+// -----------------------------------------ROUTES --------------------------------------------------
+
 /**
  * @route           POST api/users
  * @description     Register User
  * @access          Public
  */
-
-// -----------------------------------------ROUTES --------------------------------------------------
 router.post(
     '/',
     [
@@ -80,6 +82,11 @@ router.post(
     }
 );
 
+/**
+ * @route           PUT api/users/email-verify
+ * @description     Verify email
+ * @access          Public
+ */
 router.put('/email-verify', async (req, res) => {
     try {
         const { token, id } = req.body;
@@ -127,6 +134,67 @@ router.put('/email-verify', async (req, res) => {
                 .status(400)
                 .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
         }
+        return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
+ * @route           GET api/users
+ * @description     Get all users name, email, score and contributions
+ * @access          Private
+ */
+router.get('/', auth, async (req, res) => {
+    try {
+        const { sort, limit, skip } = JSON.parse(req.query.source || '{}');
+
+        const users = await User.aggregate([
+            {
+                $project: {
+                    score: {
+                        $reduce: {
+                            input: { $objectToArray: '$score' },
+                            initialValue: 0,
+                            in: { $add: ['$$value', '$$this.v'] }
+                        }
+                    },
+                    contribution: {
+                        $reduce: {
+                            input: { $objectToArray: '$contribution' },
+                            initialValue: 0,
+                            in: { $add: ['$$value', '$$this.v'] }
+                        }
+                    },
+                    name: '$name',
+                    email: '$email'
+                }
+            },
+            { $sort: sort || { _id: 1 } },
+            { $skip: skip || 0 },
+            { $limit: limit || 10 }
+        ]);
+
+        return res.json(users);
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
+ * @route           GET api/users/:userId
+ * @description     Get user name, email, score and contributions by user Id
+ * @access          Private
+ */
+router.get('/:userId', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId).select('name email score contribution');
+
+        return res.json(user);
+    } catch (err) {
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ errors: [{ msg: 'Invalid User Id' }] });
+        }
+        console.log(err.message);
         return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });

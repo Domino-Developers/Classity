@@ -1,0 +1,43 @@
+.leaderboard {
+    &__table {
+        margin: 0 auto;
+
+        thead {
+            margin: 2rem 0;
+            font-size: 2.5rem;
+            font-weight: 400;
+        }
+
+        td,
+        th {
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+    }
+
+    &__type {
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $color-primary;
+        }
+
+        .leaderboard__arrow {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        &--active .leaderboard__arrow {
+            opacity: 1;
+        }
+    }
+
+    &__link {
+        transition: color 0.2s;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}

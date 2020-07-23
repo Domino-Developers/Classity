@@ -34,11 +34,13 @@ const Help = () => {
                 <li className='help__item' id='score'>
                     <p className='help__question'>How can I get more score?</p>
                     <div className='help__answer'>
-                        Your score is a measure of your combined progress in all your enrolled
-                        courses. Grow your score graph by completing resources and trying to score
-                        best in tests. Completing each resource gives you a score of five. You also
-                        get a bonus score equal to twice your best marks in each test. Start your
-                        learning and climb up the leaderboard!
+                        <p>
+                            Your score is a measure of your combined progress in all your enrolled
+                            courses. Grow your score graph by completing resources and trying to
+                            score best in tests. Completing each resource gives you a score of five.
+                            You also get a bonus score equal to twice your best marks in each test.
+                            Start your learning and climb up the leaderboard!
+                        </p>
                     </div>
                 </li>
                 <li className='help__item' id='contribution'>
@@ -60,7 +62,7 @@ const Help = () => {
                             If you have a decent knowledge of any subject/topic, we request you to
                             create a course about it to share your expertise with others.
                         </p>
-                        <p>
+                        <div>
                             By creating a course you earn contribution in two ways:
                             <ol>
                                 <li>
@@ -90,7 +92,7 @@ const Help = () => {
                                     </p>
                                 </li>
                             </ol>
-                        </p>
+                        </div>
                         <p>
                             Wanna show off your expertise? Get an infinite supply of contribution
                             points by creating a course!

@@ -29,6 +29,10 @@ const Dashboard = loadable(() => import('../features/Dashboard'), {
     fallback: <Loading />
 });
 
+const Leaderboard = loadable(() => import('../features/Leaderboard'), {
+    fallback: <Loading />
+});
+
 const Help = loadable(() => import('../components/Help'), {
     fallback: <Loading />
 });
@@ -60,7 +64,8 @@ function App() {
                             render={props => <ContentContainer {...props} />}
                         />
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
-                        <PrivateRoute exact path='/profile' component={Profile} />
+                        <PrivateRoute exact path='/profile/:userId' component={Profile} />
+                        <PrivateRoute exact path='/leaderboard' component={Leaderboard} />
                         <Route exact path='/help' component={Help} />
                         <Route exact path='/email-verify' component={EmailVerify} />
                     </Switch>

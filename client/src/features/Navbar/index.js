@@ -12,13 +12,15 @@ import { useQuery } from '../../utils/hooks';
 const sel = createSelector(
     [
         state => state.auth.isAuthenticated,
+        state => state.user._id,
         state => state.user.name,
         state => state.user.email,
         state => state.user.energy,
         state => state.user.loading
     ],
-    (isAuthenticated, name, email, energy, loading) => ({
+    (isAuthenticated, userId, name, email, energy, loading) => ({
         isAuthenticated,
+        userId,
         name,
         email,
         energy,
@@ -29,7 +31,7 @@ const sel = createSelector(
 const Navbar = () => {
     let [query, location] = useQuery();
     const dispatch = useDispatch();
-    const { isAuthenticated, name, email, energy, loading } = useSelector(sel);
+    const { isAuthenticated, userId, name, email, energy, loading } = useSelector(sel);
 
     const hashChange = () => {
         setTimeout(() => {
@@ -69,13 +71,18 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link className='nav__link' to='/profile'>
-                            Profile
+                        <Link className='nav__link' to={`/profile/${userId}`}>
+                            My Profile
+                        </Link>
+                    </li>
+                    <li>
+                        <Link className='nav__link' to='/dashboard'>
+                            My Courses
                         </Link>
                     </li>
                     <li className='nav__item--border'>
-                        <Link className='nav__link' to='/dashboard'>
-                            My Courses
+                        <Link className='nav__link' to='/leaderboard'>
+                            Leaderboard
                         </Link>
                     </li>
                     <li>

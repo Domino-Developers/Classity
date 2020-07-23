@@ -1362,3 +1362,30 @@ main {
       transform: translateX(-50%); }
   .profile-bar:hover .profile-bar__text--exact {
     opacity: 1; }
+
+.leaderboard__table {
+  margin: 0 auto; }
+  .leaderboard__table thead {
+    margin: 2rem 0;
+    font-size: 2.5rem;
+    font-weight: 400; }
+  .leaderboard__table td,
+  .leaderboard__table th {
+    padding: 1rem 2rem;
+    text-align: center; }
+
+.leaderboard__type {
+  cursor: pointer;
+  transition: color 0.2s; }
+  .leaderboard__type:hover {
+    color: #7619cc; }
+  .leaderboard__type .leaderboard__arrow {
+    opacity: 0;
+    transition: opacity 0.2s; }
+  .leaderboard__type--active .leaderboard__arrow {
+    opacity: 1; }
+
+.leaderboard__link {
+  transition: color 0.2s; }
+  .leaderboard__link:hover {
+    color: #7619cc; }

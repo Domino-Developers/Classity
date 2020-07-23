@@ -42,5 +42,23 @@ export default {
         } catch (err) {
             throw err.response.data;
         }
+    },
+
+    async getAllUsers(sort, limit, skip) {
+        try {
+            const res = await api.get('/api/users', { query: { sort, limit, skip } });
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
+    },
+
+    async getUserById(id) {
+        try {
+            const res = await api.get(`/api/users/${id}`);
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
     }
 };
