@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from './authSlice';
 import Button from '../../components/Button';
 import { createSelector } from '@reduxjs/toolkit';
+import Resend from './Resend';
 
 const sel = createSelector(
     [state => state.auth.inactive, state => state.auth.loading],
@@ -18,6 +19,7 @@ const Login = () => {
     });
     const dispatch = useDispatch();
     const { loading, inactive } = useSelector(sel);
+    const [userEmail, setUserEmail] = useState('');
 
     const onChange = e => {
         setFormData({
@@ -36,6 +38,7 @@ const Login = () => {
     const onSubmit = e => {
         e.preventDefault();
         dispatch(login(email, password, remember));
+        setUserEmail(email);
     };
     return (
         <form onSubmit={onSubmit}>
@@ -80,7 +83,8 @@ const Login = () => {
             {inactive && (
                 <div className='auth__card__info'>
                     <span className='auth__card__info--warning'>
-                        Please verify your email before logging in
+                        Please verify your email(<b>{userEmail}</b>) before logging in.{' '}
+                        <Resend requestFor={userEmail} />
                     </span>
                 </div>
             )}

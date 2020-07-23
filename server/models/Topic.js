@@ -63,6 +63,7 @@ TopicSchema.pre('remove', async function (next) {
 });
 
 async function updateCourse(topic, next) {
+    console.log(this.$session);
     try {
         await mongoose.model('course').findOneAndUpdate(
             { _id: topic.course },
@@ -78,7 +79,5 @@ async function updateCourse(topic, next) {
 }
 
 TopicSchema.post('save', updateCourse);
-
-TopicSchema.post('findOneAndUpdate', updateCourse);
 
 module.exports = mongoose.model('topic', TopicSchema);

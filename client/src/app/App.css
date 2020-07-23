@@ -689,6 +689,10 @@ main {
     font-size: 2.4rem;
     border: 1px solid #aaa; }
 
+.resend__link {
+  color: #7619cc;
+  cursor: pointer; }
+
 .course-header {
   padding: 8rem 20%;
   display: grid;

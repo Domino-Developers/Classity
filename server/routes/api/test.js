@@ -51,7 +51,7 @@ router.patch(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 // Create test object to validate for errors
                 const test = new Test({
                     ...req.body
@@ -104,7 +104,7 @@ router.put(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 const courseObj = await Test.findById(req.params.testId).populate(
                     'topic',
                     'course'

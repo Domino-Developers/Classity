@@ -60,5 +60,13 @@ export default {
         } catch (err) {
             throw err.response.data;
         }
+    },
+    async rerequestLink(reason, email) {
+        try {
+            const res = await api.put('/api/users/rerequest-link', { body: { reason, email } });
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
     }
 };

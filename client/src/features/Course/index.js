@@ -44,7 +44,6 @@ const Course = () => {
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
     const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
-    const loading = loading1 || loading2;
     const courseChanges = useRef({});
     const { data: course, error, mutate } = useSWR(
         !loading1 ? `get-course-${courseId}` : null,
@@ -54,7 +53,7 @@ const Course = () => {
     );
 
     if (error && navigator.onLine) return <div> Opps... not found </div>;
-    if (!course || loading) return <Loading />;
+    if (!course || loading1) return <Loading />;
 
     const isInstructor = isAuthenticated && course.instructor._id === id;
     const isStudent = isAuthenticated && course.students.includes(id);
@@ -187,12 +186,16 @@ const Course = () => {
                     desc={course.description}
                     courseChanges={courseChanges}
                 />
-                <Content
-                    editing={editing}
-                    course={course}
-                    courseChanges={courseChanges}
-                    isInstructor={isInstructor}
-                />
+                {!loading2 ? (
+                    <Content
+                        editing={editing}
+                        course={course}
+                        courseChanges={courseChanges}
+                        isInstructor={isInstructor}
+                    />
+                ) : (
+                    <Loading />
+                )}
 
                 {!editing && course.reviews.length > 0 && <Feedback course={course} />}
                 {!editing && <Review isStudent={isStudent} isInstructor={isInstructor} />}

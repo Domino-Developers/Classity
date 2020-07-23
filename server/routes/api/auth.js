@@ -42,8 +42,8 @@ router.post(
                 return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
-            if (user.verifyingToken && user.verifyingToken.for === 'email-verify') {
-                return res.json({ inactive: true });
+            if (user.verifyingToken && user.verifyingToken.reason === 'email-verify') {
+                return res.json({ inactive: true, nextTokenRequest: user.nextTokenRequest });
             }
 
             // check the password

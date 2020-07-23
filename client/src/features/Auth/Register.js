@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { setAlert } from '../Alerts/alertSlice';
 import Button from '../../components/Button';
 import userStore from '../../api/user';
+import { setNextTokenDate } from '../User/userSlice';
+import Resend from './Resend';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -14,7 +16,7 @@ const Register = () => {
     });
 
     const dispatch = useDispatch();
-    const [warning, setWarning] = useState({ show: false, loading: false });
+    const [warning, setWarning] = useState({ show: false, loading: false, userEmail: '' });
 
     const onChange = e => {
         setFormData({
@@ -34,16 +36,26 @@ const Register = () => {
 
     const register = async (name, email, password) => {
         try {
-            setWarning({ show: false, loading: true });
-            await userStore.register({ name, email, password });
-            setWarning({ show: true, loading: false });
+            setWarning({ show: false, loading: true, userEmail: '' });
+            const overide = true;
+            const { nextTokenRequest } = await userStore.register({
+                name,
+                email,
+                password,
+                overide
+            });
+
+            if (!overide) {
+                dispatch(setNextTokenDate(nextTokenRequest));
+                setWarning({ show: true, loading: false, userEmail: email });
+            }
             dispatch(setAlert('Registered Successfully', 'success', 2000));
         } catch (err) {
             const errors = err.errors;
             errors.forEach(error => {
                 dispatch(setAlert(error.msg, 'danger'));
             });
-            setWarning({ show: false, loading: false });
+            setWarning({ show: false, loading: false, userEmail: '' });
             console.error(err);
         } finally {
             setFormData({
@@ -113,8 +125,10 @@ const Register = () => {
             </div>
             {warning.show && (
                 <div className='auth__card__info'>
-                    'Please check your email for verification. Make sure to check your spam and junk
-                    mail too! It may take upto 15 mins'
+                    'Email send to <b>{warning.userEmail}.</b>
+                    Please check your email for verification. Make sure to check your spam and junk
+                    mail too! It may take upto 15 mins.'
+                    <Resend requestFor={warning.userEmail} />
                 </div>
             )}
         </form>

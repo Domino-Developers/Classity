@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { course, text } = require('./common');
+const { course, text, date } = require('./common');
 
 const Course = require('./Course');
 const CourseProgress = require('./CourseProgress');
@@ -32,11 +32,12 @@ const UserSchema = new mongoose.Schema({
     },
     verifyingToken: {
         type: {
-            for: String,
+            reason: String,
             token: String,
             expDate: Date
         }
-    }
+    },
+    nextTokenRequest: date
 });
 
 UserSchema.pre('remove', async function (next) {

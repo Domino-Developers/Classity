@@ -4,7 +4,7 @@ import { sendFlushReq, sendTokenRes } from '../../utils/storageCom';
 import user from '../../api/user';
 import { setAlert } from '../Alerts/alertSlice';
 import { setAuthToken, removeAuthToken } from '../../utils/authToken';
-import { fetchUser } from '../User/userSlice';
+import { fetchUser, setNextTokenDate } from '../User/userSlice';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -62,14 +62,14 @@ const authSlice = createSlice({
             state.token = null;
             state.isAuthenticated = false;
             state.loading = false;
-            state.inactive = true;
+            state.inactive = action.payload.inactive;
         }
     }
 });
 
 const { authRejected, authStart, authSuccess, setInactive } = authSlice.actions;
 
-export { authRejected, authSuccess };
+export { authRejected, authSuccess, setInactive };
 
 export default authSlice.reducer;
 
@@ -80,7 +80,8 @@ export const login = (email, password, remember) => async dispatch => {
         const token_res = await user.login({ email, password });
 
         if (token_res.inactive) {
-            dispatch(setInactive());
+            dispatch(setNextTokenDate(token_res.nextTokenRequest));
+            dispatch(setInactive({ inactive: true }));
         } else {
             dispatch(authSuccess({ token: token_res.token, remember }));
             dispatch(fetchUser());
