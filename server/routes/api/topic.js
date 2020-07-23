@@ -15,7 +15,6 @@ const User = require('../../models/User');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');
-const { course } = require('../../models/common');
 
 // Initialize router
 const router = express.Router();
@@ -65,21 +64,28 @@ router.get('/:topicId', classroomAuth, async (req, res) => {
  * @access		private + instructorOnly
  */
 router.patch('/:topicId', instructorAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+
     try {
-        const { name, description, deadline } = req.body;
-        const change = {};
-        if (name) change.name = name;
-        if (description) change.description = description;
-        if (deadline) change.deadline = deadline;
+        session.withTransaction(async () => {
+            const { name, description, deadline } = req.body;
+            const change = {};
+            if (name) change.name = name;
+            if (description) change.description = description;
+            if (deadline) change.deadline = deadline;
 
-        const topic = await Topic.findOneAndUpdate({ _id: req.params.topicId }, change, {
-            new: true
+            const topic = await Topic.findOneAndUpdate({ _id: req.params.topicId }, change, {
+                new: true,
+                session
+            });
+
+            res.json(topic);
         });
-
-        res.json(topic);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    } finally {
+        session.endSession();
     }
 });
 
@@ -89,43 +95,49 @@ router.patch('/:topicId', instructorAuth, async (req, res) => {
  * @access		private + instructorOnly
  */
 router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+
     try {
-        req.body.forEach((resource, i, arr) => {
-            if (
-                !['text', 'video', 'test'].includes(resource.kind) ||
-                !resource.name ||
-                (!resource.payload && !resource.text && !resource.url && !resource.testId)
-            ) {
-                throw new Error('Bad Request');
-            }
+        session.withTransaction(async () => {
+            req.body.forEach((resource, i, arr) => {
+                if (
+                    !['text', 'video', 'test'].includes(resource.kind) ||
+                    !resource.name ||
+                    (!resource.payload && !resource.text && !resource.url && !resource.testId)
+                ) {
+                    throw new Error('Bad Request');
+                }
 
-            if (resource.text) resource.payload = resource.text;
-            if (resource.url) resource.payload = resource.url;
-            if (resource.testId) resource.payload = resource.testId;
+                if (resource.text) resource.payload = resource.text;
+                if (resource.url) resource.payload = resource.url;
+                if (resource.testId) resource.payload = resource.testId;
 
-            arr[i] = {
-                kind: resource.kind,
-                name: resource.name,
-                text: resource.payload,
-                url: resource.payload,
-                testId: resource.payload,
-                _id: resource._id || new mongoose.Types.ObjectId().toHexString()
-            };
+                arr[i] = {
+                    kind: resource.kind,
+                    name: resource.name,
+                    text: resource.payload,
+                    url: resource.payload,
+                    testId: resource.payload,
+                    _id: resource._id || new mongoose.Types.ObjectId().toHexString()
+                };
+            });
+
+            const topic = await Topic.findOneAndUpdate(
+                { _id: req.params.topicId },
+                { coreResources: req.body },
+                { new: true, session }
+            );
+
+            res.json(topic.coreResources);
         });
-
-        const topic = await Topic.findOneAndUpdate(
-            { _id: req.params.topicId },
-            { coreResources: req.body },
-            { new: true }
-        );
-
-        res.json(topic.coreResources);
     } catch (err) {
-        if (err.message === 'Bad Request') {
+        if (err.message === 'Bad Request')
             return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
-        }
+
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    } finally {
+        session.endSession();
     }
 });
 
@@ -136,36 +148,32 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
  */
 router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const { type, topicId } = req.params;
-        const user = req.user.id;
-        const text = req.body.text;
+        session.withTransaction(async () => {
+            const { type, topicId } = req.params;
+            const user = req.user.id;
+            const text = req.body.text;
 
-        if (!text) {
-            return res.status(400).json({ errors: [{ msg: 'Text not found' }] });
-        }
+            if (!text) return res.status(400).json({ errors: [{ msg: 'Text not found' }] });
 
-        const comment = new Comment({ user, topic: topicId, text });
-        const commentPromise = comment.save({ session });
+            const comment = new Comment({ user, topic: topicId, text });
+            const commentPromise = comment.save({ session });
 
-        const topicPromise = Topic.findOneAndUpdate(
-            { _id: topicId },
-            { $push: { [type]: comment.id } },
-            { new: true, session }
-        ).populate(type);
+            const topicPromise = Topic.findOneAndUpdate(
+                { _id: topicId },
+                { $push: { [type]: comment.id } },
+                { new: true, session }
+            ).populate(type);
 
-        const [newTopic] = await Promise.all([topicPromise, commentPromise]);
+            const [newTopic] = await Promise.all([topicPromise, commentPromise]);
 
-        res.json(newTopic[type]);
-
-        await session.commitTransaction();
-        session.endSession();
+            res.json(newTopic[type]);
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
@@ -183,28 +191,36 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(400).json(errors);
         }
+
+        const session = await mongoose.startSession();
+
         try {
-            // Create test object
-            const test = new Test({
-                ...req.body,
-                topic: req.params.topicId
+            session.withTransaction(async () => {
+                // Create test object
+                const test = new Test({
+                    ...req.body,
+                    topic: req.params.topicId
+                });
+
+                // check for errors
+                const ValidationErrors = test.validateSync();
+                if (ValidationErrors) {
+                    const errors = ValidationErrors.errors;
+                    const errorMessages = [];
+                    for (let field in errors) errorMessages.push({ msg: errors[field].message });
+
+                    return res.status(400).json({ errors: errorMessages });
+                }
+
+                await test.save({ session });
+
+                res.json(test);
             });
-
-            // check for errors
-            const ValidationErrors = test.validateSync();
-            if (ValidationErrors) {
-                const errors = ValidationErrors.errors;
-                const errorMessages = [];
-                for (let field in errors) errorMessages.push({ msg: errors[field].message });
-                return res.status(400).json({ errors: errorMessages });
-            }
-
-            await test.save();
-
-            res.json(test);
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        } finally {
+            session.endSession();
         }
     }
 );
@@ -225,62 +241,61 @@ router.put(
         const { topicId, resId } = req.params;
 
         const session = await mongoose.startSession();
-        session.startTransaction();
+
         try {
-            const topicPromise = Topic.findById(topicId).lean();
-            const progressFind = CourseProgress.findOne({
-                user: req.user.id,
-                course: req.course._id
-            });
-
-            const [topic, courseProgress] = await Promise.all([topicPromise, progressFind]);
-            const coreResource = topic.coreResources.find(res => res._id.toString() === resId);
-
-            if (!coreResource)
-                return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
-
-            let resDone = courseProgress.topicStatus.get(topicId) || [];
-
-            if (resDone.includes(resId))
-                return res.status(400).json({
-                    errors: [
-                        {
-                            msg: 'Resource already completed',
-                            warning: 'Trying to be smart ha? You underestimated us'
-                        }
-                    ]
+            session.withTransaction(async () => {
+                const topicPromise = Topic.findById(topicId).lean();
+                const progressFind = CourseProgress.findOne({
+                    user: req.user.id,
+                    course: req.course._id
                 });
 
-            resDone.push(mongoose.Types.ObjectId(resId));
+                const [topic, courseProgress] = await Promise.all([topicPromise, progressFind]);
+                const coreResource = topic.coreResources.find(res => res._id.toString() === resId);
 
-            courseProgress.set(`topicStatus.${topicId}`, resDone);
+                if (!coreResource)
+                    return res.status(400).json({ errors: [{ msg: 'Invalid resource Id' }] });
 
-            let userUpdateOpts = {
-                $inc: { [`score.${getDateString()}`]: 5 }
-            };
+                let resDone = courseProgress.topicStatus.get(topicId) || [];
 
-            if (req.body.courseCompleted && !courseProgress.completedOnce) {
-                userUpdateOpts = {
-                    ...userUpdateOpts,
-                    $inc: { energy: 1 }
+                if (resDone.includes(resId))
+                    return res.status(400).json({
+                        errors: [
+                            {
+                                msg: 'Resource already completed',
+                                warning: 'Trying to be smart ha? You underestimated us'
+                            }
+                        ]
+                    });
+
+                resDone.push(mongoose.Types.ObjectId(resId));
+
+                courseProgress.set(`topicStatus.${topicId}`, resDone);
+
+                let userUpdateOpts = {
+                    $inc: { [`score.${getDateString()}`]: 5 }
                 };
-                courseProgress.completedOnce = true;
-            }
 
-            const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts, {
-                new: true,
-                session
+                if (req.body.courseCompleted && !courseProgress.completedOnce) {
+                    userUpdateOpts = {
+                        ...userUpdateOpts,
+                        $inc: { energy: 1 }
+                    };
+                    courseProgress.completedOnce = true;
+                }
+
+                const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts, {
+                    new: true,
+                    session
+                });
+
+                courseProgress.markModified(`topicStatus.${topicId}`);
+                const progressPromise = courseProgress.save({ session });
+
+                const [newUser] = await Promise.all([userPromise, progressPromise]);
+
+                res.json({ courseProgress, newScore: newUser.score });
             });
-
-            courseProgress.markModified(`topicStatus.${topicId}`);
-            const progressPromise = courseProgress.save({ session });
-
-            const [newUser] = await Promise.all([userPromise, progressPromise]);
-
-            res.json({ courseProgress, newScore: newUser.score });
-
-            await session.commitTransaction();
-            session.endSession();
         } catch (err) {
             if (err.kind === 'ObjectId') {
                 res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
@@ -288,8 +303,7 @@ router.put(
                 console.error(err.message);
                 res.status(500).json({ errors: [{ msg: 'Server Error' }] });
             }
-
-            await session.abortTransaction();
+        } finally {
             session.endSession();
         }
     }
@@ -302,39 +316,35 @@ router.put(
  */
 router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const { topicId, commentId } = req.params;
+        session.withTransaction(async () => {
+            const { topicId, commentId } = req.params;
 
-        const comment = await Comment.findById(commentId).select('user');
+            const comment = await Comment.findById(commentId).select('user');
 
-        if (!comment) {
-            return res.status(400).json({ errors: [{ msg: 'Comment not found' }] });
-        }
+            if (!comment) return res.status(400).json({ errors: [{ msg: 'Comment not found' }] });
 
-        if (String(comment.user) !== req.user.id) {
-            return res.status(401).json({
-                errors: [{ msg: 'Not authorized to delete comment' }]
+            if (String(comment.user) !== req.user.id)
+                return res.status(401).json({
+                    errors: [{ msg: 'Not authorized to delete comment' }]
+                });
+
+            const commentPromise = Comment.findOneAndDelete({ _id: commentId }, { session });
+
+            const topicPromise = Topic.findOneAndUpdate(
+                { _id: topicId },
+                { $pull: { doubt: commentId, resourceDump: commentId } },
+                { new: true, session }
+            );
+
+            const [newTopic] = Promise.all([topicPromise, commentPromise]);
+
+            res.json({
+                doubt: newTopic.doubt,
+                resourceDump: newTopic.resourceDump
             });
-        }
-
-        const commentPromise = Comment.findOneAndDelete({ _id: commentId }, { session });
-
-        const topicPromise = Topic.findOneAndUpdate(
-            { _id: topicId },
-            { $pull: { doubt: commentId, resourceDump: commentId } },
-            { new: true, session }
-        );
-
-        const [newTopic] = Promise.all([topicPromise, commentPromise]);
-
-        res.json({
-            doubt: newTopic.doubt,
-            resourceDump: newTopic.resourceDump
         });
-
-        await session.commitTransaction();
-        session.endSession();
     } catch (err) {
         if (err.kind === 'ObjectId') {
             res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
@@ -342,8 +352,7 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
@@ -355,42 +364,39 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
  */
 router.delete('/:topicId/coreResource/:resourceId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const { topicId, resourceId } = req.params;
+        session.withTransaction(async () => {
+            const { topicId, resourceId } = req.params;
 
-        const topic = await Topic.findById(topicId).select('course coreResources');
-        const coreResources = topic.coreResources;
+            const topic = await Topic.findById(topicId).select('course coreResources');
+            const coreResources = topic.coreResources;
 
-        const index = coreResources.findIndex(resource => String(resource.id) === resourceId);
+            const index = coreResources.findIndex(resource => String(resource.id) === resourceId);
 
-        if (index === -1) {
-            return res.status(400).json({ errors: [{ msg: 'Core resource not found' }] });
-        }
+            if (index === -1)
+                return res.status(400).json({ errors: [{ msg: 'Core resource not found' }] });
 
-        if (coreResources[index].kind === 'test') {
-            await Test.findOneAndDelete(
-                {
-                    _id: coreResources[index].testId
-                },
-                { session }
-            );
-        }
+            if (coreResources[index].kind === 'test') {
+                await Test.findOneAndDelete(
+                    {
+                        _id: coreResources[index].testId
+                    },
+                    { session }
+                );
+            }
 
-        coreResources.splice(index, 1);
+            coreResources.splice(index, 1);
 
-        topic.coreResources = coreResources;
-        await topic.save({ session });
+            topic.coreResources = coreResources;
+            await topic.save({ session });
 
-        res.json({ coreResources });
-
-        await session.commitTransaction();
-        session.endSession();
+            res.json({ coreResources });
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });

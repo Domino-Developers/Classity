@@ -2,11 +2,8 @@ import React from 'react';
 import loadable from '@loadable/component';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
-<<<<<<< HEAD
 import { createSelector } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-=======
->>>>>>> LeaderBoard + Profile for every user
 
 import Loading from '../../components/Loading';
 import { getxycoordinates } from './helper';
@@ -16,11 +13,8 @@ const LineChart = loadable(() => import('./LineChart'), { fallback: <Loading /> 
 
 // Assumption: score or contribution will NOT be >= 1000
 
-<<<<<<< HEAD
 const sel = createSelector([state => state.user], myUser => myUser);
 
-=======
->>>>>>> LeaderBoard + Profile for every user
 const Bar = ({ start, end, exact, progress }) => (
     <div className='profile-bar'>
         <div className='profile-bar__filled' style={{ width: `${progress}%` }}>
@@ -35,7 +29,6 @@ const Bar = ({ start, end, exact, progress }) => (
 
 const Profile = () => {
     const { userId } = useParams();
-<<<<<<< HEAD
     const myUser = useSelector(sel);
 
     let { data: user } = useSWR(myUser._id !== userId ? `get-user-${userId}` : null, () =>
@@ -43,10 +36,6 @@ const Profile = () => {
     );
 
     if (userId === myUser._id) user = myUser;
-=======
-
-    const { data: user } = useSWR(`get-user-${userId}`, () => userStore.getUserById(userId));
->>>>>>> LeaderBoard + Profile for every user
 
     if (!user) return <Loading />;
 

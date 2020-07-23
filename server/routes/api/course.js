@@ -43,38 +43,36 @@ router.post(
         }
 
         const session = await mongoose.startSession();
-        session.startTransaction();
+
         try {
-            const courseData = {
-                ...req.body,
-                instructor: req.user.id
-            };
-            const course = new Course(courseData);
-            const coursePromise = course.save({ session });
-            const userPromise = User.findOneAndUpdate(
-                { _id: req.user.id },
-                {
-                    $push: {
-                        coursesCreated: {
-                            $each: [course.id],
-                            $position: 0
+            session.withTransaction(async () => {
+                const courseData = {
+                    ...req.body,
+                    instructor: req.user.id
+                };
+                const course = new Course(courseData);
+                const coursePromise = course.save({ session });
+                const userPromise = User.findOneAndUpdate(
+                    { _id: req.user.id },
+                    {
+                        $push: {
+                            coursesCreated: {
+                                $each: [course.id],
+                                $position: 0
+                            }
                         }
-                    }
-                },
-                { session }
-            );
+                    },
+                    { session }
+                );
 
-            await Promise.all([coursePromise, userPromise]);
+                await Promise.all([coursePromise, userPromise]);
 
-            res.json(course);
-
-            await session.commitTransaction();
-            session.endSession();
+                res.json(course);
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-            await session.abortTransaction();
+        } finally {
             session.endSession();
         }
     }
@@ -173,45 +171,43 @@ router.put(
         }
 
         const session = await mongoose.startSession();
-        session.startTransaction();
+
         try {
-            const courseId = req.params.courseId;
-            const position = req.body.position;
+            session.withTransaction(async () => {
+                const courseId = req.params.courseId;
+                const position = req.body.position;
 
-            const topicData = {
-                name: req.body.name,
-                course: courseId
-            };
-            const topic = new Topic(topicData);
+                const topicData = {
+                    name: req.body.name,
+                    course: courseId
+                };
+                const topic = new Topic(topicData);
 
-            // Get course. We know course_id is valid because it is checked in the instructorAuth
-            const coursePromise = Course.findOneAndUpdate(
-                { _id: courseId },
-                {
-                    $push: {
-                        topics: {
-                            $each: [topic.id],
-                            $position: position
+                // Get course. We know course_id is valid because it is checked in the instructorAuth
+                const coursePromise = Course.findOneAndUpdate(
+                    { _id: courseId },
+                    {
+                        $push: {
+                            topics: {
+                                $each: [topic.id],
+                                $position: position
+                            }
                         }
-                    }
-                },
-                { session }
-            );
+                    },
+                    { session }
+                );
 
-            // Save the topic
-            const topicPromise = topic.save({ session });
+                // Save the topic
+                const topicPromise = topic.save({ session });
 
-            await Promise.all([coursePromise, topicPromise]);
+                await Promise.all([coursePromise, topicPromise]);
 
-            res.json(topic);
-
-            await session.commitTransaction();
-            session.endSession();
+                res.json(topic);
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-            await session.abortTransaction();
+        } finally {
             session.endSession();
         }
     }
@@ -267,59 +263,53 @@ router.get('/:courseId', async (req, res) => {
  */
 router.put('/:courseId/enroll', auth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const courseId = req.params.courseId;
-        // get the course
-        const course = await Course.findById(courseId);
+        session.withTransaction(async () => {
+            const courseId = req.params.courseId;
+            // get the course
+            const course = await Course.findById(courseId);
 
-        // Checking if course is there
-        if (!course) {
-            return res.status(400).json({ errors: [{ msg: 'Course not found' }] });
-        }
+            // Checking if course is there
+            if (!course) return res.status(400).json({ errors: [{ msg: 'Course not found' }] });
 
-        // instructor can't enroll !
-        if (req.user.id === course.instructor.toString()) {
-            return res.status(400).json({
-                errors: [{ msg: "instructor can't enroll to a course " }]
-            });
-        }
+            // instructor can't enroll !
+            if (req.user.id === course.instructor.toString())
+                return res.status(400).json({
+                    errors: [{ msg: "instructor can't enroll to a course " }]
+                });
 
-        // check if student is not already enrolled
-        if (course.students.filter(id => id.toString() === req.user.id).length > 0) {
-            return res.status(400).json({ errors: [{ msg: 'Already Enrolled' }] });
-        }
+            // check if student is not already enrolled
+            if (course.students.filter(id => id.toString() === req.user.id).length > 0)
+                return res.status(400).json({ errors: [{ msg: 'Already Enrolled' }] });
 
-        // check if the student has energy
-        const user = await User.findById(req.user.id);
-        if (user.energy <= 0) {
-            return res.status(403).json({ errors: [{ msg: 'Not enough energy' }] });
-        }
+            // check if the student has energy
+            const user = await User.findById(req.user.id);
+            if (user.energy <= 0)
+                return res.status(403).json({ errors: [{ msg: 'Not enough energy' }] });
 
-        // adding student to course
-        course.students.push(req.user.id);
+            // adding student to course
+            course.students.push(req.user.id);
 
-        // create courseProgress object to track progress
-        const courseProgressData = {
-            user: req.user.id,
-            course: course.id
-        };
-        const courseProgress = new CourseProgress(courseProgressData);
+            // create courseProgress object to track progress
+            const courseProgressData = {
+                user: req.user.id,
+                course: course.id
+            };
+            const courseProgress = new CourseProgress(courseProgressData);
 
-        const coursePromise = course.save({ session });
-        const courseProgressPromise = courseProgress.save({ session });
+            const coursePromise = course.save({ session });
+            const courseProgressPromise = courseProgress.save({ session });
 
-        // Add course to user enrolled courses
-        user.energy -= 1;
-        user.coursesEnrolled.set(courseId, courseProgress.id);
-        const userPromise = user.save({ session });
+            // Add course to user enrolled courses
+            user.energy -= 1;
+            user.coursesEnrolled.set(courseId, courseProgress.id);
+            const userPromise = user.save({ session });
 
-        await Promise.all([coursePromise, courseProgressPromise, userPromise]);
+            await Promise.all([coursePromise, courseProgressPromise, userPromise]);
 
-        res.json(courseProgress);
-
-        await session.commitTransaction();
-        session.endSession();
+            res.json(courseProgress);
+        });
     } catch (err) {
         if (err.kind === 'ObjectId') {
             res.status(400).json({ errors: [{ msg: 'Invalid Course Id' }] });
@@ -327,8 +317,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
         }
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
@@ -339,25 +328,33 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
  * @access		private + studentOnly
  */
 router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
-    try {
-        const courseId = req.params.courseId;
-        let coursesEnrolled = await User.findById(req.user.id)
-            .lean()
-            .select('coursesEnrolled -_id');
-        coursesEnrolled = coursesEnrolled['coursesEnrolled'];
-        const courseProgressId = String(coursesEnrolled[courseId]);
+    const session = await mongoose.startSession();
 
-        // update course progress
-        await CourseProgress.findOneAndUpdate(
-            { _id: courseProgressId },
-            {
-                $set: { lastStudied: Date.now() }
-            }
-        );
-        res.json(courseProgressId);
+    try {
+        session.withTransaction(async () => {
+            const courseId = req.params.courseId;
+            let coursesEnrolled = await User.findById(req.user.id)
+                .lean()
+                .select('coursesEnrolled -_id');
+            coursesEnrolled = coursesEnrolled['coursesEnrolled'];
+            const courseProgressId = String(coursesEnrolled[courseId]);
+
+            // update course progress
+            await CourseProgress.findOneAndUpdate(
+                { _id: courseProgressId },
+                {
+                    $set: { lastStudied: Date.now() }
+                },
+                { session }
+            );
+
+            res.json(courseProgressId);
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    } finally {
+        session.endSession();
     }
 });
 
@@ -367,25 +364,33 @@ router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
  * @access		private + studentOnly
  */
 router.put('/:courseId/resetDeadline', studentAuth, async (req, res) => {
-    try {
-        const courseId = req.params.courseId;
-        let coursesEnrolled = await User.findById(req.user.id)
-            .lean()
-            .select('coursesEnrolled -_id');
-        coursesEnrolled = coursesEnrolled['coursesEnrolled'];
-        const courseProgressId = String(coursesEnrolled[courseId]);
+    const session = await mongoose.startSession();
 
-        // update course progress
-        await CourseProgress.findOneAndUpdate(
-            { _id: courseProgressId },
-            {
-                $set: { startedOn: Date.now() }
-            }
-        );
-        res.json(courseProgressId);
+    try {
+        session.withTransaction(async () => {
+            const courseId = req.params.courseId;
+            let coursesEnrolled = await User.findById(req.user.id)
+                .lean()
+                .select('coursesEnrolled -_id');
+            coursesEnrolled = coursesEnrolled['coursesEnrolled'];
+            const courseProgressId = String(coursesEnrolled[courseId]);
+
+            // update course progress
+            await CourseProgress.findOneAndUpdate(
+                { _id: courseProgressId },
+                {
+                    $set: { startedOn: Date.now() }
+                },
+                { session }
+            );
+
+            res.json(courseProgressId);
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    } finally {
+        session.endSession();
     }
 });
 
@@ -396,62 +401,62 @@ router.put('/:courseId/resetDeadline', studentAuth, async (req, res) => {
  */
 router.put('/:courseId/review', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
     try {
-        const { text, rating } = req.body;
-        const courseId = req.params.courseId;
+        await session.withTransaction(async () => {
+            const { text, rating } = req.body;
+            const courseId = req.params.courseId;
 
-        if (!Number.isInteger(rating) || rating <= 0 || rating > 5 || !text) {
-            return res.status(400).json({ errors: [{ msg: 'Bad Request' }] });
-        }
+            if (!Number.isInteger(rating) || rating <= 0 || rating > 5 || !text) {
+                await session.abortTransaction();
+                session.endSession();
 
-        const course = await Course.findById(courseId).populate('topics', 'coreResources');
+                return res.status(400).json({ errors: [{ msg: 'Bad Request' }] });
+            }
 
-        let totalRating = course.avgRating * course.reviews.length;
+            const course = await Course.findById(courseId).populate('topics', 'coreResources');
 
-        const index = course.reviews.findIndex(review => String(review.user) === req.user.id);
+            let totalRating = course.avgRating * course.reviews.length;
 
-        const contributionByRating = [-100, -5, 0, 5, 10, 20];
-        let contribution = contributionByRating[rating];
+            const index = course.reviews.findIndex(review => String(review.user) === req.user.id);
 
-        if (index === -1) {
-            course.reviews.push({ user: req.user.id, text, rating });
-        } else {
-            contribution -= contributionByRating[course.reviews[index].rating];
-            totalRating -= course.reviews[index].rating;
-            course.reviews[index] = { user: req.user.id, text, rating };
-        }
+            const contributionByRating = [-100, -5, 0, 5, 10, 20];
+            let contribution = contributionByRating[rating];
 
-        totalRating += rating;
-        course.avgRating = totalRating / course.reviews.length;
+            if (index === -1) {
+                course.reviews.push({ user: req.user.id, text, rating });
+            } else {
+                contribution -= contributionByRating[course.reviews[index].rating];
+                totalRating -= course.reviews[index].rating;
+                course.reviews[index] = { user: req.user.id, text, rating };
+            }
 
-        course.points += contribution;
-        if (course.points >= course.threshold) {
-            course.threshold *= 2;
+            totalRating += rating;
+            course.avgRating = totalRating / course.reviews.length;
 
-            let totalResources = 0;
-            course.topics.forEach(topic => (totalResources += topic.coreResources.length));
-            contribution += 50 * totalResources;
-        }
+            course.points += contribution;
+            if (course.points >= course.threshold) {
+                course.threshold *= 2;
 
-        const coursePromise = course.save({ session });
-        const userPromise = User.findOneAndUpdate(
-            { _id: course.instructor },
-            { $inc: { [`contribution.${getDateString()}`]: contribution } },
-            { session }
-        );
+                let totalResources = 0;
+                course.topics.forEach(topic => (totalResources += topic.coreResources.length));
+                contribution += 50 * totalResources;
+            }
 
-        await Promise.all([coursePromise, userPromise]);
+            const coursePromise = course.save({ session });
+            const userPromise = User.findOneAndUpdate(
+                { _id: course.instructor },
+                { $inc: { [`contribution.${getDateString()}`]: contribution } },
+                { session }
+            );
 
-        res.json(course.reviews);
+            await Promise.all([coursePromise, userPromise]);
 
-        await session.commitTransaction();
-        session.endSession();
+            res.json(course.reviews);
+        });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
@@ -490,28 +495,35 @@ router.post(
             if (req.body[key]) body[key] = req.body[key];
         }
 
-        try {
-            const courseId = req.params.courseId;
+        const session = await mongoose.startSession();
 
-            const newCourse = await Course.findOneAndUpdate(
-                { _id: courseId },
-                {
-                    ...body,
-                    modifiedDate: Date.now()
-                },
-                { new: true }
-            )
-                .lean()
-                .populate('instructor', 'name')
-                .populate({
-                    path: 'topics',
-                    select: 'name coreResources',
-                    populate: { path: 'coreResources', select: 'name' }
-                });
-            res.json(newCourse);
+        try {
+            session.withTransaction(async () => {
+                const courseId = req.params.courseId;
+
+                const newCourse = await Course.findOneAndUpdate(
+                    { _id: courseId },
+                    {
+                        ...body,
+                        modifiedDate: Date.now()
+                    },
+                    { new: true, session }
+                )
+                    .lean()
+                    .populate('instructor', 'name')
+                    .populate({
+                        path: 'topics',
+                        select: 'name coreResources',
+                        populate: { path: 'coreResources', select: 'name' }
+                    });
+
+                res.json(newCourse);
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+        } finally {
+            session.endSession();
         }
     }
 );
@@ -523,54 +535,52 @@ router.post(
  */
 router.delete('/:courseId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const courseId = req.params.courseId;
+        session.withTransaction(async () => {
+            const courseId = req.params.courseId;
 
-        const course = await Course.findById(courseId).session(session);
+            const course = await Course.findById(courseId).session(session);
 
-        const coursePromise = course.remove();
+            const coursePromise = course.remove();
 
-        // Remove from created courses
-        const instructorPromise = User.findOneAndUpdate(
-            { _id: req.user.id },
-            { $pull: { coursesCreated: courseId } },
-            { session }
-        );
-
-        // Unenroll students
-        const studentPromises = [];
-        for (let studentId of course.students) {
-            studentPromises.push(
-                User.findOneAndUpdate(
-                    { _id: studentId },
-                    { $unset: { [`coursesEnrolled.${courseId}`]: '' } },
-                    { session }
-                ).select('coursesEnrolled')
+            // Remove from created courses
+            const instructorPromise = User.findOneAndUpdate(
+                { _id: req.user.id },
+                { $pull: { coursesCreated: courseId } },
+                { session }
             );
-        }
 
-        const students = await Promise.all(studentPromises);
+            // Unenroll students
+            const studentPromises = [];
+            for (let studentId of course.students) {
+                studentPromises.push(
+                    User.findOneAndUpdate(
+                        { _id: studentId },
+                        { $unset: { [`coursesEnrolled.${courseId}`]: '' } },
+                        { session }
+                    ).select('coursesEnrolled')
+                );
+            }
 
-        const courseProgressPromises = [];
-        students.forEach(student => {
-            const progressId = String(student.coursesEnrolled.get(courseId));
-            courseProgressPromises.push(
-                CourseProgress.findOneAndDelete({ _id: progressId }, { session })
-            );
+            const students = await Promise.all(studentPromises);
+
+            const courseProgressPromises = [];
+            students.forEach(student => {
+                const progressId = String(student.coursesEnrolled.get(courseId));
+                courseProgressPromises.push(
+                    CourseProgress.findOneAndDelete({ _id: progressId }, { session })
+                );
+            });
+
+            await Promise.all([...courseProgressPromises, coursePromise, instructorPromise]);
+
+            res.json(course);
         });
-
-        await Promise.all([...courseProgressPromises, coursePromise, instructorPromise]);
-
-        res.json(course);
-
-        await session.commitTransaction();
-        session.endSession();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
@@ -582,35 +592,33 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
  */
 router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-        const { courseId, topicId } = req.params;
+        session.withTransaction(async () => {
+            const { courseId, topicId } = req.params;
 
-        const topic = await Topic.findById(topicId).session(session);
-        const topicPromise = topic.remove();
+            const topic = await Topic.findById(topicId).session(session);
+            const topicPromise = topic.remove();
 
-        const coursePromise = Course.findOneAndUpdate(
-            { _id: courseId },
-            { $pull: { topics: topicId } },
-            { new: true, session }
-        )
-            .select('topics')
-            .populate('topics', 'name');
+            const coursePromise = Course.findOneAndUpdate(
+                { _id: courseId },
+                { $pull: { topics: topicId } },
+                { new: true, session }
+            )
+                .select('topics')
+                .populate('topics', 'name');
 
-        const [newCourse] = await Promise.all([coursePromise, topicPromise]);
+            const [newCourse] = await Promise.all([coursePromise, topicPromise]);
 
-        res.json(newCourse.topics);
-
-        await session.commitTransaction();
-        session.endSession();
+            res.json(newCourse.topics);
+        });
     } catch (err) {
-        if (err.kind === 'ObjectId') {
+        if (err.kind === 'ObjectId')
             return res.status(400).json({ errors: [{ msg: 'Invalid data' }] });
-        }
+
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-
-        await session.abortTransaction();
+    } finally {
         session.endSession();
     }
 });
