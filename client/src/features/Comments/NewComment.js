@@ -8,7 +8,7 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
     const [rating, setRating] = useState();
 
     if (isNaN(rating) && review) {
-        const userReview = comments.find(r => r.user === user);
+        const userReview = comments.find(r => r.user._id === user);
 
         if (userReview) {
             setRating(userReview.rating);
