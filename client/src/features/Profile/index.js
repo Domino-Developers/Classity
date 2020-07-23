@@ -1,20 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { createSelector } from '@reduxjs/toolkit';
 import loadable from '@loadable/component';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import useSWR from 'swr';
+import { createSelector } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
 import Loading from '../../components/Loading';
 import { getxycoordinates } from './helper';
+import userStore from '../../api/user';
 
 const LineChart = loadable(() => import('./LineChart'), { fallback: <Loading /> });
 
 // Assumption: score or contribution will NOT be >= 1000
 
-const userSel = createSelector(
-    state => state.user,
-    user => user
-);
+const sel = createSelector([state => state.user], myUser => myUser);
 
 const Bar = ({ start, end, exact, progress }) => (
     <div className='profile-bar'>
@@ -29,7 +28,16 @@ const Bar = ({ start, end, exact, progress }) => (
 );
 
 const Profile = () => {
-    const user = useSelector(userSel);
+    const { userId } = useParams();
+    const myUser = useSelector(sel);
+
+    let { data: user } = useSWR(myUser._id !== userId ? `get-user-${userId}` : null, () =>
+        userStore.getUserById(userId)
+    );
+
+    if (userId === myUser._id) user = myUser;
+
+    if (!user) return <Loading />;
 
     let score = 0;
     let contribution = 0;
@@ -58,9 +66,7 @@ const Profile = () => {
     const scorePercent =
         (100 * (score - levels[scoreLevel])) / (levels[scoreLevel + 1] - levels[scoreLevel]);
 
-    return user.loading ? (
-        <Loading />
-    ) : (
+    return (
         <div className='container'>
             <h2>{user.name}</h2>
             <p className='profile__email'>{user.email}</p>
@@ -111,7 +117,7 @@ const Profile = () => {
 export default Profile;
 
 /**
- * Temp variables for lines 92 & 93
+ * Temp variables for lines 105 & 112
  * tempScore <=> user.score
  * tempContribution <=> user.contribution
  */
