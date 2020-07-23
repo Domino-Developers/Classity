@@ -2,16 +2,22 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
+import { createSelector } from '@reduxjs/toolkit';
 
 import courseApi from '../../api/course';
 import Comments from '../Comments';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 
+const sel = createSelector([state => state.user._id, state => state.user.name], (id, name) => ({
+    id,
+    name
+}));
+
 const Review = ({ isStudent, isInstructor }) => {
     const dispatch = useDispatch();
 
-    const id = useSelector(state => state.user._id);
+    const { id, name } = useSelector(sel);
     const { courseId } = useParams();
     const { data: course, mutate } = useSWR(`get-course-${courseId}`, () =>
         courseApi.get(courseId)
@@ -29,7 +35,7 @@ const Review = ({ isStudent, isInstructor }) => {
         try {
             await courseApi.review(course._id, review);
 
-            const newReview = { ...review, user: id, date: Date.now() };
+            const newReview = { ...review, user: { _id: id, name }, date: Date.now() };
             const reviews = [...course.reviews];
             const reviewIndex = reviews.findIndex(r => r.user === id);
 
