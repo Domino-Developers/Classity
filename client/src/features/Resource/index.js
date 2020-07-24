@@ -8,6 +8,7 @@ import TextRes from './TextRes';
 import TestView from './TestView';
 import TestEdit from './TestEdit';
 import topicApi from '../../api/topic';
+import courseStore from '../../api/course';
 import Loading from '../../components/Loading';
 import { setAlert } from '../Alerts/alertSlice';
 import Button from '../../components/Button';
@@ -28,11 +29,18 @@ const Resource = () => {
     const { courseId, topicId, resourceId } = useParams();
     const { coursesCreated, loading } = useSelector(userAndAuth);
     const isInstructor = coursesCreated.includes(courseId);
-    const resourcesDone = useResourceStatus(!isInstructor, courseId, topicId);
+    const resourcesDoneByTopic = useResourceStatus(!isInstructor, courseId);
     const { data: topic } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
-    if (!topic) return <Loading />;
+    const { data: course } = useSWR(`get-course-${courseId}`, () => courseStore.get(courseId));
+    if (!topic || !course) return <Loading />;
 
     const resource = topic.coreResources.find(res => res._id === resourceId);
+    const totResources = course.topics.reduce((tot, top) => tot + top.coreResources.length, 0);
+    const totResourcesDone = Object.values(resourcesDoneByTopic).reduce(
+        (tot, res) => tot + res.length,
+        0
+    );
+    const resourcesDone = resourcesDoneByTopic[topicId] || [];
 
     const update = async (newResource, callback) => {
         try {
@@ -49,14 +57,13 @@ const Resource = () => {
             }
         }
     };
-
     const complete = async () => {
         dispatch(
             completeCoreResource(
                 courseId,
                 topicId,
                 resourceId,
-                resourcesDone + 1 === topic.coreResources.length
+                totResourcesDone + 1 === totResources
             )
         );
     };
@@ -73,8 +80,8 @@ const Resource = () => {
                     courseId={courseId}
                     topicId={topicId}
                     resId={resourceId}
-                    resDoneSize={resourcesDone.length}
-                    totResSize={topic.coreResources.length}
+                    resDoneSize={totResourcesDone}
+                    totResSize={totResources}
                 />
             )
     };

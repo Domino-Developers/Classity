@@ -16,7 +16,8 @@ const initialState = {
     resourceLoading: false,
     score: null,
     contribution: null,
-    energy: null
+    energy: null,
+    nextTokenRequest: null
 };
 
 const userSlice = createSlice({
@@ -35,6 +36,7 @@ const userSlice = createSlice({
             state.score = null;
             state.contribution = null;
             state.energy = null;
+            state.nextTokenRequest = null;
         },
         fetchUserSuccess: (state, action) => {
             const user = action.payload;
@@ -49,6 +51,7 @@ const userSlice = createSlice({
             state.contribution = user.contribution;
             state.energy = user.energy;
             state.resourceLoading = false;
+            state.nextTokenRequest = null;
         },
         fetchUserFail: (state, action) => {
             state.loading = false;
@@ -62,14 +65,17 @@ const userSlice = createSlice({
             state.contribution = null;
             state.energy = null;
             state.resourceLoading = false;
+            state.nextTokenRequest = null;
         },
         addCreatedCourse: (state, action) => {
             const { courseId } = action.payload;
             state.coursesCreated.push(courseId);
         },
         addCourseProgress: (state, action) => {
-            const { courseId, courseProgress, keepLoading } = action.payload;
+            const { courseId, courseProgress, keepLoading, energy, score } = action.payload;
             state.coursesEnrolled[courseId] = courseProgress;
+            if (energy) state.energy = energy;
+            if (score) state.score = score;
             if (!keepLoading) state.resourceLoading = false;
         },
         resourceLoadStart: (state, action) => {
@@ -79,7 +85,7 @@ const userSlice = createSlice({
             state.resourceLoading = false;
         },
         enrollStart: (state, action) => {
-            state.loading = false;
+            state.loading = true;
         },
         enrollSuccess: (state, action) => {
             state.loading = false;
@@ -94,8 +100,8 @@ const userSlice = createSlice({
             const { courseId } = action.payload;
             state.coursesCreated = state.coursesCreated.filter(id => id !== courseId);
         },
-        setScore(state, action) {
-            state.score = action.payload;
+        setNextTokenDate: (state, action) => {
+            state.nextTokenRequest = action.payload;
         }
     }
 });
@@ -112,10 +118,17 @@ const {
     resourceLoadStart,
     resourceLoadStop,
     deleteCreatedCourse,
-    setScore
+    setNextTokenDate
 } = userSlice.actions;
 
-export { addCreatedCourse, fetchUserFail, addCourseProgress, deleteCreatedCourse, fetchUserStart };
+export {
+    addCreatedCourse,
+    fetchUserFail,
+    addCourseProgress,
+    deleteCreatedCourse,
+    fetchUserStart,
+    setNextTokenDate
+};
 
 export default userSlice.reducer;
 
@@ -143,7 +156,6 @@ export const enroll = (courseId, mutate) => async dispatch => {
 
         dispatch(setAlert('Enrolled Successfully', 'success'));
     } catch (err) {
-        dispatch(setAlert('Server Error Please try again', 'danger'));
         dispatch(enrollFail());
         if (err.errors) {
             const errors = [...err.errors];
@@ -167,13 +179,19 @@ export const completeCoreResource = (
 ) => async dispatch => {
     dispatch(resourceLoadStart());
     try {
-        const { courseProgress, newScore } = await topicStore.markComplete(
+        const { courseProgress, newScoreAndEnergy } = await topicStore.markComplete(
             topicId,
             resId,
             courseCompleted
         );
-        dispatch(addCourseProgress({ courseId, courseProgress }));
-        dispatch(setScore(newScore));
+        dispatch(
+            addCourseProgress({
+                courseId,
+                courseProgress,
+                energy: newScoreAndEnergy.energy,
+                score: newScoreAndEnergy.score
+            })
+        );
     } catch (err) {
         dispatch(setAlert('Error completing! Try again', 'danger'));
         dispatch(resourceLoadStop());

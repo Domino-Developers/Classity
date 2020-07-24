@@ -15,6 +15,7 @@ const User = require('../../models/User');
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');
+const Course = require('../../models/Course');
 
 // Initialize router
 const router = express.Router();
@@ -67,7 +68,7 @@ router.patch('/:topicId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { name, description, deadline } = req.body;
             const change = {};
             if (name) change.name = name;
@@ -98,7 +99,8 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
+            // TODO: Add session here
             req.body.forEach((resource, i, arr) => {
                 if (
                     !['text', 'video', 'test'].includes(resource.kind) ||
@@ -125,7 +127,14 @@ router.put('/:topicId/coreResource', instructorAuth, async (req, res) => {
             const topic = await Topic.findOneAndUpdate(
                 { _id: req.params.topicId },
                 { coreResources: req.body },
-                { new: true, session }
+                { session, new: true }
+            );
+            await Course.findOneAndUpdate(
+                { _id: topic.course },
+                {
+                    modifiedDate: Date.now()
+                },
+                { session }
             );
 
             res.json(topic.coreResources);
@@ -150,7 +159,7 @@ router.put('/:topicId/comment/:type(doubt|resourceDump)', studentAuth, async (re
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { type, topicId } = req.params;
             const user = req.user.id;
             const text = req.body.text;
@@ -195,7 +204,7 @@ router.post(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 // Create test object
                 const test = new Test({
                     ...req.body,
@@ -243,7 +252,7 @@ router.put(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 const topicPromise = Topic.findById(topicId).lean();
                 const progressFind = CourseProgress.findOne({
                     user: req.user.id,
@@ -293,8 +302,10 @@ router.put(
                 const progressPromise = courseProgress.save({ session });
 
                 const [newUser] = await Promise.all([userPromise, progressPromise]);
-
-                res.json({ courseProgress, newScore: newUser.score });
+                res.json({
+                    courseProgress,
+                    newScoreAndEnergy: { score: newUser.score, energy: newUser.energy }
+                });
             });
         } catch (err) {
             if (err.kind === 'ObjectId') {
@@ -318,7 +329,7 @@ router.delete('/:topicId/comment/:commentId', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { topicId, commentId } = req.params;
 
             const comment = await Comment.findById(commentId).select('user');
@@ -366,7 +377,7 @@ router.delete('/:topicId/coreResource/:resourceId', instructorAuth, async (req, 
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { topicId, resourceId } = req.params;
 
             const topic = await Topic.findById(topicId).select('course coreResources');

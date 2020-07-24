@@ -45,7 +45,7 @@ router.post(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 const courseData = {
                     ...req.body,
                     instructor: req.user.id
@@ -173,7 +173,7 @@ router.put(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 const courseId = req.params.courseId;
                 const position = req.body.position;
 
@@ -265,7 +265,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const courseId = req.params.courseId;
             // get the course
             const course = await Course.findById(courseId);
@@ -331,7 +331,7 @@ router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const courseId = req.params.courseId;
             let coursesEnrolled = await User.findById(req.user.id)
                 .lean()
@@ -367,7 +367,7 @@ router.put('/:courseId/resetDeadline', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const courseId = req.params.courseId;
             let coursesEnrolled = await User.findById(req.user.id)
                 .lean()
@@ -402,7 +402,7 @@ router.put('/:courseId/resetDeadline', studentAuth, async (req, res) => {
 router.put('/:courseId/review', studentAuth, async (req, res) => {
     const session = await mongoose.startSession();
     try {
-        await session.withTransaction(async () => {
+        await await session.withTransaction(async () => {
             const { text, rating } = req.body;
             const courseId = req.params.courseId;
 
@@ -498,7 +498,7 @@ router.post(
         const session = await mongoose.startSession();
 
         try {
-            session.withTransaction(async () => {
+            await session.withTransaction(async () => {
                 const courseId = req.params.courseId;
 
                 const newCourse = await Course.findOneAndUpdate(
@@ -537,7 +537,7 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const courseId = req.params.courseId;
 
             const course = await Course.findById(courseId).session(session);
@@ -594,7 +594,7 @@ router.delete('/:courseId/topic/:topicId', instructorAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { courseId, topicId } = req.params;
 
             const topic = await Topic.findById(topicId).session(session);

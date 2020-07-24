@@ -24,7 +24,7 @@ router.put('/:commentId/like', classroomAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const comment = await Comment.findById(req.params.commentId);
 
             if (comment.likes.findIndex(user => String(user) === req.user.id) === -1) {
@@ -63,7 +63,7 @@ router.delete('/:commentId/like', classroomAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const comment = await Comment.findById(req.params.commentId);
             const index = comment.likes.findIndex(user => String(user) === req.user.id);
 
@@ -102,7 +102,7 @@ router.put('/:commentId/reply', classroomAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const text = req.body.text;
             const user = req.user.id;
 
@@ -133,7 +133,7 @@ router.delete('/:commentId/reply/:replyId', classroomAuth, async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
-        session.withTransaction(async () => {
+        await session.withTransaction(async () => {
             const { commentId, replyId } = req.params;
 
             const comment = await Comment.findById(commentId).select('reply');
