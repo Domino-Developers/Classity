@@ -44,9 +44,9 @@ export default {
         }
     },
 
-    async getAllUsers(sort, limit, skip) {
+    async getAllUsers(query) {
         try {
-            const res = await api.get('/api/users', { query: { sort, limit, skip } });
+            const res = await api.get('/api/users', { query: query });
             return res.data;
         } catch (err) {
             throw err.response.data;

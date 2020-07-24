@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import Button from '../../components/Button';
+import SearchBar from '../SearchBar';
 import Battery from '../../components/Battery';
 import Auth from '../Auth';
 import { authRejected } from '../Auth/authSlice';
@@ -108,6 +109,11 @@ const Navbar = () => {
     const guestLinks = !isAuthenticated && (
         <Fragment>
             <li>
+                <Link className='nav__link' to='/leaderboard'>
+                    Leaderboard
+                </Link>
+            </li>
+            <li>
                 <Link className='nav__link' to={`${location.pathname}?authMode=login`}>
                     Log In
                 </Link>
@@ -124,6 +130,7 @@ const Navbar = () => {
                 <Link to='/' className='project-name'>
                     Classity
                 </Link>
+                <SearchBar small />
                 <ul className='nav__list'>
                     <li>
                         <Link className='nav__link' to='/#explore' onClick={hashChange}>

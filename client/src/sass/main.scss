@@ -24,7 +24,9 @@
 @import '../components/Loading/loading';
 @import '../components/Help/help';
 @import '../components/Battery/battery';
+@import '../components/UserList/userList';
 
+@import '../features/SearchBar/searchBar';
 @import '../features/Navbar/navbar';
 @import '../features/Auth/auth';
 @import '../features/Course/course';
@@ -35,4 +37,3 @@
 @import '../features/Dashboard/dashboard';
 @import '../features/CardsContainer/cardsContainer';
 @import '../features/Profile/profile';
-@import '../features/Leaderboard/leaderboard';
