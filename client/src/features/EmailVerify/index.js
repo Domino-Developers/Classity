@@ -16,7 +16,6 @@ const EmailVerify = () => {
             try {
                 const token = query.get('_tk_');
                 const id = query.get('_id_');
-                console.log(token, id);
 
                 if (!token || !id) {
                     dispatch(setAlert('test', 'success'));

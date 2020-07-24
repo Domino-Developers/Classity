@@ -323,7 +323,7 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 });
 
 /**
- * @route		PUT api/course/:courseId/enroll
+ * @route		DELETE api/course/:courseId/enroll
  * @description Unenroll current student
  * @access		private + studentOnly
  */

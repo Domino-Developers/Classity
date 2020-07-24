@@ -93,6 +93,12 @@ const userSlice = createSlice({
             state.coursesEnrolled[courseId] = courseProgress;
             state.energy -= 1;
         },
+        unEnrollSuccess: (state, action) => {
+            const courseId = action.payload;
+            state.loading = false;
+            state.energy += 1;
+            delete state.coursesEnrolled[courseId];
+        },
         enrollFail: (state, action) => {
             state.loading = false;
         },
@@ -118,7 +124,8 @@ const {
     resourceLoadStart,
     resourceLoadStop,
     deleteCreatedCourse,
-    setNextTokenDate
+    setNextTokenDate,
+    unEnrollSuccess
 } = userSlice.actions;
 
 export {
@@ -152,9 +159,26 @@ export const enroll = (courseId, mutate) => async dispatch => {
     try {
         const courseProgress = await courseStore.enroll(courseId);
         dispatch(enrollSuccess({ courseId, courseProgress }));
-        await mutate(courseProgress);
+        mutate(courseProgress);
 
         dispatch(setAlert('Enrolled Successfully', 'success'));
+    } catch (err) {
+        dispatch(enrollFail());
+        if (err.errors) {
+            const errors = [...err.errors];
+            errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+        }
+        console.error(err);
+    }
+};
+
+export const unEnroll = (courseId, mutate) => async dispatch => {
+    dispatch(enrollStart());
+    try {
+        await courseStore.unenroll(courseId);
+        dispatch(unEnrollSuccess(courseId));
+        await mutate();
+        dispatch(setAlert('Unenrolled Successfully', 'success'));
     } catch (err) {
         dispatch(enrollFail());
         if (err.errors) {

@@ -76,7 +76,6 @@ const Dashboard = () => {
                 0
             );
             const progress = doneResources / courseData.totalCoreResources;
-            console.log(courseData);
             const cardData = {
                 ...courseData,
                 lastStudied: progressData.lastStudied,
