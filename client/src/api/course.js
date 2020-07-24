@@ -51,6 +51,16 @@ export default {
         }
     },
 
+    // unenroll
+    async unenroll(courseId) {
+        try {
+            const res = await api.delete(`/api/course/${courseId}/enroll`);
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
+    },
+
     // Update lastStudied
     async updateLastStudied(courseId) {
         try {

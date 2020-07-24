@@ -27,7 +27,8 @@ const Header = props => {
         enroll,
         isSaving,
         isEnrolling,
-        student
+        student,
+        unEnroll
     } = props;
 
     const name = useRef(course.name);
@@ -98,7 +99,13 @@ const Header = props => {
                         loading={isEnrolling ? 'Enrolling' : null}
                     />
                 )}
-                {student && <Button text='Enrolled' full />}
+                {student && (
+                    <Button
+                        text='Unenroll'
+                        onClick={unEnroll}
+                        loading={isEnrolling ? 'Unenrolling' : null}
+                    />
+                )}
                 {instructor && !editing && (
                     <Button text='Edit Course' full onClick={() => edit(true)} />
                 )}
@@ -141,7 +148,8 @@ Header.propTypes = {
     enroll: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
     isEnrolling: PropTypes.bool.isRequired,
-    student: PropTypes.bool.isRequired
+    student: PropTypes.bool.isRequired,
+    unEnroll: PropTypes.func.isRequired
 };
 
 export default Header;

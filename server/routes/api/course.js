@@ -323,6 +323,39 @@ router.put('/:courseId/enroll', auth, async (req, res) => {
 });
 
 /**
+ * @route		DELETE api/course/:courseId/enroll
+ * @description Unenroll current student
+ * @access		private + studentOnly
+ */
+router.delete('/:courseId/enroll', studentAuth, async (req, res) => {
+    const session = await mongoose.startSession();
+    try {
+        await session.withTransaction(async () => {
+            const { courseId } = req.params;
+            const coursePromise = Course.findOneAndUpdate(
+                { _id: courseId },
+                {
+                    $pull: { students: req.user.id }
+                },
+                { session }
+            );
+            const userPromise = User.findOneAndUpdate(
+                { _id: req.user.id },
+                { $unset: { [`coursesEnrolled.${courseId}`]: '' }, $inc: { energy: 1 } },
+                { session }
+            );
+
+            const courseProgressPromise = CourseProgress.deleteOne({
+                course: courseId,
+                user: req.user.id
+            });
+
+            await Promise.all([coursePromise, userPromise, courseProgressPromise]);
+            res.json({ success: true });
+        });
+    } catch (err) {}
+});
+/**
  * @route		PUT api/course/:courseId/lastStudied
  * @description Update lastStudied
  * @access		private + studentOnly

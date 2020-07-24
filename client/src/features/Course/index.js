@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
@@ -16,7 +16,7 @@ import stripHtml from '../../utils/stripHtml';
 import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
-import { enroll, addCourseProgressIfNeeded } from '../User/userSlice';
+import { enroll, addCourseProgressIfNeeded, unEnroll } from '../User/userSlice';
 import { createSelector } from '@reduxjs/toolkit';
 
 const sel = createSelector(
@@ -45,12 +45,9 @@ const Course = () => {
     const [isSaving, setSave] = useState(false);
     const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
     const courseChanges = useRef({});
-    const { data: course, error, mutate } = useSWR(
-        !loading1 ? `get-course-${courseId}` : null,
-        () => {
-            return courseApi.get(courseId);
-        }
-    );
+    const { data: course, error } = useSWR(!loading1 ? `get-course-${courseId}` : null, () => {
+        return courseApi.get(courseId);
+    });
 
     if (error && navigator.onLine) return <div> Opps... not found </div>;
     if (!course || loading1) return <Loading />;
@@ -69,8 +66,46 @@ const Course = () => {
             return;
         }
         dispatch(
-            enroll(courseId, async courseProgress => {
-                await mutate({ ...course, students: [...course.students, id], courseProgress });
+            enroll(courseId, courseProgress => {
+                mutate(`get-course-${courseId}`, {
+                    ...course,
+                    students: [...course.students, id],
+                    courseProgress
+                });
+                mutate(`get-custom-course-min-${id}`, curData => {
+                    if (curData) {
+                        curData[courseId] = {
+                            course: {
+                                name: course.name,
+                                instructor: course.instructor,
+                                tags: course.tags,
+                                avgRating: course.avgRating,
+                                imageURL: course.imageURL,
+                                totalCoreResources: course.topics.reduce(
+                                    (tot, top) => tot + top.coreResources.length,
+                                    0
+                                )
+                            },
+                            courseProgress: course.courseProgress
+                        };
+                    }
+                    return curData;
+                });
+            })
+        );
+    };
+
+    const onUnEnroll = async () => {
+        dispatch(
+            unEnroll(courseId, () => {
+                const index = course.students.findIndex(id_ => id_ === id);
+                mutate(`get-course-${courseId}`, {
+                    ...course,
+                    students: [
+                        ...course.students.slice(0, index),
+                        ...course.students.slice(index + 1)
+                    ]
+                });
             })
         );
     };
@@ -175,6 +210,7 @@ const Course = () => {
                 saveCourse={saveCourse}
                 cancelSave={cancel}
                 enroll={onEnroll}
+                unEnroll={onUnEnroll}
                 isSaving={isSaving}
                 isEnrolling={loading2}
                 courseChanges={courseChanges}
