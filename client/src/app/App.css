@@ -588,6 +588,116 @@ main {
     visibility: visible;
     opacity: 1; }
 
+.user-list__table {
+  margin: 0 auto; }
+  .user-list__table thead {
+    margin: 2rem 0;
+    font-size: 2.5rem;
+    font-weight: 400; }
+  .user-list__table td,
+  .user-list__table th {
+    padding: 1rem 2rem;
+    text-align: center; }
+
+.user-list__type {
+  cursor: pointer;
+  transition: color 0.2s; }
+  .user-list__type:hover {
+    color: #7619cc; }
+  .user-list__type .user-list__arrow {
+    opacity: 0;
+    transition: opacity 0.2s; }
+  .user-list__type--active .user-list__arrow {
+    opacity: 1; }
+
+.user-list__link {
+  transition: color 0.2s; }
+  .user-list__link:hover {
+    color: #7619cc; }
+
+.search-bar {
+  display: inline-block;
+  position: relative; }
+  .search-bar__input {
+    width: 100%;
+    vertical-align: middle;
+    border-radius: 10rem;
+    border: 1px solid #d6d6d6;
+    padding: 0.5rem 1rem;
+    padding-right: 4rem;
+    transition: border 0.2s, transform 0.3s; }
+    .search-bar__input:focus {
+      border: 1px solid #7619cc; }
+  .search-bar__icon {
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 3rem);
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.2s, left 0.3s; }
+    .search-bar__icon:hover {
+      color: #7619cc; }
+  .search-bar--small .search-bar__input {
+    transform: scaleX(0.5) scaleY(0.8);
+    padding-right: 1rem; }
+    .search-bar--small .search-bar__input:focus {
+      transform: scaleX(1) scaleY(1);
+      padding-right: 4rem; }
+      .search-bar--small .search-bar__input:focus::placeholder {
+        opacity: 0.5; }
+    .search-bar--small .search-bar__input::placeholder {
+      opacity: 0;
+      transition: opacity 0.3s; }
+  .search-bar--small:hover .search-bar__input {
+    transform: scaleX(1) scaleY(1);
+    border: 1px solid #aaa;
+    padding-right: 4rem; }
+  .search-bar--small .search-bar__icon {
+    transform: translate(-50%, -50%);
+    left: 50%;
+    color: #d6d6d6; }
+  .search-bar--small:hover .search-bar__icon,
+  .search-bar--small .search-bar__input:focus + .search-bar__icon {
+    left: calc(100% - 3rem);
+    transform: translateY(-50%);
+    color: #252227; }
+    .search-bar--small:hover .search-bar__icon:hover,
+    .search-bar--small .search-bar__input:focus + .search-bar__icon:hover {
+      color: #7619cc; }
+  .search-bar--small:hover .search-bar__input::placeholder {
+    opacity: 0.5; }
+  .search-bar__suggestions {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    background-color: #fcfcfc;
+    z-index: 1;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s; }
+    .search-bar__suggestions li {
+      text-align: center;
+      margin: 2px 0;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d6d6d6;
+      cursor: pointer;
+      transition: border 0.2s; }
+      .search-bar__suggestions li:last-child {
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem; }
+      .search-bar__suggestions li:hover {
+        border: 1px solid #7619cc; }
+      .search-bar__suggestions li span {
+        color: #7619cc; }
+  .search-bar__input:focus ~ .search-bar__suggestions,
+  .search-bar:hover .search-bar__suggestions {
+    opacity: 1;
+    visibility: visible; }
+
 .nav {
   display: flex;
   justify-content: space-between;
@@ -1366,30 +1476,3 @@ main {
       transform: translateX(-50%); }
   .profile-bar:hover .profile-bar__text--exact {
     opacity: 1; }
-
-.leaderboard__table {
-  margin: 0 auto; }
-  .leaderboard__table thead {
-    margin: 2rem 0;
-    font-size: 2.5rem;
-    font-weight: 400; }
-  .leaderboard__table td,
-  .leaderboard__table th {
-    padding: 1rem 2rem;
-    text-align: center; }
-
-.leaderboard__type {
-  cursor: pointer;
-  transition: color 0.2s; }
-  .leaderboard__type:hover {
-    color: #7619cc; }
-  .leaderboard__type .leaderboard__arrow {
-    opacity: 0;
-    transition: opacity 0.2s; }
-  .leaderboard__type--active .leaderboard__arrow {
-    opacity: 1; }
-
-.leaderboard__link {
-  transition: color 0.2s; }
-  .leaderboard__link:hover {
-    color: #7619cc; }

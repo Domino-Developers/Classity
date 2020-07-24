@@ -156,6 +156,28 @@ router.get('/custom', auth, async (req, res) => {
 });
 
 /**
+ * @route		GET api/course/search
+ * @description Search for courses by name
+ * @access		public
+ */
+router.get('/search', async (req, res) => {
+    if (!req.query.source) return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+
+    const { source } = req.query;
+    const { text } = JSON.parse(source);
+    const regex = new RegExp(text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+
+    try {
+        const result = await Course.find({ name: regex });
+
+        return res.json(result);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
  * @route		PUT api/course/:courseId/topic
  * @description Add a topic to course
  * @access		private + instructorOnly

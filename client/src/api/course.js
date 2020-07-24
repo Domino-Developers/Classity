@@ -41,6 +41,16 @@ export default {
         }
     },
 
+    // Search for courses by name
+    async search(text) {
+        try {
+            const res = await api.get('/api/course/search', { query: { text } });
+            return res.data;
+        } catch (err) {
+            throw err.response.data;
+        }
+    },
+
     // Enroll in a course
     async enroll(courseId) {
         try {

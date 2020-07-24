@@ -39,6 +39,8 @@ const Help = loadable(() => import('../components/Help'), {
 
 const Profile = loadable(() => import('../features/Profile'), { fallback: <Loading /> });
 
+const Search = loadable(() => import('../features/Search'), { fallback: <Loading /> });
+
 function App() {
     useEffect(() => {
         initTokenCom(
@@ -58,6 +60,7 @@ function App() {
                 <main>
                     <Switch>
                         <Route exact path='/' component={Landing} />
+                        <Route exact path='/search' component={Search} />
                         <Route exact path='/course/:courseId' component={Course} />
                         <ClassroomRoute
                             path='/course/:courseId/topic/:topicId'
@@ -65,7 +68,7 @@ function App() {
                         />
                         <PrivateRoute exact path='/dashboard' component={Dashboard} />
                         <PrivateRoute exact path='/profile/:userId' component={Profile} />
-                        <PrivateRoute exact path='/leaderboard' component={Leaderboard} />
+                        <Route exact path='/leaderboard' component={Leaderboard} />
                         <Route exact path='/help' component={Help} />
                         <Route exact path='/email-verify' component={EmailVerify} />
                     </Switch>

@@ -178,13 +178,18 @@ router.put('/email-verify', async (req, res) => {
 /**
  * @route           GET api/users
  * @description     Get all users name, email, score and contributions
- * @access          Private
+ * @access          Public
  */
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const { sort, limit, skip } = JSON.parse(req.query.source || '{}');
+        const { sort, limit, skip, name } = JSON.parse(req.query.source || '{}');
+        const regex = new RegExp(
+            name ? name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') : '.*?',
+            'gi'
+        );
 
         const users = await User.aggregate([
+            { $match: { name: regex } },
             {
                 $project: {
                     score: {

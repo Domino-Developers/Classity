@@ -1,4 +1,4 @@
-.leaderboard {
+.user-list {
     &__table {
         margin: 0 auto;
 
@@ -23,12 +23,12 @@
             color: $color-primary;
         }
 
-        .leaderboard__arrow {
+        .user-list__arrow {
             opacity: 0;
             transition: opacity 0.2s;
         }
 
-        &--active .leaderboard__arrow {
+        &--active .user-list__arrow {
             opacity: 1;
         }
     }
