@@ -33,11 +33,9 @@ const Review = ({ isStudent, isInstructor }) => {
 
     const add = async review => {
         try {
-            await courseApi.review(course._id, review);
-
             const newReview = { ...review, user: { _id: id, name }, date: Date.now() };
             const reviews = [...course.reviews];
-            const reviewIndex = reviews.findIndex(r => r.user === id);
+            const reviewIndex = reviews.findIndex(r => r.user._id === id);
 
             if (reviewIndex !== -1) {
                 reviews[reviewIndex] = newReview;
@@ -45,7 +43,9 @@ const Review = ({ isStudent, isInstructor }) => {
                 reviews.push(newReview);
             }
 
-            mutate({ ...course, reviews });
+            mutate({ ...course, reviews }, false);
+
+            await courseApi.review(course._id, review);
         } catch (err) {
             if (err.errors) {
                 const errors = err.errors;

@@ -149,21 +149,24 @@ const Topic = () => {
 
     const addComment = async (type, comment, clear) => {
         try {
-            await commentApi.add(topic._id, type, comment);
+            mutate(
+                {
+                    ...topic,
+                    [type]: [
+                        ...topic[type],
+                        {
+                            text: comment.text,
+                            user: id,
+                            likes: [],
+                            reply: [],
+                            date: Date.now()
+                        }
+                    ]
+                },
+                false
+            );
 
-            mutate({
-                ...topic,
-                [type]: [
-                    ...topic[type],
-                    {
-                        text: comment.text,
-                        user: id,
-                        likes: [],
-                        reply: [],
-                        date: Date.now()
-                    }
-                ]
-            });
+            await commentApi.add(topic._id, type, comment);
 
             clear();
         } catch (err) {
@@ -200,7 +203,7 @@ const Topic = () => {
                                     type='text'
                                     defaultValue={deadline.current}
                                     onChange={e => (deadline.current = Number(e.target.value))}
-                                    className='topic__deadline-input'
+                                    className='topic__deadline-input input'
                                 />
                             ) : (
                                 topic.deadline
@@ -219,6 +222,7 @@ const Topic = () => {
                         html={description.current}
                         tagName='p'
                         onChange={e => (description.current = e.target.value)}
+                        rich
                     />
                 ) : (
                     <FadeText html>{description.current}</FadeText>
@@ -265,7 +269,7 @@ const Topic = () => {
                                         <li className='icon topic-content__item'>
                                             {editing && (
                                                 <i
-                                                    className='fas fa-minus delete-btn'
+                                                    className='fas fa-minus delete-btn u-margin-right-small'
                                                     onClick={() => {
                                                         setResources([
                                                             ...resources.slice(0, i),

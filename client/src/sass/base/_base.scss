@@ -15,8 +15,26 @@ body {
     background-color: $color-white;
 }
 
+::selection {
+    color: $color-white;
+    background-color: $color-primary;
+}
+
 ul {
     list-style: none;
+}
+
+.input {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid $color-grey-3;
+    border-radius: 0.5rem;
+    transition: border 0.2s;
+
+    &:focus,
+    &:hover {
+        outline: none;
+        border: 1px solid $color-primary;
+    }
 }
 
 .icon::before {

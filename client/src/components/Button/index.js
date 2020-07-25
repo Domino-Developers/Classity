@@ -2,13 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import Loading from '../Loading';
+
 const Button = props => {
     const { full, text, onClick, to, loading, value, className } = props;
     return loading ? (
-        <div className={'btn btn--disabled ' + (className ? className : '')}>
+        <div
+            className={
+                'btn btn--disabled ' +
+                (full ? 'btn--full ' : 'btn--ghost ') +
+                (className ? className : '')
+            }>
             <div className='btn__show'>
                 <span className='text'>{loading}</span>
-                <span className='btn__dots'>&nbsp;. . .</span>
+                <Loading size='2' className='u-margin-left-small' white={full} />
             </div>
             <span className='btn__hide'>{text || value}</span>
         </div>

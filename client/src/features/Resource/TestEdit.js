@@ -132,14 +132,14 @@ const TestEdit = ({ payload }) => {
                         Pass score:&nbsp;
                         <input
                             type='text'
-                            className='test-edit__pass-score'
+                            className='test-edit__pass-score input'
                             value={passScore}
                             onChange={e => setPassScore(Number(e.target.value))}
                         />
                         % &nbsp;or&nbsp;
                         <input
                             type='text'
-                            className='test-edit__pass-score'
+                            className='test-edit__pass-score input'
                             value={(passScore * questions.length) / 100}
                             onChange={e =>
                                 setPassScore((Number(e.target.value) * 100) / questions.length)
@@ -261,6 +261,7 @@ const TestEdit = ({ payload }) => {
                                                 placeholder='Correct Answer'
                                                 defaultValue={q.answer}
                                                 onChange={e => (q.answer = e.target.value)}
+                                                className='input'
                                             />
                                         </div>
                                     </Fragment>
@@ -279,7 +280,7 @@ const TestEdit = ({ payload }) => {
                                                     onChange={e =>
                                                         (q.answer.from = Number(e.target.value))
                                                     }
-                                                    className='test-edit__num-input'
+                                                    className='test-edit__num-input input'
                                                 />
                                             </label>
                                             &nbsp;
@@ -291,7 +292,7 @@ const TestEdit = ({ payload }) => {
                                                     onChange={e =>
                                                         (q.answer.to = Number(e.target.value))
                                                     }
-                                                    className='test-edit__num-input'
+                                                    className='test-edit__num-input input'
                                                 />
                                             </label>
                                         </div>

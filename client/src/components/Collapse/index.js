@@ -52,7 +52,9 @@ const Head = props => {
         <Fragment>
             {editing && editable ? (
                 <p className='collapse__text collapse__text--outer'>
-                    <i className='fas fa-minus delete-btn' onClick={onDelete}></i>
+                    <i
+                        className='fas fa-minus delete-btn u-margin-right-small'
+                        onClick={onDelete}></i>
                     <Editable html={text} onChange={onChange} tagName='span' />
                 </p>
             ) : (

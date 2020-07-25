@@ -81,7 +81,7 @@ const SearchBar = ({ initial, small }) => {
             onSubmit={submit}>
             <input
                 type='text'
-                className='search-bar__input'
+                className='input search-bar__input'
                 placeholder='Search'
                 value={text}
                 onChange={e => setText(e.target.value)}
