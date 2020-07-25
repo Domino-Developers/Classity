@@ -1,13 +1,14 @@
 .search-bar {
     display: inline-block;
     position: relative;
+    width: 40rem;
 
     &__input {
         width: 100%;
         vertical-align: middle;
-        border-radius: 10rem;
+        border-radius: 0.5rem;
         border: 1px solid $color-grey-2;
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1.5rem;
         padding-right: 4rem;
         transition: border 0.2s, transform 0.3s;
 
@@ -31,7 +32,7 @@
 
     &--small &__input {
         transform: scaleX(0.5) scaleY(0.8);
-        padding-right: 1rem;
+        padding-right: 1.5rem;
 
         &:focus {
             transform: scaleX(1) scaleY(1);
@@ -82,32 +83,38 @@
         width: calc(100% - 2rem);
         background-color: $color-white;
         z-index: 1;
+        border: 1px solid $color-grey-2;
+        border-top: none;
+        border-bottom: none;
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
-        overflow: hidden;
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.2s;
 
         li {
             text-align: center;
-            margin: 2px 0;
-            padding: 0.5rem 1rem;
-            border: 1px solid $color-grey-2;
+            padding: 0.75rem 1.5rem;
             cursor: pointer;
-            transition: border 0.2s;
+            transition: background-color 0.2s;
 
             &:last-child {
                 border-bottom-left-radius: 1rem;
                 border-bottom-right-radius: 1rem;
+                border-bottom: 1px solid $color-grey-2;
             }
 
-            &:hover {
-                border: 1px solid $color-primary;
+            &:hover,
+            &.selected {
+                background-color: $color-grey-1;
             }
 
-            span {
+            .search-bar__found {
                 color: $color-primary;
+            }
+
+            i {
+                margin-right: 1rem;
             }
         }
     }
