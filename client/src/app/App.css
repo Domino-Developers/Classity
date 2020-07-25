@@ -485,22 +485,16 @@ main {
 [contenteditable='true']:hover {
   border: 1px solid #7619cc; }
 
-.editable__rich-btns {
-  display: flex; }
-  .editable__rich-btns--right {
-    margin-left: auto; }
-
-.editable__btn {
-  margin: 0 1rem; }
-  .editable__btn:hover {
-    color: #7619cc; }
+.ql-container {
+  font-family: inherit !important;
+  font-size: inherit !important; }
 
 .fade-text {
   position: relative; }
   .fade-text__hide {
     position: absolute;
     width: 100%;
-    height: 2.5rem;
+    height: 6rem;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fcfcfc);
     transition: opacity 250ms; }
   .fade-text--show .fade-text__hide {
