@@ -617,13 +617,14 @@ main {
 
 .search-bar {
   display: inline-block;
-  position: relative; }
+  position: relative;
+  width: 40rem; }
   .search-bar__input {
     width: 100%;
     vertical-align: middle;
-    border-radius: 10rem;
+    border-radius: 0.5rem;
     border: 1px solid #d6d6d6;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     padding-right: 4rem;
     transition: border 0.2s, transform 0.3s; }
     .search-bar__input:focus {
@@ -639,7 +640,7 @@ main {
       color: #7619cc; }
   .search-bar--small .search-bar__input {
     transform: scaleX(0.5) scaleY(0.8);
-    padding-right: 1rem; }
+    padding-right: 1.5rem; }
     .search-bar--small .search-bar__input:focus {
       transform: scaleX(1) scaleY(1);
       padding-right: 4rem; }
@@ -673,26 +674,29 @@ main {
     width: calc(100% - 2rem);
     background-color: #fcfcfc;
     z-index: 1;
+    border: 1px solid #d6d6d6;
+    border-top: none;
+    border-bottom: none;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    overflow: hidden;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s; }
     .search-bar__suggestions li {
       text-align: center;
-      margin: 2px 0;
-      padding: 0.5rem 1rem;
-      border: 1px solid #d6d6d6;
+      padding: 0.75rem 1.5rem;
       cursor: pointer;
-      transition: border 0.2s; }
+      transition: background-color 0.2s; }
       .search-bar__suggestions li:last-child {
         border-bottom-left-radius: 1rem;
-        border-bottom-right-radius: 1rem; }
-      .search-bar__suggestions li:hover {
-        border: 1px solid #7619cc; }
-      .search-bar__suggestions li span {
+        border-bottom-right-radius: 1rem;
+        border-bottom: 1px solid #d6d6d6; }
+      .search-bar__suggestions li:hover, .search-bar__suggestions li.selected {
+        background-color: #eee; }
+      .search-bar__suggestions li .search-bar__found {
         color: #7619cc; }
+      .search-bar__suggestions li i {
+        margin-right: 1rem; }
   .search-bar__input:focus ~ .search-bar__suggestions,
   .search-bar:hover .search-bar__suggestions {
     opacity: 1;

@@ -8,7 +8,6 @@ import { useQuery } from '../../utils/hooks';
 import courseStore from '../../api/course';
 import userStore from '../../api/user';
 import CardsContainer from '../CardsContainer';
-import SearchBar from '../SearchBar';
 
 const Search = () => {
     const [userSort, setUserSort] = useState('score');
@@ -29,7 +28,6 @@ const Search = () => {
     return (
         <div className='container'>
             <h3>Search: {text}</h3>
-            <SearchBar initial={text} />
             <Tabs.Container>
                 <Tabs.Tab name='Courses'>
                     {courses ? (
