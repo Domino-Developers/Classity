@@ -8,7 +8,9 @@ const FadeText = props => {
     const lines = props.lines || 4;
     const isHtml = props.html;
     const text = props.children;
-    const showHeight = Number(lines) * 24;
+    const showHeight = Number(lines) * 30;
+    // 30 = line height(1.5) * font-size(20)
+    // Also change top of .fade-text__hide and its height as ( 30/10 * (lines - noOfLinesFaded)rem )
 
     let element = {};
     const [hidden, hide] = useState(0);
@@ -22,7 +24,7 @@ const FadeText = props => {
         <div className={'fade-text' + (show ? ' fade-text--show' : '')}>
             <AnimateHeight height={show ? 'auto' : showHeight} duration={250}>
                 {isHtml ? <Html tag='div'>{text}</Html> : <div>{text}</div>}
-                <div className='fade-text__hide' style={{ top: `${2.4 * (lines - 1)}rem` }}></div>
+                <div className='fade-text__hide' style={{ top: `${3 * (lines - 2)}rem` }}></div>
             </AnimateHeight>
             <a href='#!' onClick={() => toggle(!show)}>
                 {show ? (

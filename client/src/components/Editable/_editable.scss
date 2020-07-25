@@ -10,20 +10,7 @@
     border: 1px solid $color-primary;
 }
 
-.editable {
-    &__rich-btns {
-        display: flex;
-
-        &--right {
-            margin-left: auto;
-        }
-    }
-
-    &__btn {
-        margin: 0 1rem;
-
-        &:hover {
-            color: $color-primary;
-        }
-    }
+.ql-container {
+    font-family: inherit !important;
+    font-size: inherit !important;
 }

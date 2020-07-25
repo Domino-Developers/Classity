@@ -4,7 +4,7 @@ export const addCourse = async (history, setLoading, addToState) => {
     const dummyCourse = {
         name: 'Add course name here',
         description:
-            '<div>This is short description of course.</div><div>Everything before an empty line will come in your course header.</div><br><div>From this line everything will show only here</div><div>Plan and write a good description.</div>',
+            '<p>This is short description of course.</p><p>Everything before an empty line will come in your course header.</p><br><p>From this line everything will show only here</p><p>Plan and write a good description.</p>',
         imageURL: 'https://via.placeholder.com/280x200.png?text=A'
     };
 

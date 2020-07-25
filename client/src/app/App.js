@@ -14,6 +14,9 @@ import ClassroomRoute from '../features/ClassroomRoute';
 import PrivateRoute from '../components/PrivateRoute';
 import EmailVerify from '../features/EmailVerify';
 
+// Quill text editor, available themes: snow, bubble, core
+import 'react-quill/dist/quill.snow.css';
+
 // loadable components
 const Course = loadable(() => import('../features/Course'), {
     fallback: <Loading />
