@@ -1,11 +1,10 @@
 .btn {
     border: 1px solid $color-primary;
     border-radius: 200px;
-    padding: 10px 30px;
+    padding: 1rem 3rem;
     transition: color 0.2s, background-color 0.2s;
     display: inline-block;
     cursor: pointer;
-    font-size: inherit;
 
     &--full {
         background-color: $color-primary;
@@ -14,8 +13,9 @@
 
     &--ghost {
         color: $color-primary;
+        background-color: transparent;
 
-        &:hover {
+        &:hover:not(.btn--disabled) {
             color: $color-white;
         }
     }
@@ -27,29 +27,21 @@
 
     &--disabled {
         position: relative;
-        background-color: $color-grey-3;
-        border: 1px solid $color-grey-3;
         cursor: progress;
+        padding: 0.7rem 3rem;
     }
 
     &__show {
         position: absolute;
         top: 50%;
-        left: 1.6rem;
+        left: 3rem;
         transform: translateY(-50%);
         display: flex;
-        opacity: 0.5;
+        align-items: center;
     }
 
     &__hide {
         opacity: 0;
-    }
-
-    &__dots {
-        display: inline-block;
-        white-space: nowrap;
-        animation: loading-dots 2s infinite;
-        overflow-x: hidden;
     }
 }
 

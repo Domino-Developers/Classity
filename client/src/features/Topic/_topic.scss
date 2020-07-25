@@ -38,12 +38,7 @@
 }
 
 .topic__deadline-input {
-    width: 3rem;
+    padding: 0.5rem 1rem;
+    width: 4.5rem;
     text-align: center;
-    border: 1px solid $color-grey-2;
-    border-radius: 3px;
-
-    &:focus {
-        border: 1px solid $color-primary;
-    }
 }

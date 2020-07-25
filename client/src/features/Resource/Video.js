@@ -58,7 +58,7 @@ const Video = ({ payload, instructor, update }) => {
                     <label>
                         Video url
                         <input
-                            className='video__input'
+                            className='video__input input'
                             type='text'
                             value={url}
                             onChange={e => setUrl(e.target.value)}></input>

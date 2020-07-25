@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Loading = props => {
     const sizeInRem = props.size || '5';
     const size = sizeInRem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-    const strokeWidth = 4;
+    const strokeWidth = sizeInRem <= 3 ? 2 : 4;
     const center = size / 2;
     const radius = center - strokeWidth / 2;
     const circumference = 2 * Math.PI * radius;
@@ -27,7 +27,7 @@ const Loading = props => {
             width={size}
             height={size}>
             <circle
-                className='loading__circle loading__circle--inner'
+                className={'loading__circle' + (props.white ? ' loading__circle--white' : '')}
                 cx={center}
                 cy={center}
                 r={radius}
@@ -42,6 +42,7 @@ const Loading = props => {
 Loading.propTypes = {
     size: PropTypes.string,
     className: PropTypes.string,
+    white: PropTypes.bool,
     inline: PropTypes.bool
 };
 

@@ -1,13 +1,15 @@
 [contenteditable='true'] {
     outline: none;
     border: 1px solid $color-grey-3;
+    border-radius: 0.5rem;
     transition: border 0.2s;
-    padding: 0.5rem 1rem;
-}
+    padding: 0.75rem 1.5rem;
 
-[contenteditable='true']:focus,
-[contenteditable='true']:hover {
-    border: 1px solid $color-primary;
+    &:focus,
+    &:hover {
+        outline: none;
+        border: 1px solid $color-primary;
+    }
 }
 
 .ql-container {

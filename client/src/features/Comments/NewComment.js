@@ -22,21 +22,24 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
         <div>
             {review && <h4>Your review</h4>}
             {review && <Rating select={setRating} rating={rating} />}
-            <input
-                className='comment__input'
-                type='text'
-                onChange={e => setText(e.target.value)}
-                value={text}
-                placeholder={newText}
-            />
-            <a
-                href='#!'
-                className={
-                    'comment__btn' + (text && (!review || rating) ? ' comment__btn--active' : '')
-                }
-                onClick={() => onAdd({ text, rating }, () => setText(''))}>
-                &#9654;
-            </a>
+            <form action='#!' onSubmit={() => onAdd({ text, rating }, () => setText(''))}>
+                <input
+                    className='comment__input input'
+                    type='text'
+                    onChange={e => setText(e.target.value)}
+                    value={text}
+                    placeholder={newText}
+                />
+                <a
+                    href='#!'
+                    className={
+                        'comment__btn' +
+                        (text && (!review || rating) ? ' comment__btn--active' : '')
+                    }
+                    onClick={() => onAdd({ text, rating }, () => setText(''))}>
+                    &#9654;
+                </a>
+            </form>
         </div>
     );
 };

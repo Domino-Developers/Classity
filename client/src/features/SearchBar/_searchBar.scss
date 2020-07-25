@@ -7,13 +7,12 @@
         width: 100%;
         vertical-align: middle;
         border-radius: 0.5rem;
-        border: 1px solid $color-grey-2;
-        padding: 0.75rem 1.5rem;
+        border: 1px solid $color-grey-3;
         padding-right: 4rem;
         transition: border 0.2s, transform 0.3s;
 
         &:focus {
-            border: 1px solid $color-primary;
+            border: 2px solid $color-primary;
         }
     }
 
@@ -51,14 +50,18 @@
 
     &--small:hover &__input {
         transform: scaleX(1) scaleY(1);
-        border: 1px solid $color-grey-3;
+        border: 2px solid $color-grey-3;
         padding-right: 4rem;
+
+        &:focus {
+            border: 2px solid $color-primary;
+        }
     }
 
     &--small &__icon {
         transform: translate(-50%, -50%);
         left: 50%;
-        color: $color-grey-2;
+        color: $color-primary;
     }
 
     &--small:hover &__icon,
@@ -93,7 +96,6 @@
         transition: opacity 0.2s;
 
         li {
-            text-align: center;
             padding: 0.75rem 1.5rem;
             cursor: pointer;
             transition: background-color 0.2s;

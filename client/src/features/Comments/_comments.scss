@@ -94,14 +94,7 @@
     // Input
     &__input {
         font-size: 2rem;
-        border: 1px solid $color-grey-3;
-        padding: 5px 0.5rem;
-        border-radius: 5px;
         width: 80%;
-
-        &:focus {
-            border: 1px solid $color-primary;
-        }
     }
 
     &__btn {

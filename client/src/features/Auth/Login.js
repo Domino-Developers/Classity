@@ -45,7 +45,7 @@ const Login = () => {
             <label className='auth__label'>
                 Email:
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='email'
                     name='email'
                     placeholder='Email'
@@ -57,7 +57,7 @@ const Login = () => {
             <label className='auth__label'>
                 Password
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='password'
                     name='password'
                     placeholder='Password'

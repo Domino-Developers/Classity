@@ -113,13 +113,25 @@ const Dashboard = () => {
             ) : (
                 <Tabs.Container>
                     <Tabs.Tab name='In progress'>
-                        <CardsContainer courses={enrolledCourses} />
+                        {enrolledCourses.length ? (
+                            <CardsContainer courses={enrolledCourses} />
+                        ) : (
+                            <p>Nothing here.</p>
+                        )}
                     </Tabs.Tab>
                     <Tabs.Tab name='Completed'>
-                        <CardsContainer courses={completedCourses} />
+                        {completedCourses.length ? (
+                            <CardsContainer courses={completedCourses} />
+                        ) : (
+                            <p>Nothing here.</p>
+                        )}
                     </Tabs.Tab>
                     <Tabs.Tab name='Created'>
-                        <CardsContainer courses={createdCourses} normal />
+                        {createdCourses.length ? (
+                            <CardsContainer courses={createdCourses} normal />
+                        ) : (
+                            <p>Nothing here.</p>
+                        )}
                     </Tabs.Tab>
                 </Tabs.Container>
             )}

@@ -13,6 +13,7 @@
         padding: 2rem 2rem;
         border-radius: 10px;
         color: $color-black;
+
         &__info {
             border: 1px solid $color-grey-3;
             padding: 1rem;
@@ -56,9 +57,7 @@
 
     &__input--text {
         width: 100%;
-        padding: 8px;
         font-size: 2.4rem;
-        border: 1px solid $color-grey-3;
     }
 }
 

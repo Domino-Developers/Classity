@@ -133,7 +133,7 @@ const Test = ({ test, pastScore, resDoneSize, totResSize }) => {
                             ) : (
                                 <input
                                     type='text'
-                                    className='test__input--text'
+                                    className='test__input--text input'
                                     name={`q${i}`}
                                     onChange={handleChange}
                                     disabled={submitted}

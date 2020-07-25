@@ -73,7 +73,7 @@ const Register = () => {
             <label className='auth__label'>
                 Name
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='text'
                     name='name'
                     placeholder='Name'
@@ -85,7 +85,7 @@ const Register = () => {
             <label className='auth__label'>
                 Email:
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='email'
                     name='email'
                     placeholder='Email'
@@ -97,7 +97,7 @@ const Register = () => {
             <label className='auth__label'>
                 Password
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='password'
                     name='password'
                     placeholder='Password'
@@ -110,7 +110,7 @@ const Register = () => {
             <label className='auth__label'>
                 Confirm Password
                 <input
-                    className='auth__input auth__input--text'
+                    className='auth__input auth__input--text input'
                     type='password'
                     name='password2'
                     placeholder='Confirm Password'

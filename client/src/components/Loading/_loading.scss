@@ -1,16 +1,20 @@
 .loading {
     display: block;
     margin: 0 auto;
-    vertical-align: middle;
 
     &__circle {
         fill: none;
         stroke: $color-primary;
         transform-origin: center;
         animation: loading-circle 2s linear infinite;
+
+        &--white {
+            stroke: $color-white;
+        }
     }
 
     &--inline {
         display: inline-block;
+        vertical-align: middle;
     }
 }

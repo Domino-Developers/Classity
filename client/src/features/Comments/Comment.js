@@ -42,33 +42,39 @@ const Comment = props => {
             const likeIndex = comment.likes.indexOf(user);
 
             if (likeIndex === -1) {
+                mutate(
+                    {
+                        ...topic,
+                        [type]: [
+                            ...topic[type].map(c =>
+                                c === comment ? { ...c, likes: [...c.likes, user] } : c
+                            )
+                        ]
+                    },
+                    false
+                );
                 await commentApi.like(comment._id);
-                mutate({
-                    ...topic,
-                    [type]: [
-                        ...topic[type].map(c =>
-                            c === comment ? { ...c, likes: [...c.likes, user] } : c
-                        )
-                    ]
-                });
             } else {
+                mutate(
+                    {
+                        ...topic,
+                        [type]: [
+                            ...topic[type].map(c =>
+                                c === comment
+                                    ? {
+                                          ...c,
+                                          likes: [
+                                              ...c.likes.slice(0, likeIndex),
+                                              ...c.likes.slice(likeIndex + 1)
+                                          ]
+                                      }
+                                    : c
+                            )
+                        ]
+                    },
+                    false
+                );
                 await commentApi.unlike(comment._id);
-                mutate({
-                    ...topic,
-                    [type]: [
-                        ...topic[type].map(c =>
-                            c === comment
-                                ? {
-                                      ...c,
-                                      likes: [
-                                          ...c.likes.slice(0, likeIndex),
-                                          ...c.likes.slice(likeIndex + 1)
-                                      ]
-                                  }
-                                : c
-                        )
-                    ]
-                });
             }
         } catch (err) {
             if (err.errors) {
@@ -80,18 +86,21 @@ const Comment = props => {
 
     const addReply = async () => {
         try {
-            await commentApi.addReply(comment._id, { text });
+            mutate(
+                {
+                    ...topic,
+                    [type]: [
+                        ...topic[type].map(c =>
+                            c === comment
+                                ? { ...c, reply: [...c.reply, { user, text, date: Date.now() }] }
+                                : c
+                        )
+                    ]
+                },
+                false
+            );
 
-            mutate({
-                ...topic,
-                [type]: [
-                    ...topic[type].map(c =>
-                        c === comment
-                            ? { ...c, reply: [...c.reply, { user, text, date: Date.now() }] }
-                            : c
-                    )
-                ]
-            });
+            await commentApi.addReply(comment._id, { text });
 
             replyState(true);
             setText('');
@@ -140,9 +149,9 @@ const Comment = props => {
                 <div className='comment__text'>
                     <FadeText>{comment.text}</FadeText>
                 </div>
-                <div className='comment__add'>
+                <form action='#!' onSubmit={addReply} className='comment__add'>
                     <input
-                        className='comment__input'
+                        className='comment__input input'
                         type='text'
                         placeholder='Reply'
                         onChange={e => setText(e.target.value)}
@@ -154,7 +163,7 @@ const Comment = props => {
                         onClick={addReply}>
                         &#9654;
                     </a>
-                </div>
+                </form>
             </div>
             {!reply && !review && (
                 <AnimateHeight height={showReply ? 'auto' : 0}>
