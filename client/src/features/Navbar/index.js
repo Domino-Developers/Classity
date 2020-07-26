@@ -34,6 +34,9 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const { isAuthenticated, userId, name, email, energy, loading } = useSelector(sel);
 
+    const colors = ['#9c32ff', '#e000e0', '#1447f0', '#1fbe27', '#02b3b3', '#7961ff'];
+    const rndInd = Math.floor(Math.random() * 6);
+
     const hashChange = () => {
         setTimeout(() => {
             const { hash } = window.location;
@@ -59,7 +62,12 @@ const Navbar = () => {
                 </Link>
             </li>
             <li className='nav__auth-list-container'>
-                <span className='nav__item nav__link'>{name}</span>
+                <Link
+                    to={`/profile/${userId}`}
+                    className='nav__user--img'
+                    style={{ backgroundColor: colors[rndInd] }}>
+                    {name.toUpperCase()[0]}
+                </Link>
 
                 <ul className='nav__auth-list'>
                     <li className='nav__item nav__item--border'>

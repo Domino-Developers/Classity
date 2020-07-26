@@ -47,7 +47,7 @@
     &__auth-list {
         position: absolute;
         right: 0;
-        top: calc(9rem - 4px);
+        top: calc(6rem + 2px);
         min-width: 20rem;
         background-color: $color-white;
         border-bottom-left-radius: 0.5rem;
@@ -73,6 +73,18 @@
         &--email {
             font-size: 1.5rem;
             color: $color-grey-3;
+        }
+
+        &--img {
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $color-white;
+            font-weight: 600;
+            border-radius: 50%;
+            cursor: pointer;
         }
     }
 }
