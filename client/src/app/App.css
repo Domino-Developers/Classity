@@ -1461,19 +1461,24 @@ main {
       left: 0; }
     .profile-bar__text--end {
       left: 100%; }
-    .profile-bar__text--exact {
-      opacity: 0;
-      left: 100%;
-      color: #7619cc;
-      border: 1px solid #7619cc;
-      border-radius: 5px;
-      padding: 0.2rem 0.5rem;
-      transition: opacity 0.5s; }
     .profile-bar__text::before {
       content: '\25B4';
       position: absolute;
       top: -1.9rem;
       left: 50%;
       transform: translateX(-50%); }
+    .profile-bar__text--exact {
+      opacity: 0;
+      left: 100%;
+      top: -2.6rem;
+      color: #7619cc;
+      border: 1px solid #7619cc;
+      border-radius: 5px;
+      padding: 0.2rem 0.5rem;
+      transition: opacity 0.5s;
+      background-color: #fcfcfc; }
+      .profile-bar__text--exact::before {
+        content: '\25BE';
+        top: 2.3rem; }
   .profile-bar:hover .profile-bar__text--exact {
     opacity: 1; }

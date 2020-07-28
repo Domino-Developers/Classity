@@ -68,22 +68,29 @@
             left: 100%;
         }
 
-        &--exact {
-            opacity: 0;
-            left: 100%;
-            color: $color-primary;
-            border: 1px solid $color-primary;
-            border-radius: 5px;
-            padding: 0.2rem 0.5rem;
-            transition: opacity 0.5s;
-        }
-
         &::before {
             content: '\25B4';
             position: absolute;
             top: -1.9rem;
             left: 50%;
             transform: translateX(-50%);
+        }
+
+        &--exact {
+            opacity: 0;
+            left: 100%;
+            top: -2.6rem;
+            color: $color-primary;
+            border: 1px solid $color-primary;
+            border-radius: 5px;
+            padding: 0.2rem 0.5rem;
+            transition: opacity 0.5s;
+            background-color: $color-white;
+
+            &::before {
+                content: '\25BE';
+                top: 2.3rem;
+            }
         }
     }
 
