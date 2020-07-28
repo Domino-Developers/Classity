@@ -78,7 +78,7 @@ const Login = () => {
                 Remember me
             </label>
             <div className='auth__input'>
-                <Button value='Submit' loading={loading && 'Loading'} />
+                <Button full value='Submit' loading={loading && 'Loading'} />
             </div>
             {inactive && (
                 <div className='auth__card__info'>

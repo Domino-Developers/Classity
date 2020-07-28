@@ -121,7 +121,7 @@ const Register = () => {
                 />
             </label>
             <div className='auth__input'>
-                <Button value='Submit' loading={warning.loading && 'Loading'} />
+                <Button full value='Submit' loading={warning.loading && 'Loading'} />
             </div>
             {warning.show && (
                 <div className='auth__card__info'>

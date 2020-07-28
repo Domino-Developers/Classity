@@ -20,10 +20,7 @@ const CourseProgressSchema = new mongoose.Schema({
         of: [mongoose.Schema.Types.ObjectId],
         default: {}
     },
-    completedOnce: {
-        type: Boolean,
-        default: false
-    }
+    completedOn: String
 });
 
 CourseProgressSchema.pre('findOneAndUpdate', function () {

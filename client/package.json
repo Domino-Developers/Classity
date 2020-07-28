@@ -11,6 +11,7 @@
         "axios": "^0.19.2",
         "chart.js": "^2.9.3",
         "moment": "^2.26.0",
+        "pdfmake": "^0.1.67",
         "react": "^16.13.1",
         "react-animate-height": "^2.0.21",
         "react-contenteditable": "^3.3.5",
