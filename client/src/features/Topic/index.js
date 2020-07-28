@@ -153,7 +153,9 @@ const Topic = () => {
         window.location.reload(false);
     };
 
-    const addComment = async (type, comment, clear) => {
+    const addComment = async (e, type, comment, clear) => {
+        e.preventDefault();
+
         try {
             mutate(
                 {
@@ -360,8 +362,8 @@ const Topic = () => {
                                 comments={topic.resourceDump}
                                 user={{ id, name }}
                                 newText='Share a resource'
-                                onAdd={(comment, clear) =>
-                                    addComment('resourceDump', comment, clear)
+                                onAdd={(e, comment, clear) =>
+                                    addComment(e, 'resourceDump', comment, clear)
                                 }
                                 newComment={
                                     isInstructor && 'To share something, add it to Topic content'
@@ -375,7 +377,9 @@ const Topic = () => {
                                 comments={topic.doubt}
                                 user={{ id, name }}
                                 newText='Ask a doubt'
-                                onAdd={(comment, clear) => addComment('doubt', comment, clear)}
+                                onAdd={(e, comment, clear) =>
+                                    addComment(e, 'doubt', comment, clear)
+                                }
                                 newComment={isInstructor && "Instructor can't ask a doubt"}
                             />
                         </Tabs.Tab>

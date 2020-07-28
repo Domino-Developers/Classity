@@ -84,7 +84,9 @@ const Comment = props => {
         }
     };
 
-    const addReply = async () => {
+    const addReply = async e => {
+        e.preventDefault();
+
         try {
             mutate(
                 {

@@ -22,7 +22,7 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
         <div>
             {review && <h4>Your review</h4>}
             {review && <Rating select={setRating} rating={rating} />}
-            <form action='#!' onSubmit={() => onAdd({ text, rating }, () => setText(''))}>
+            <form action='#!' onSubmit={e => onAdd(e, { text, rating }, () => setText(''))}>
                 <input
                     className='comment__input input'
                     type='text'
@@ -36,7 +36,7 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
                         'comment__btn' +
                         (text && (!review || rating) ? ' comment__btn--active' : '')
                     }
-                    onClick={() => onAdd({ text, rating }, () => setText(''))}>
+                    onClick={e => onAdd(e, { text, rating }, () => setText(''))}>
                     &#9654;
                 </a>
             </form>
