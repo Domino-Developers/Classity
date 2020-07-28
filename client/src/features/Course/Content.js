@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
+import getCertificate from '../../utils/getCertificate';
 import Collapse from '../../components/Collapse';
 import Loading from '../../components/Loading';
+import Button from '../../components/Button';
 import courseStore from '../../api/course';
 import { setAlert } from '../Alerts/alertSlice';
 
 const Content = props => {
     const dispatch = useDispatch();
 
-    const { editing, course, courseChanges } = props;
+    const { editing, course, courseChanges, user } = props;
     const [topics, setTopics] = useState([...course.topics]);
     courseChanges.current.topics = topics;
 
@@ -49,6 +51,18 @@ const Content = props => {
     return (
         <section>
             <h2>Course Content</h2>
+            {course.courseProgress && (
+                <Button
+                    text='Get Certificate'
+                    className='u-margin-bottom-small'
+                    disabled={
+                        !course.courseProgress.completedOn && 'Complete course to get certificate'
+                    }
+                    onClick={() =>
+                        getCertificate(user, course.name, course.courseProgress.completedOn)
+                    }
+                />
+            )}
             {reset && !resetting && (
                 <div className='course-content__reset'>
                     <p className='u-center-text'>
@@ -144,7 +158,8 @@ Content.propTypes = {
     editing: PropTypes.bool.isRequired,
     course: PropTypes.object.isRequired,
     courseChanges: PropTypes.object.isRequired,
-    isInstructor: PropTypes.bool.isRequired
+    isInstructor: PropTypes.bool.isRequired,
+    user: PropTypes.string.isRequired
 };
 
 export default Content;

@@ -209,12 +209,17 @@ main {
   .btn--ghost {
     color: #7619cc;
     background-color: transparent; }
-    .btn--ghost:hover:not(.btn--disabled) {
+    .btn--ghost:hover:not(.btn--loading) {
       color: #fcfcfc; }
-  .btn:not(.btn--disabled):hover {
+  .btn--disabled {
+    background-color: #aaa;
+    border: 1px solid #aaa;
+    cursor: not-allowed;
+    color: #252227; }
+  .btn:not(.btn--loading):not(.btn--disabled):hover {
     background-color: #5c139f;
     border: 1px solid #5c139f; }
-  .btn--disabled {
+  .btn--loading {
     position: relative;
     cursor: progress;
     padding: 0.7rem 3rem; }

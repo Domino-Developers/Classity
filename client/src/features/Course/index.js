@@ -24,15 +24,15 @@ const sel = createSelector(
         state => state.auth.isAuthenticated,
         state => state.auth.loading,
         state => state.user._id,
-        state => state.user.loading,
-        state => state.auth.token
+        state => state.user.name,
+        state => state.user.loading
     ],
-    (isAuthenticated, loading1, _id, loading2, token) => ({
+    (isAuthenticated, loading1, _id, name, loading2) => ({
         isAuthenticated,
         loading1,
         loading2,
         _id,
-        token
+        name
     })
 );
 
@@ -43,7 +43,7 @@ const Course = () => {
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
-    const { isAuthenticated, loading1, loading2, _id: id } = useSelector(sel);
+    const { isAuthenticated, loading1, loading2, _id: id, name } = useSelector(sel);
     const courseChanges = useRef({});
     const { data: course, error } = useSWR(!loading1 ? `get-course-${courseId}` : null, () => {
         return courseApi.get(courseId);
@@ -228,6 +228,7 @@ const Course = () => {
                         course={course}
                         courseChanges={courseChanges}
                         isInstructor={isInstructor}
+                        user={name}
                     />
                 ) : (
                     <Loading />

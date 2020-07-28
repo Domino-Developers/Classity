@@ -285,12 +285,12 @@ router.put(
                     $inc: { [`score.${getDateString()}`]: 5 }
                 };
 
-                if (req.body.courseCompleted && !courseProgress.completedOnce) {
+                if (req.body.courseCompleted && !courseProgress.completedOn) {
                     userUpdateOpts = {
                         ...userUpdateOpts,
                         $inc: { energy: 1 }
                     };
-                    courseProgress.completedOnce = true;
+                    courseProgress.completedOn = getDateString();
                 }
 
                 const userPromise = User.findOneAndUpdate({ _id: req.user.id }, userUpdateOpts, {
