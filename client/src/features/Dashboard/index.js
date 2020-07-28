@@ -53,6 +53,7 @@ const Dashboard = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
+    if (loading) return <Loading />;
     if (error && navigator.onLine) return <div>Opps</div>;
 
     let enrolledCourses, createdCourses, completedCourses;
@@ -90,8 +91,6 @@ const Dashboard = () => {
         enrolledCourses = enrolledCourses.filter(c => c.progress !== 100);
         createdCourses = coursesCreated.map(id => data[id].course);
     }
-
-    if (loading) return <Loading />;
 
     return (
         <div className='container'>

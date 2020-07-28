@@ -606,29 +606,30 @@ router.delete('/:courseId', instructorAuth, async (req, res) => {
                 { session }
             );
 
-            // Unenroll students
-            const studentPromises = [];
-            for (let studentId of course.students) {
-                studentPromises.push(
-                    User.findOneAndUpdate(
-                        { _id: studentId },
-                        { $unset: { [`coursesEnrolled.${courseId}`]: '' } },
-                        { session }
-                    ).select('coursesEnrolled')
-                );
-            }
-
-            const students = await Promise.all(studentPromises);
-
-            const courseProgressPromises = [];
-            students.forEach(student => {
-                const progressId = String(student.coursesEnrolled.get(courseId));
-                courseProgressPromises.push(
-                    CourseProgress.findOneAndDelete({ _id: progressId }, { session })
+            const courseProgressesPromise = [];
+            course.students.forEach(_id => {
+                courseProgressesPromise.push(
+                    CourseProgress.findOneAndDelete({ user: _id, course: courseId }, { session })
                 );
             });
+            const courseProgresses = await Promise.all(courseProgressesPromise);
 
-            await Promise.all([...courseProgressPromises, coursePromise, instructorPromise]);
+            // Unenroll students
+            const studentPromises = [];
+            courseProgresses.forEach(progress => {
+                const userId = progress.user;
+                const completed = progress.completedOn;
+
+                const updateQuery = {
+                    $unset: { [`coursesEnrolled.${courseId}`]: '' }
+                };
+                if (!completed) {
+                    updateQuery['$inc'] = { energy: 1 };
+                }
+                studentPromises.push(User.findByIdAndUpdate(userId, updateQuery, { session }));
+            });
+
+            await Promise.all([...studentPromises, coursePromise, instructorPromise]);
 
             res.json(course);
         });
