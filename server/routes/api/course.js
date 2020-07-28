@@ -169,7 +169,7 @@ router.get('/search', async (req, res) => {
     const regex = new RegExp(text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 
     try {
-        const result = await Course.find({ name: regex });
+        const result = await Course.find({ name: regex }).populate('instructor', 'name');
 
         return res.json(result);
     } catch (err) {
