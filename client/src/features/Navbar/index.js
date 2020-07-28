@@ -36,6 +36,8 @@ const Navbar = () => {
 
     const colors = ['#9c32ff', '#e000e0', '#1447f0', '#1fbe27', '#02b3b3', '#7961ff'];
     const rndInd = Math.floor(Math.random() * 6);
+    const bgColor = localStorage.getItem('GTS_USER_BG') || colors[rndInd];
+    localStorage.setItem('GTS_USER_BG', bgColor);
 
     const hashChange = () => {
         setTimeout(() => {
@@ -65,7 +67,7 @@ const Navbar = () => {
                 <Link
                     to={`/profile/${userId}`}
                     className='nav__user--img'
-                    style={{ backgroundColor: colors[rndInd] }}>
+                    style={{ backgroundColor: bgColor }}>
                     {name.toUpperCase()[0]}
                 </Link>
 
