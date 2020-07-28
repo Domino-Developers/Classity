@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 const { course, text, date } = require('./common');
 
 const Course = require('./Course');
@@ -77,4 +80,21 @@ UserSchema.pre('remove', async function (next) {
     next();
 });
 
+UserSchema.methods.generateJWT = function () {
+    const payload = {
+        user: {
+            id: this._id
+        }
+    };
+    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 36000000 });
+    return token;
+};
+
+UserSchema.methods.checkPassword = function (password) {
+    return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.emailVerified = function () {
+    return !this.verifyingToken || this.verifyingToken.reason !== 'email-verify';
+};
 module.exports = mongoose.model('user', UserSchema);

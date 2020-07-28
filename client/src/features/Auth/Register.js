@@ -48,6 +48,8 @@ const Register = () => {
             if (!overide) {
                 dispatch(setNextTokenDate(nextTokenRequest));
                 setWarning({ show: true, loading: false, userEmail: email });
+            } else {
+                setWarning({ show: false, loading: false, userEmail: '' });
             }
             dispatch(setAlert('Registered Successfully', 'success', 2000));
         } catch (err) {
