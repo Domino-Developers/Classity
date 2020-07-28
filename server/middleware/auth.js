@@ -1,5 +1,5 @@
 const { verify } = require('./util');
-const User = require('../models/User');
+const User = require('../models/User').User;
 
 /**
  * @param {*} req

@@ -8,7 +8,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Comment = require('../../models/Comment');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 
 // Initialize router
 const router = express.Router();

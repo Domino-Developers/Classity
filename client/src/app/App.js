@@ -14,6 +14,7 @@ import { initTokenCom } from '../utils/storageCom';
 import ClassroomRoute from '../features/ClassroomRoute';
 import PrivateRoute from '../components/PrivateRoute';
 import EmailVerify from '../features/EmailVerify';
+import GoogleLogin from '../features/Auth/GoogleLogin';
 
 // Quill text editor, available themes: snow, bubble, core
 import 'react-quill/dist/quill.snow.css';
@@ -75,6 +76,7 @@ function App() {
                         <Route exact path='/leaderboard' component={Leaderboard} />
                         <Route exact path='/help' component={Help} />
                         <Route exact path='/email-verify' component={EmailVerify} />
+                        <Route exact path='/glogin' component={GoogleLogin} />
                     </Switch>
                 </main>
                 <Footer />

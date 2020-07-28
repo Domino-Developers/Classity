@@ -12,7 +12,6 @@ export function sendTokenRes(token) {
 }
 export function initTokenCom(setAuth, removeAuth) {
     let token = localStorage.getItem('GTS_TOKEN') || sessionStorage.getItem('GTS_TOKEN');
-
     if (token) {
         sessionStorage.setItem('GTS_TOKEN', token);
         setAuth();

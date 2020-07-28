@@ -8,7 +8,10 @@ const jwt = require('jsonwebtoken');
 const auth = require('../../middleware/auth');
 
 // Models
-const User = require('../../models/User');
+const userModels = require('../../models/User');
+const User = userModels.User;
+const EmailUser = userModels.EmailUser;
+
 const getToken = require('../../utils/tokenGenerator');
 const emailSend = require('../../utils/emailSend');
 const { verifyEmailHTML } = require('../../utils/getHtmlBody');
@@ -52,7 +55,7 @@ router.post(
                     r: 'pg',
                     d: 'mm'
                 });
-                user = new User({
+                user = new EmailUser({
                     name,
                     email,
                     password,
@@ -117,7 +120,7 @@ router.put('/email-verify', async (req, res) => {
                     .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
             }
 
-            const user = await User.findById(id);
+            const user = await EmailUser.findById(id);
 
             if (!user) {
                 return res
@@ -246,7 +249,7 @@ router.put(
 
             if (reason === 'email-verify') {
                 const [user, secretToken] = await Promise.all([
-                    User.findOne({ email }),
+                    EmailUser.findOne({ email }),
                     getToken(100)
                 ]);
 

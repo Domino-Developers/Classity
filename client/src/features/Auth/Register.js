@@ -37,7 +37,7 @@ const Register = () => {
     const register = async (name, email, password) => {
         try {
             setWarning({ show: false, loading: true, userEmail: '' });
-            const overide = true;
+            const overide = false;
             const { nextTokenRequest } = await userStore.register({
                 name,
                 email,
