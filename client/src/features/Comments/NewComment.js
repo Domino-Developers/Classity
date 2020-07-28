@@ -8,7 +8,7 @@ const NewComment = ({ review, comments, onAdd, user, newText }) => {
     const [rating, setRating] = useState();
 
     if (isNaN(rating) && review) {
-        const userReview = comments.find(r => r.user._id === user);
+        const userReview = comments.find(r => r.user._id === user.id);
 
         if (userReview) {
             setRating(userReview.rating);
@@ -48,7 +48,7 @@ NewComment.propTypes = {
     review: PropTypes.bool,
     comments: PropTypes.array.isRequired,
     onAdd: PropTypes.func.isRequired,
-    user: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired,
     newText: PropTypes.string
 };
 

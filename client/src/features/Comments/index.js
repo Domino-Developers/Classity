@@ -52,7 +52,7 @@ Comments.propTypes = {
     newComment: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     review: PropTypes.bool,
     onAdd: PropTypes.func.isRequired,
-    user: PropTypes.string
+    user: PropTypes.object.isRequired
 };
 
 export default Comments;

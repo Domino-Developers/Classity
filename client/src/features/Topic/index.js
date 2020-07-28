@@ -21,9 +21,15 @@ import { setAlert } from '../Alerts/alertSlice';
 import { createSelector } from '@reduxjs/toolkit';
 
 const userAndAuth = createSelector(
-    [state => state.user._id, state => state.user.loading, state => state.user.coursesCreated],
-    (id, loading, coursesCreated) => ({
+    [
+        state => state.user._id,
+        state => state.user.name,
+        state => state.user.loading,
+        state => state.user.coursesCreated
+    ],
+    (id, name, loading, coursesCreated) => ({
         id,
+        name,
         loading,
         coursesCreated
     })
@@ -32,7 +38,7 @@ const userAndAuth = createSelector(
 const Topic = () => {
     const dispatch = useDispatch();
     const { courseId, topicId } = useParams();
-    const { id, loading, coursesCreated } = useSelector(userAndAuth);
+    const { id, name, loading, coursesCreated } = useSelector(userAndAuth);
     const isInstructor = coursesCreated.includes(courseId);
 
     const { data: topic, mutate } = useSWR(`get-topic-${topicId}`, () => topicApi.get(topicId));
@@ -156,7 +162,7 @@ const Topic = () => {
                         ...topic[type],
                         {
                             text: comment.text,
-                            user: id,
+                            user: { id, name },
                             likes: [],
                             reply: [],
                             date: Date.now()
@@ -352,7 +358,7 @@ const Topic = () => {
                         <Tabs.Tab name='Resource dump'>
                             <Comments
                                 comments={topic.resourceDump}
-                                user={id}
+                                user={{ id, name }}
                                 newText='Share a resource'
                                 onAdd={(comment, clear) =>
                                     addComment('resourceDump', comment, clear)
@@ -367,7 +373,7 @@ const Topic = () => {
                         <Tabs.Tab name='Doubts'>
                             <Comments
                                 comments={topic.doubt}
-                                user={id}
+                                user={{ id, name }}
                                 newText='Ask a doubt'
                                 onAdd={(comment, clear) => addComment('doubt', comment, clear)}
                                 newComment={isInstructor && "Instructor can't ask a doubt"}

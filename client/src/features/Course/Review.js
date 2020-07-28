@@ -67,7 +67,7 @@ const Review = ({ isStudent, isInstructor }) => {
                 review
                 comments={course.reviews}
                 onAdd={add}
-                user={id}
+                user={{ id, name }}
                 newComment={newComment}
             />
         </section>
