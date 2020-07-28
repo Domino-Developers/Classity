@@ -4,7 +4,7 @@ import { sendFlushReq, sendTokenRes } from '../../utils/storageCom';
 import user from '../../api/user';
 import { setAlert } from '../Alerts/alertSlice';
 import { setAuthToken, removeAuthToken } from '../../utils/authToken';
-import { fetchUser, setNextTokenDate } from '../User/userSlice';
+import { fetchUser, setNextTokenDate, fetchUserStart } from '../User/userSlice';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -101,6 +101,7 @@ export const login = (email, password, remember) => async dispatch => {
 export const initAuth = ({ dontCommunicate }) => dispatch => {
     const token = sessionStorage.getItem('GTS_TOKEN');
     if (token) {
+        dispatch(fetchUserStart());
         dispatch(authSuccess({ token, dontCommunicate }));
         dispatch(fetchUser());
     }

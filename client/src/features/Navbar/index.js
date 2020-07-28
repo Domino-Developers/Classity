@@ -114,7 +114,7 @@ const Navbar = () => {
         </Fragment>
     );
 
-    const guestLinks = !isAuthenticated && (
+    const guestLinks = (!isAuthenticated || loading) && (
         <Fragment>
             <li>
                 <Link className='nav__link' to='/leaderboard'>
