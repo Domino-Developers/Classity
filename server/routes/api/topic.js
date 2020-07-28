@@ -11,7 +11,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Topic = require('../../models/Topic');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 const Comment = require('../../models/Comment');
 const Test = require('../../models/Test');
 const CourseProgress = require('../../models/CourseProgress');

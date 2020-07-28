@@ -11,7 +11,7 @@ const classroomAuth = require('../../middleware/classroomAuth');
 
 // Models
 const Test = require('../../models/Test');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 const CourseProgress = require('../../models/CourseProgress');
 
 // Initialize router

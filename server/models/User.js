@@ -8,40 +8,34 @@ const Course = require('./Course');
 const CourseProgress = require('./CourseProgress');
 const getDateString = require('./../utils/getDateString');
 
-const UserSchema = new mongoose.Schema({
-    name: text,
-    password: text,
-    email: text,
-    avatar: text,
-    coursesEnrolled: {
-        type: Map,
-        of: mongoose.Schema.Types.ObjectId,
-        default: {}
-    },
-    coursesCreated: [course],
-    energy: {
-        type: Number,
-        default: 4
-    },
-    score: {
-        type: Map,
-        of: Number,
-        default: { [getDateString()]: 0 }
-    },
-    contribution: {
-        type: Map,
-        of: Number,
-        default: { [getDateString()]: 0 }
-    },
-    verifyingToken: {
-        type: {
-            reason: String,
-            token: String,
-            expDate: Date
+const UserSchema = new mongoose.Schema(
+    {
+        name: text,
+        email: text,
+        avatar: text,
+        coursesEnrolled: {
+            type: Map,
+            of: mongoose.Schema.Types.ObjectId,
+            default: {}
+        },
+        coursesCreated: [course],
+        energy: {
+            type: Number,
+            default: 4
+        },
+        score: {
+            type: Map,
+            of: Number,
+            default: { [getDateString()]: 0 }
+        },
+        contribution: {
+            type: Map,
+            of: Number,
+            default: { [getDateString()]: 0 }
         }
     },
-    nextTokenRequest: date
-});
+    { discriminatorKey: 'provider' }
+);
 
 UserSchema.pre('remove', async function (next) {
     const coursePromise = Course.find({
@@ -90,11 +84,38 @@ UserSchema.methods.generateJWT = function () {
     return token;
 };
 
-UserSchema.methods.checkPassword = function (password) {
+const User = mongoose.model('user', UserSchema);
+
+const EmailUserSchema = new mongoose.Schema({
+    password: text,
+    verifyingToken: {
+        type: {
+            reason: String,
+            token: String,
+            expDate: Date
+        }
+    },
+    nextTokenRequest: date
+});
+
+EmailUserSchema.methods.checkPassword = function (password) {
     return bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.emailVerified = function () {
+EmailUserSchema.methods.emailVerified = function () {
     return !this.verifyingToken || this.verifyingToken.reason !== 'email-verify';
 };
-module.exports = mongoose.model('user', UserSchema);
+
+const EmailUser = User.discriminator('email', EmailUserSchema);
+
+const GoogleUserSchema = new mongoose.Schema({
+    googleId: text
+});
+
+const GoogleUser = User.discriminator('google', GoogleUserSchema);
+
+module.exports = {
+    User,
+    EmailUser,
+    GoogleUser
+};

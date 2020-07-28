@@ -1,5 +1,6 @@
 const express = require('express');
 const connectDB = require('./utils/db_loader');
+const passport = require('passport');
 
 const app = express();
 
@@ -7,9 +8,16 @@ const app = express();
 connectDB();
 
 // Applying global middleware
-app.use(express.json({ limit: '6mb' }));
+app.use(express.json());
+app.use(passport.initialize());
+
+// apply google strategy
+passport.use(require('./services/googleStrategy'));
 
 // Connecting routers
+// Auth
+app.use('/auth/google', require('./routes/auth/google'));
+// apis
 app.use('/api', require('./routes/api/general'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));

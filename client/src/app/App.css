@@ -938,6 +938,23 @@ main {
   color: #7619cc;
   cursor: pointer; }
 
+.google-btn {
+  width: 100%;
+  text-align: center;
+  font-size: 2.3rem; }
+  .google-btn a {
+    display: block;
+    justify-content: center;
+    color: #fcfcfc;
+    background-color: #7619cc;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin: 2rem;
+    letter-spacing: 0.1rem;
+    transition: background-color 0.2s; }
+    .google-btn a:hover {
+      background-color: #5c139f; }
+
 .course-header {
   padding: 8rem 20%;
   display: grid;

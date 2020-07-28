@@ -4,7 +4,10 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 
 // Models
-const User = require('../../models/User');
+const userModels = require('../../models/User');
+
+const User = userModels.User;
+const EmailUser = userModels.EmailUser;
 
 // Initialize router
 const router = express.Router();
@@ -33,7 +36,7 @@ router.post(
             const { email, password } = req.body;
 
             // get user from db
-            let user = await User.findOne({ email });
+            let user = await EmailUser.findOne({ email });
 
             // if there is no user
             if (!user) {
@@ -70,7 +73,7 @@ router.post(
 router.get('/', auth, async (req, res) => {
     try {
         //get user form db
-        const user = await User.findById(req.user.id).select('-password');
+        const user = await User.findById(req.user.id).select('-password -googleId');
 
         res.json(user);
     } catch (err) {

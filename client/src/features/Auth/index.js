@@ -46,6 +46,11 @@ const Auth = props => {
                             </li>
                         </ul>
                         <div className='auth__card'>
+                            <div className='google-btn'>
+                                <a href='http://localhost:5000/auth/google'>
+                                    <i class='fab fa-google'></i> Continue with Google
+                                </a>
+                            </div>
                             {mode === 'login' ? <Login /> : <Register />}
                         </div>
                     </div>
