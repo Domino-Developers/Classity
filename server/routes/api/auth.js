@@ -1,7 +1,5 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const auth = require('../../middleware/auth');
 
@@ -42,12 +40,12 @@ router.post(
                 return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
 
-            if (user.verifyingToken && user.verifyingToken.reason === 'email-verify') {
+            if (!user.emailVerified()) {
                 return res.json({ inactive: true, nextTokenRequest: user.nextTokenRequest });
             }
 
             // check the password
-            const isMatch = await bcrypt.compare(password, user.password);
+            const isMatch = await user.checkPassword(password);
 
             // if password doesnt match
             if (!isMatch) {
@@ -55,23 +53,8 @@ router.post(
             }
 
             // Send back token if credentials are correct
-            const payload = {
-                user: {
-                    id: user.id
-                }
-            };
-
-            jwt.sign(
-                payload,
-                process.env.SECRET_KEY,
-                {
-                    expiresIn: 36000000
-                },
-                (err, token) => {
-                    if (err) throw err;
-                    res.json({ token });
-                }
-            );
+            const token = user.generateJWT();
+            return res.json({ token });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });

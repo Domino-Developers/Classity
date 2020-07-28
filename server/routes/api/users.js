@@ -69,20 +69,8 @@ router.post(
                 if (req.body.overide) {
                     user.verifyingToken = null;
                     await user.save();
-                    const payload = {
-                        user: {
-                            id: user.id
-                        }
-                    };
-                    jwt.sign(
-                        payload,
-                        process.env.SECRET_KEY,
-                        { expiresIn: 360000000 },
-                        (err, token) => {
-                            if (err) throw err;
-                            res.json({ token });
-                        }
-                    );
+                    const token = user.generateJWT();
+                    return res.json({ token });
                 } else {
                     user.verifyingToken = {
                         reason: 'email-verify',
@@ -137,7 +125,7 @@ router.put('/email-verify', async (req, res) => {
                     .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
             }
 
-            if (!user.verifyingToken || user.verifyingToken.reason !== 'email-verify') {
+            if (user.emailVerified()) {
                 return res
                     .status(403)
                     .json({ errors: [{ msg: 'Verification failed! Please try again' }] });
@@ -264,6 +252,10 @@ router.put(
 
                 if (!user) {
                     return res.status(400).json({ errors: [{ msg: 'Bad Request' }] });
+                }
+
+                if (user.emailVerified()) {
+                    return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
                 }
 
                 if (user.nextTokenRequest > Date.now()) {
