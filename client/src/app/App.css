@@ -460,9 +460,22 @@ main {
   transition-delay: 0.1s;
   border: 1px solid #eee;
   border-left: none;
-  border-right: none; }
+  border-right: none;
+  position: relative; }
+  .add-new::after {
+    content: '\2b';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+    font-weight: 600;
+    color: #7619cc;
+    font-size: 2.5rem; }
   .add-new:hover {
     max-height: 10rem; }
+    .add-new:hover::after {
+      content: ''; }
   .add-new:hover .add-new__link {
     opacity: 1;
     visibility: visible; }
@@ -479,6 +492,24 @@ main {
       color: #7619cc; }
   .add-new__icon {
     margin-right: 5px; }
+  .add-new__guide {
+    display: inline-block;
+    position: relative;
+    background-color: #252227;
+    color: #fcfcfc;
+    text-align: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem; }
+    .add-new__guide::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -0.5rem;
+      border-width: 0.5rem;
+      border-style: solid;
+      border-color: #252227 transparent transparent transparent; }
 
 [contenteditable='true'] {
   outline: none;
@@ -958,7 +989,8 @@ main {
   margin-left: 5rem; }
 
 .topic-content {
-  font-size: 2.4rem; }
+  font-size: 2.4rem;
+  margin-bottom: 10rem; }
   .topic-content__link {
     display: inline-block;
     padding: 2rem;
@@ -1189,7 +1221,8 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fcfcfc; }
+    background-color: #fcfcfc;
+    z-index: 1; }
   .test__content {
     max-width: 960px;
     margin: 4rem auto;
@@ -1368,15 +1401,15 @@ main {
     height: 20rem;
     display: block;
     object-fit: cover; }
-  .card__title, .card__instructor, .card__rating, .card__last-study, .card_tags {
+  .card__title, .card__instructor, .card__rating, .card__last-study {
     padding: 1rem; }
   .card__title {
     display: table-cell;
     vertical-align: middle;
     font-size: 2.5rem;
-    height: 8rem; }
+    height: 9.5rem; }
   .card__tags {
-    height: 5.2rem;
+    height: 5.9rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center; }

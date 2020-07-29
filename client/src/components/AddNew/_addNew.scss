@@ -8,9 +8,26 @@
     border: 1px solid $color-grey-1;
     border-left: none;
     border-right: none;
+    position: relative;
+
+    &::after {
+        content: '\2b';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        line-height: 1;
+        font-weight: 600;
+        color: $color-primary;
+        font-size: 2.5rem;
+    }
 
     &:hover {
         max-height: 10rem;
+
+        &::after {
+            content: '';
+        }
     }
 
     &:hover &__link {
@@ -35,5 +52,27 @@
 
     &__icon {
         margin-right: 5px;
+    }
+
+    &__guide {
+        display: inline-block;
+        position: relative;
+        background-color: $color-black;
+        color: $color-white;
+        text-align: center;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.5rem;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -0.5rem;
+            border-width: 0.5rem;
+            border-style: solid;
+            border-color: $color-black transparent transparent transparent;
+        }
     }
 }

@@ -240,7 +240,7 @@ const Topic = () => {
                         <ul className='topic-content'>
                             {editing && (
                                 <li>
-                                    <AddNew>
+                                    <AddNew guide={!(resources && resources.length)}>
                                         <span
                                             onAdd={() => {
                                                 setResources([

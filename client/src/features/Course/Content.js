@@ -63,6 +63,7 @@ const Content = props => {
             <Collapse.Container editing={editing}>
                 <Collapse.Head>
                     <Collapse.Item
+                        guide={!topics.length}
                         onAdd={() => {
                             setTopics([{ name: 'New Topic', coreResources: [] }, ...topics]);
                             courseChanges.current.topics = topics;
