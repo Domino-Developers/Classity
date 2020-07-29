@@ -44,6 +44,7 @@ const TestView = ({ payload, courseId, topicId, resId, resDoneSize, totResSize }
                     test={{
                         ...test,
                         _id: payload.testId,
+                        name: payload.name,
                         courseId,
                         topicId,
                         resId

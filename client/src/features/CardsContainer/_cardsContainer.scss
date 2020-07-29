@@ -26,8 +26,7 @@
     &__title,
     &__instructor,
     &__rating,
-    &__last-study,
-    &_tags {
+    &__last-study {
         padding: 1rem;
     }
 
@@ -35,11 +34,11 @@
         display: table-cell;
         vertical-align: middle;
         font-size: 2.5rem;
-        height: 8rem;
+        height: 9.5rem;
     }
 
     &__tags {
-        height: 5.2rem;
+        height: 5.9rem;
         display: flex;
         flex-wrap: wrap;
         align-items: center;

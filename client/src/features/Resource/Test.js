@@ -82,7 +82,7 @@ const Test = ({ test, pastScore, resDoneSize, totResSize }) => {
 
     return (
         <div className='test'>
-            <div className='test__bar'>Name</div>
+            <div className='test__bar'>{test.name}</div>
 
             {submitted && (
                 <div className={`test__score test__score--${scorePercent >= passScore}`}>
@@ -106,7 +106,7 @@ const Test = ({ test, pastScore, resDoneSize, totResSize }) => {
             )}
 
             <div className='test__content'>
-                <h2>Name</h2>
+                <h2>{test.name}</h2>
                 <ol className='test__question-list'>
                     {questions.map((q, i) => (
                         <li

@@ -956,7 +956,8 @@ main {
   border-bottom: 1px solid #d6d6d6; }
 
 .topic-content {
-  font-size: 2.4rem; }
+  font-size: 2.4rem;
+  margin-bottom: 10rem; }
   .topic-content__link {
     display: inline-block;
     padding: 2rem;
@@ -1187,7 +1188,8 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fcfcfc; }
+    background-color: #fcfcfc;
+    z-index: 1; }
   .test__content {
     max-width: 960px;
     margin: 4rem auto;
@@ -1366,15 +1368,15 @@ main {
     height: 20rem;
     display: block;
     object-fit: cover; }
-  .card__title, .card__instructor, .card__rating, .card__last-study, .card_tags {
+  .card__title, .card__instructor, .card__rating, .card__last-study {
     padding: 1rem; }
   .card__title {
     display: table-cell;
     vertical-align: middle;
     font-size: 2.5rem;
-    height: 8rem; }
+    height: 9.5rem; }
   .card__tags {
-    height: 5.2rem;
+    height: 5.9rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center; }
