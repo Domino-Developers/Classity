@@ -123,5 +123,17 @@ export default {
         } catch (err) {
             throw err.response.data;
         }
+    },
+
+    async uploadImage(file) {
+        try {
+            const res = await api.post(`/api/course/upload`, {
+                body: { file }
+            });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            throw err.response.data;
+        }
     }
 };

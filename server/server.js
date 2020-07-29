@@ -7,7 +7,7 @@ const app = express();
 connectDB();
 
 // Applying global middleware
-app.use(express.json());
+app.use(express.json({ limit: '6mb' }));
 
 // Connecting routers
 app.use('/api/users', require('./routes/api/users'));

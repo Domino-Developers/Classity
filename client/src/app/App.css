@@ -939,6 +939,16 @@ main {
 .reviews__heading {
   border-bottom: 1px solid #d6d6d6; }
 
+.image-uploader__image {
+  height: 30rem;
+  width: 42rem;
+  display: block;
+  object-fit: cover;
+  margin: 5rem auto; }
+
+.image-uploader__input--link {
+  margin-left: 5rem; }
+
 .topic-content {
   font-size: 2.4rem; }
   .topic-content__link {

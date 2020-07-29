@@ -151,3 +151,19 @@
         border-bottom: 1px solid $color-grey-2;
     }
 }
+
+.image-uploader {
+    &__image {
+        height: 30rem;
+        width: 42rem;
+        display: block;
+        object-fit: cover;
+        margin: 5rem auto;
+    }
+
+    &__input {
+        &--link {
+            margin-left: 5rem;
+        }
+    }
+}

@@ -28,7 +28,8 @@ const Header = props => {
         isSaving,
         isEnrolling,
         student,
-        unEnroll
+        unEnroll,
+        uploading
     } = props;
 
     const name = useRef(course.name);
@@ -116,6 +117,7 @@ const Header = props => {
                             full
                             onClick={saveCourse}
                             loading={isSaving ? 'Saving' : null}
+                            disabled={uploading && 'Image still uploading'}
                             className='u-margin-right-small'
                         />
                         <Button text='Cancel' full onClick={cancelSave} />
@@ -147,6 +149,7 @@ Header.propTypes = {
     cancelSave: PropTypes.func.isRequired,
     enroll: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
+    uploading: PropTypes.bool.isRequired,
     isEnrolling: PropTypes.bool.isRequired,
     student: PropTypes.bool.isRequired,
     unEnroll: PropTypes.func.isRequired
