@@ -13,10 +13,13 @@ const CourseCard = props => {
         name,
         lastStudied,
         progress,
-        streak,
         tags,
         imageURL
     } = props.course;
+
+    let streak = props.course.streak;
+
+    if (Math.floor((Date.now() - lastStudied) / (24 * 3600 * 1000)) > 1) streak = 0;
 
     return (
         <Link to={`/course/${_id}`} className='card'>

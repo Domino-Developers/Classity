@@ -378,41 +378,6 @@ router.delete('/:courseId/enroll', studentAuth, async (req, res) => {
         });
     } catch (err) {}
 });
-/**
- * @route		PUT api/course/:courseId/lastStudied
- * @description Update lastStudied
- * @access		private + studentOnly
- */
-router.put('/:courseId/lastStudied', studentAuth, async (req, res) => {
-    const session = await mongoose.startSession();
-
-    try {
-        await session.withTransaction(async () => {
-            const courseId = req.params.courseId;
-            let coursesEnrolled = await User.findById(req.user.id)
-                .lean()
-                .select('coursesEnrolled -_id');
-            coursesEnrolled = coursesEnrolled['coursesEnrolled'];
-            const courseProgressId = String(coursesEnrolled[courseId]);
-
-            // update course progress
-            await CourseProgress.findOneAndUpdate(
-                { _id: courseProgressId },
-                {
-                    $set: { lastStudied: Date.now() }
-                },
-                { session }
-            );
-
-            res.json(courseProgressId);
-        });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-    } finally {
-        session.endSession();
-    }
-});
 
 /**
  * @route		PUT api/course/:courseId/resetDeadline
