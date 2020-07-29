@@ -84,12 +84,12 @@ const Head = props => {
 };
 
 const Item = props => {
-    const { children, editing, onAdd, to, className } = props;
+    const { children, editing, onAdd, to, className, guide } = props;
 
     return (
         <li>
             {editing && onAdd ? (
-                <AddNew>
+                <AddNew guide={guide}>
                     <span onAdd={onAdd}>{children}</span>
                 </AddNew>
             ) : (

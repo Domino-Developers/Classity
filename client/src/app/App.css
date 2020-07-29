@@ -447,9 +447,22 @@ main {
   transition-delay: 0.1s;
   border: 1px solid #eee;
   border-left: none;
-  border-right: none; }
+  border-right: none;
+  position: relative; }
+  .add-new::after {
+    content: '\2b';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+    font-weight: 600;
+    color: #7619cc;
+    font-size: 2.5rem; }
   .add-new:hover {
     max-height: 10rem; }
+    .add-new:hover::after {
+      content: ''; }
   .add-new:hover .add-new__link {
     opacity: 1;
     visibility: visible; }
@@ -466,6 +479,24 @@ main {
       color: #7619cc; }
   .add-new__icon {
     margin-right: 5px; }
+  .add-new__guide {
+    display: inline-block;
+    position: relative;
+    background-color: #252227;
+    color: #fcfcfc;
+    text-align: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem; }
+    .add-new__guide::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -0.5rem;
+      border-width: 0.5rem;
+      border-style: solid;
+      border-color: #252227 transparent transparent transparent; }
 
 [contenteditable='true'] {
   outline: none;
