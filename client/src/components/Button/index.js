@@ -51,7 +51,7 @@ const Button = props => {
 Button.propTypes = {
     full: PropTypes.bool,
     text: PropTypes.string,
-    disabled: PropTypes.string,
+    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     className: PropTypes.string,
     onClick: PropTypes.func,
     to: PropTypes.string,

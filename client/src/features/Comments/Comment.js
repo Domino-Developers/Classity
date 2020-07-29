@@ -29,7 +29,7 @@ const Comment = props => {
     if (comment.topic && !topic) return <Loading />;
 
     const className = review ? 'review' : reply ? 'reply' : '';
-    const liked = comment.likes && comment.likes.indexOf(user) !== -1;
+    const liked = comment.likes && comment.likes.indexOf(user.id) !== -1;
 
     let type;
     if (topic) {
@@ -39,7 +39,7 @@ const Comment = props => {
 
     const toggleLike = async () => {
         try {
-            const likeIndex = comment.likes.indexOf(user);
+            const likeIndex = comment.likes.indexOf(user.id);
 
             if (likeIndex === -1) {
                 mutate(
@@ -47,7 +47,7 @@ const Comment = props => {
                         ...topic,
                         [type]: [
                             ...topic[type].map(c =>
-                                c === comment ? { ...c, likes: [...c.likes, user] } : c
+                                c === comment ? { ...c, likes: [...c.likes, user.id] } : c
                             )
                         ]
                     },
@@ -84,7 +84,9 @@ const Comment = props => {
         }
     };
 
-    const addReply = async () => {
+    const addReply = async e => {
+        e.preventDefault();
+
         try {
             mutate(
                 {

@@ -298,7 +298,20 @@ router.put(
                     session
                 });
 
-                courseProgress.markModified(`topicStatus.${topicId}`);
+                if (
+                    Math.floor((Date.now() - courseProgress.lastStudied) / (24 * 3600 * 1000)) === 1
+                ) {
+                    courseProgress.streak += 1;
+                } else if (
+                    Math.floor((Date.now() - courseProgress.lastStudied) / (24 * 3600 * 1000)) >
+                        1 ||
+                    courseProgress.streak === 0
+                ) {
+                    courseProgress.streak = 1;
+                }
+
+                courseProgress.lastStudied = Date.now();
+
                 const progressPromise = courseProgress.save({ session });
 
                 const [newUser] = await Promise.all([userPromise, progressPromise]);

@@ -2,17 +2,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const bar = (width, height, color) => ({
-    width: 'auto',
-    layout: {
-        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0 : height / 2),
-        vLineWidth: () => 0,
-        hLineColor: () => color
-    },
-    table: {
-        widths: [width],
-        body: [[' '], [' ']]
-    }
+const bar = (x, y, width, height, color) => ({
+    canvas: [{ type: 'rect', x, y, w: width, h: height, color }]
 });
 
 const spikyCircle = (centerX, centerY, radius, color, fill = true, noOfSpikes = 50) => {
@@ -47,6 +38,8 @@ const spikyCircle = (centerX, centerY, radius, color, fill = true, noOfSpikes = 
 export default function getCertificate(user, course, date) {
     const docDefinition = {
         info: { title: 'Classity' },
+        pageSize: { width: 515, height: 370 },
+        pageMargins: [0, 0, 0, 0],
         content: [
             {
                 layout: {
@@ -79,12 +72,8 @@ export default function getCertificate(user, course, date) {
                                     ]
                                 },
                                 {
-                                    columns: [
-                                        { width: '*', text: '' },
-                                        bar(20, 10, '#7619cc'),
-                                        { width: '*', text: '' }
-                                    ],
-                                    margin: -10
+                                    margin: 10,
+                                    ...bar(20, 0, 30, 5, '#7619cc')
                                 },
                                 {
                                     text: [
@@ -99,9 +88,9 @@ export default function getCertificate(user, course, date) {
                                         {
                                             text: `${course}\n`,
                                             style: { color: '#7619cc', fontSize: 10 }
-                                        },
-                                        { text: ' ', style: { fontSize: 20 } }
-                                    ]
+                                        }
+                                    ],
+                                    margin: [0, 0, 0, 25]
                                 },
                                 {
                                     layout: 'noBorders',
@@ -122,18 +111,11 @@ export default function getCertificate(user, course, date) {
                                                             w: 83,
                                                             h: 29,
                                                             color: '#252227'
-                                                        }
+                                                        },
+                                                        bar(42, 9, 80, 1.5, '#aaa').canvas[0],
+                                                        bar(42, -11, 80, 1.5, '#aaa').canvas[0]
                                                     ],
                                                     style: { alignment: 'left' }
-                                                }
-                                            ],
-                                            [
-                                                {
-                                                    ...bar(75, 3, '#aaa'),
-                                                    relativePosition: {
-                                                        x: 41,
-                                                        y: -93
-                                                    }
                                                 }
                                             ],
                                             [
@@ -146,41 +128,30 @@ export default function getCertificate(user, course, date) {
                                                     },
                                                     relativePosition: {
                                                         x: 43,
-                                                        y: -76
+                                                        y: -72
                                                     }
                                                 }
                                             ],
                                             [
                                                 {
-                                                    ...bar(75, 3, '#aaa'),
-                                                    relativePosition: {
-                                                        x: 41,
-                                                        y: -80
-                                                    }
-                                                }
-                                            ],
-                                            [
-                                                {
-                                                    text: date,
-                                                    style: { fontSize: 15 },
-                                                    relativePosition: { x: 0, y: -50 }
-                                                }
-                                            ],
-                                            [
-                                                {
-                                                    ...bar(100, 3, '#aaa'),
-                                                    relativePosition: { x: 205, y: -55 }
-                                                }
-                                            ],
-                                            [
-                                                {
-                                                    text: 'Date of Issuance',
-                                                    style: {
-                                                        fontSize: 10,
-                                                        bold: false,
-                                                        color: '#aaa'
-                                                    },
-                                                    relativePosition: { x: 0, y: -38 }
+                                                    stack: [
+                                                        {
+                                                            text: date,
+                                                            style: { fontSize: 15 },
+                                                            relativePosition: { x: 0, y: -50 }
+                                                        },
+                                                        bar(30, -34, 105, 1.5, '#aaa'),
+                                                        {
+                                                            text: 'Date of Issuance',
+                                                            style: {
+                                                                fontSize: 10,
+                                                                bold: false,
+                                                                color: '#aaa'
+                                                            },
+                                                            relativePosition: { x: 0, y: -30 }
+                                                        },
+                                                        { text: ' ', style: { fontSize: 15 } }
+                                                    ]
                                                 }
                                             ]
                                         ]

@@ -18,9 +18,7 @@ const sel = createSelector([state => state.user], myUser => myUser);
 const Bar = ({ start, end, exact, progress }) => (
     <div className='profile-bar'>
         <div className='profile-bar__filled' style={{ width: `${progress}%` }}>
-            {exact !== start && exact !== end ? (
-                <span className='profile-bar__text profile-bar__text--exact'>{exact}</span>
-            ) : null}
+            <span className='profile-bar__text profile-bar__text--exact'>{exact}</span>
         </div>
         <span className='profile-bar__text profile-bar__text--start'>{start}</span>
         <span className='profile-bar__text profile-bar__text--end'>{end}</span>

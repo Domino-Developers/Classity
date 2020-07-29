@@ -71,16 +71,6 @@ export default {
         }
     },
 
-    // Update lastStudied
-    async updateLastStudied(courseId) {
-        try {
-            const res = await api.put(`/api/course/${courseId}/lastStudied`);
-            return res.data;
-        } catch (err) {
-            throw err.response.data;
-        }
-    },
-
     // Reset Deadline
     async resetDeadline(courseId) {
         try {

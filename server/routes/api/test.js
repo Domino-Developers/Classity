@@ -111,17 +111,32 @@ router.put(
                 );
                 const courseId = courseObj.topic.course;
 
-                const progressPromise = CourseProgress.findOneAndUpdate(
-                    {
-                        user: req.user.id,
-                        course: courseId
-                    },
-                    {
-                        $inc: { [`testScores.${req.params.testId}.score`]: req.body.score },
-                        [`testScores.${req.params.testId}.lastAttemptDate`]: Date.now()
-                    },
-                    { new: true, session }
-                );
+                const progress = await CourseProgress.findOne({
+                    user: req.user.id,
+                    course: courseId
+                });
+
+                const initialScore = progress.testScores.get(`${req.params.testId}`)
+                    ? progress.testScores.get(`${req.params.testId}`).score
+                    : 0;
+
+                progress.testScores.set(`${req.params.testId}`, {
+                    score: initialScore + req.body.score,
+                    lastAttemptDate: Date.now()
+                });
+
+                if (Math.floor((Date.now() - progress.lastStudied) / (24 * 3600 * 1000)) === 1) {
+                    progress.streak += 1;
+                } else if (
+                    Math.floor((Date.now() - progress.lastStudied) / (24 * 3600 * 1000)) > 1 ||
+                    progress.streak === 0
+                ) {
+                    progress.streak = 1;
+                }
+
+                progress.lastStudied = Date.now();
+
+                const progressPromise = progress.save({ session });
 
                 const userPromise = User.findOneAndUpdate(
                     { _id: req.user.id },
@@ -129,9 +144,9 @@ router.put(
                     { session }
                 );
 
-                const [newProgress] = await Promise.all([progressPromise, userPromise]);
+                await Promise.all([progressPromise, userPromise]);
 
-                res.json(newProgress);
+                res.json(progress);
             });
         } catch (err) {
             console.error(err.message);

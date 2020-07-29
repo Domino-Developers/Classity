@@ -21,7 +21,7 @@ const FadeText = props => {
     }, [element.clientHeight, showHeight]);
 
     const contracted = (
-        <div className={'fade-text' + (show ? ' fade-text--show' : '')}>
+        <div className={'fade-text list' + (show ? ' fade-text--show' : '')}>
             <AnimateHeight height={show ? 'auto' : showHeight} duration={250}>
                 {isHtml ? <Html tag='div'>{text}</Html> : <div>{text}</div>}
                 <div className='fade-text__hide' style={{ top: `${3 * (lines - 2)}rem` }}></div>
@@ -41,11 +41,13 @@ const FadeText = props => {
     );
 
     const normal = isHtml ? (
-        <Html tag='div' ref={e => (element = e)}>
+        <Html tag='div' ref={e => (element = e)} className='list'>
             {text}
         </Html>
     ) : (
-        <div ref={e => (element = e)}>{text}</div>
+        <div ref={e => (element = e)} className='list'>
+            {text}
+        </div>
     );
 
     return hidden ? contracted : normal;

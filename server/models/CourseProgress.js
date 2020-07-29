@@ -23,8 +23,4 @@ const CourseProgressSchema = new mongoose.Schema({
     completedOn: String
 });
 
-CourseProgressSchema.pre('findOneAndUpdate', function () {
-    this.set({ lastStudied: Date.now() });
-});
-
 module.exports = mongoose.model('courseProgress', CourseProgressSchema);

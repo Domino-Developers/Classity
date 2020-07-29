@@ -31,7 +31,9 @@ const Review = ({ isStudent, isInstructor }) => {
 
     if (!course) return <Loading />;
 
-    const add = async review => {
+    const add = async (e, review) => {
+        e.preventDefault();
+
         try {
             const newReview = { ...review, user: { _id: id, name }, date: Date.now() };
             const reviews = [...course.reviews];
@@ -67,7 +69,7 @@ const Review = ({ isStudent, isInstructor }) => {
                 review
                 comments={course.reviews}
                 onAdd={add}
-                user={id}
+                user={{ id, name }}
                 newComment={newComment}
             />
         </section>

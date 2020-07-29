@@ -247,6 +247,7 @@ const Course = () => {
                 isEnrolling={loading2}
                 courseChanges={courseChanges}
                 uploading={uploading}
+                user={name}
             />
             {imageUploader && (
                 <ImageUploader
@@ -276,7 +277,6 @@ const Course = () => {
                         course={course}
                         courseChanges={courseChanges}
                         isInstructor={isInstructor}
-                        user={name}
                     />
                 ) : (
                     <Loading />

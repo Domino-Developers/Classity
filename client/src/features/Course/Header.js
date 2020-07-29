@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
+import getCertificate from '../../utils/getCertificate';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import Rating from '../../components/Rating';
@@ -29,7 +30,8 @@ const Header = props => {
         isEnrolling,
         student,
         unEnroll,
-        uploading
+        uploading,
+        user
     } = props;
 
     const name = useRef(course.name);
@@ -101,11 +103,25 @@ const Header = props => {
                     />
                 )}
                 {student && (
-                    <Button
-                        text='Unenroll'
-                        onClick={unEnroll}
-                        loading={isEnrolling ? 'Unenrolling' : null}
-                    />
+                    <Fragment>
+                        <Button
+                            text='Unenroll'
+                            onClick={unEnroll}
+                            loading={isEnrolling ? 'Unenrolling' : null}
+                        />
+                        <Button
+                            full
+                            text='Get Certificate'
+                            className='u-margin-left-small'
+                            disabled={
+                                !course.courseProgress.completedOn &&
+                                'Complete course to get certificate'
+                            }
+                            onClick={() =>
+                                getCertificate(user, course.name, course.courseProgress.completedOn)
+                            }
+                        />
+                    </Fragment>
                 )}
                 {instructor && !editing && (
                     <Button text='Edit Course' full onClick={() => edit(true)} />
@@ -152,7 +168,8 @@ Header.propTypes = {
     uploading: PropTypes.bool.isRequired,
     isEnrolling: PropTypes.bool.isRequired,
     student: PropTypes.bool.isRequired,
-    unEnroll: PropTypes.func.isRequired
+    unEnroll: PropTypes.func.isRequired,
+    user: PropTypes.string
 };
 
 export default Header;
