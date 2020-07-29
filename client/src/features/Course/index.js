@@ -6,13 +6,16 @@ import useSWR, { mutate } from 'swr';
 import courseApi from '../../api/course';
 import topicApi from '../../api/topic';
 import Header from './Header';
+import ImageUploader from './ImageUploader';
 import Tags from './Tags';
 import Description from './Description';
 import Content from './Content';
 import Feedback from './Feedback';
 import Review from './Review';
 import Loading from '../../components/Loading';
+import Button from '../../components/Button';
 import stripHtml from '../../utils/stripHtml';
+import readFile from '../../utils/readFile';
 import { setAlert } from '../Alerts/alertSlice';
 import { useEdit } from '../../utils/hooks';
 
@@ -43,6 +46,8 @@ const Course = () => {
     const { courseId } = useParams();
     const [editing, edit] = useEdit();
     const [isSaving, setSave] = useState(false);
+    const [imageUploader, setImageUploader] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const { isAuthenticated, loading1, loading2, _id: id, name } = useSelector(sel);
     const courseChanges = useRef({});
     const { data: course, error } = useSWR(!loading1 ? `get-course-${courseId}` : null, () => {
@@ -58,6 +63,8 @@ const Course = () => {
     if (isStudent && course.courseProgress) {
         dispatch(addCourseProgressIfNeeded(courseId, course.courseProgress));
     }
+
+    if (!courseChanges.current.imageURL) courseChanges.current.imageURL = course.imageURL;
 
     const onEnroll = async () => {
         if (!id) {
@@ -121,6 +128,8 @@ const Course = () => {
 
             if (changes.tags === course.tags) delete changes.tags;
 
+            if (changes.imageURL === course.imageURL) delete changes.imageURL;
+
             if (changes.name === course.name) {
                 delete changes.name;
             } else if (changes.name === '') {
@@ -145,13 +154,17 @@ const Course = () => {
 
             const rndInd = () => Math.floor(Math.random() * 6);
 
-            if (changes.name) {
+            if (
+                changes.name &&
+                !changes.imageURL &&
+                course.imageURL.slice(0, 28) === 'https://via.placeholder.com'
+            ) {
                 changes.imageURL = `https://via.placeholder.com/280x200.png/${
                     colors[rndInd()]
                 }/ffffff?text=${changes.name.toUpperCase()[0]}`;
             }
 
-            if (changes.name || changes.description || changes.tags)
+            if (changes.name || changes.description || changes.tags || changes.imageURL)
                 promises.push(courseApi.update(courseId, changes));
 
             changes.topics.forEach(topic => (topic.name = stripHtml(topic.name)));
@@ -199,6 +212,25 @@ const Course = () => {
         window.location.reload(false);
     };
 
+    const uploadImage = async file => {
+        try {
+            setUploading(true);
+
+            const imageBase64 = await readFile(file);
+            const image = await courseApi.uploadImage(imageBase64);
+
+            setUploading(false);
+
+            return image.url;
+        } catch (err) {
+            if (err.errors) {
+                const errors = err.errors;
+                errors.forEach(e => dispatch(setAlert(e.msg, 'danger')));
+            }
+            setUploading(false);
+        }
+    };
+
     return (
         <Fragment>
             <Header
@@ -214,8 +246,24 @@ const Course = () => {
                 isSaving={isSaving}
                 isEnrolling={loading2}
                 courseChanges={courseChanges}
+                uploading={uploading}
             />
+            {imageUploader && (
+                <ImageUploader
+                    uploading={uploading}
+                    upload={uploadImage}
+                    courseChanges={courseChanges}
+                    close={() => setImageUploader(false)}
+                />
+            )}
             <div className='container'>
+                {editing && (
+                    <Button
+                        text='Change Image'
+                        className='u-margin-bottom-small'
+                        onClick={() => setImageUploader(true)}
+                    />
+                )}
                 {editing && <Tags courseChanges={courseChanges} tags={course.tags} />}
                 <Description
                     editing={editing}

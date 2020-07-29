@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { check, oneOf, validationResult } = require('express-validator');
 
 const getDateString = require('../../utils/getDateString');
+const uploadImage = require('../../utils/uploadImage');
 
 // middlewares
 const auth = require('../../middleware/auth');
@@ -510,6 +511,27 @@ router.put('/:courseId/review', studentAuth, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    } finally {
+        session.endSession();
+    }
+});
+
+/**
+ * @route		POST api/course/upload
+ * @description Upload image
+ * @access		private
+ */
+router.post('/upload', auth, async (req, res) => {
+    const session = await mongoose.startSession();
+
+    try {
+        await session.withTransaction(async () => {
+            const response = await uploadImage(req.body.file);
+            res.json(response.data.image);
+        });
+    } catch (err) {
+        console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     } finally {
         session.endSession();

@@ -20,7 +20,7 @@ const Auth = props => {
         <Fragment>
             <div className='overlay'>
                 <Link to={path} className='overlay__close'>
-                    <i className='fas fa-times overlay__clos'></i>
+                    <i className='fas fa-times'></i>
                 </Link>
                 <div className='overlay__container'>
                     <div className='auth'>
