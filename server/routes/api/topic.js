@@ -280,6 +280,7 @@ router.put(
                 resDone.push(mongoose.Types.ObjectId(resId));
 
                 courseProgress.set(`topicStatus.${topicId}`, resDone);
+                courseProgress.markModified(`topicStatus.${topicId}`);
 
                 let userUpdateOpts = {
                     $inc: { [`score.${getDateString()}`]: 5 }
