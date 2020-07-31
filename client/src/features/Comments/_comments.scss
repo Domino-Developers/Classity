@@ -1,4 +1,8 @@
 .comment {
+    &--loading {
+        opacity: 0.5;
+    }
+
     &:not(&--reply) {
         border-bottom: 1px solid $color-grey-2;
         padding: 5rem 0;
