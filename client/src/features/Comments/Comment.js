@@ -115,7 +115,12 @@ const Comment = props => {
     };
 
     return (
-        <li className={'comment' + (className ? ` comment--${className}` : '')}>
+        <li
+            className={
+                'comment' +
+                (comment.loading ? ' comment--loading' : '') +
+                (className ? ` comment--${className}` : '')
+            }>
             <div className='comment__container'>
                 <p className='comment__date'>
                     <FromNow date={comment.date} />
@@ -129,7 +134,7 @@ const Comment = props => {
                             'comment__icon-container' +
                             (liked ? ' comment__icon-container--active' : '')
                         }
-                        onClick={() => toggleLike()}>
+                        onClick={() => !comment.loading && toggleLike()}>
                         <i className='far fa-thumbs-up comment__icon comment__icon--outline'></i>
                         <i className='fas fa-thumbs-up comment__icon comment__icon--filled'></i>
                     </span>
@@ -141,7 +146,7 @@ const Comment = props => {
                             'comment__icon-container' +
                             (showReply ? ' comment__icon-container--active' : '')
                         }
-                        onClick={() => replyState(!showReply)}>
+                        onClick={() => !comment.loading && replyState(!showReply)}>
                         <i className='far fa-comment-dots comment__icon comment__icon--outline'></i>
                         <i className='fas fa-comment-dots comment__icon comment__icon--filled'></i>
                     </span>
@@ -156,6 +161,7 @@ const Comment = props => {
                         className='comment__input input'
                         type='text'
                         placeholder='Reply'
+                        disabled={comment.loading}
                         onChange={e => setText(e.target.value)}
                         value={text}
                     />

@@ -167,16 +167,22 @@ const Topic = () => {
                             user: { id, name },
                             likes: [],
                             reply: [],
-                            date: Date.now()
+                            date: Date.now(),
+                            loading: true
                         }
                     ]
                 },
                 false
             );
 
-            await commentApi.add(topic._id, type, comment);
-
             clear();
+
+            const newComments = await commentApi.add(topic._id, type, comment);
+
+            mutate({
+                ...topic,
+                [type]: newComments
+            });
         } catch (err) {
             if (err.errors) {
                 const errors = err.errors;

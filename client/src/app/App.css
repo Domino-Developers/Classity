@@ -1032,6 +1032,9 @@ main {
   width: 4.5rem;
   text-align: center; }
 
+.comment--loading {
+  opacity: 0.5; }
+
 .comment:not(.comment--reply) {
   border-bottom: 1px solid #d6d6d6;
   padding: 5rem 0; }
