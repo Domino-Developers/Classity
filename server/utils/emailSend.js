@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-var transport = nodemailer.createTransport({
+const transport = nodemailer.createTransport({
     service: 'hotmail',
     auth: {
         user: process.env.EMAIL,
@@ -11,8 +11,8 @@ var transport = nodemailer.createTransport({
 module.exports = sendMail = async (to, subject, html, text) =>
     transport.sendMail({
         from: '"Classity" <dominodevelopers@outlook.com>',
-        to: to,
-        subject: subject,
-        text: text,
-        html: html
+        to,
+        subject,
+        text,
+        html
     });

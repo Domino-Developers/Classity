@@ -94,8 +94,8 @@
     position: absolute;
     top: -135px;
     left: 0;
-    width: 100vw;
-    height: calc(100vh + 135px);
+    width: 100%;
+    height: calc(100vh + 135px + 21.6rem);
     background-color: $color-white;
     overflow: scroll;
     padding-top: 5.6rem;

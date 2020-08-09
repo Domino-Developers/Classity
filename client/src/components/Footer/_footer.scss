@@ -1,0 +1,133 @@
+.footer {
+    background-color: $color-black;
+    padding: 5rem 15rem;
+    color: $color-grey-3;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 50% 50%;
+    align-items: center;
+    justify-items: center;
+    row-gap: 4rem;
+
+    &__nav-link {
+        transition: color 0.2s;
+        margin-right: 2rem;
+
+        &:hover {
+            color: $color-grey-1;
+        }
+    }
+}
+
+.footer-form {
+    max-width: 75rem;
+    margin: 0 auto;
+
+    &__component {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4rem;
+        justify-content: space-between;
+    }
+
+    &__answer {
+        flex: 0 0 40rem;
+
+        & > * {
+            width: 100%;
+        }
+    }
+
+    &__input {
+        border: 3px solid $color-grey-3;
+
+        &:focus,
+        &:hover {
+            outline: none;
+            border: 3px solid $color-primary;
+        }
+    }
+
+    &__slider {
+        position: relative;
+        display: flex;
+
+        input {
+            position: relative;
+            z-index: 1;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            background-size: cover;
+            display: inline-block;
+            width: 4rem;
+            height: 4rem;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            z-index: 2;
+        }
+
+        &--1::before {
+            background: url('../img/emoji-very-sad.png');
+            background-size: cover;
+            left: 2%;
+        }
+
+        &--2::before {
+            background: url('../img/emoji-sad.png');
+            background-size: cover;
+            left: 25%;
+        }
+
+        &--3::before {
+            background: url('../img/emoji-neutral.png');
+            background-size: cover;
+            left: 50%;
+        }
+
+        &--4::before {
+            background: url('../img/emoji-happy.png');
+            background-size: cover;
+            left: 75%;
+        }
+
+        &--5::before {
+            background: url('../img/emoji-very-happy.png');
+            background-size: cover;
+            left: 98%;
+        }
+    }
+
+    &__slider-dots {
+        position: absolute;
+        display: inline-block;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: #c4c4c4;
+
+        &:nth-child(1) {
+            left: 1%;
+        }
+
+        &:nth-child(2) {
+            left: 25%;
+        }
+
+        &:nth-child(3) {
+            left: 50%;
+        }
+
+        &:nth-child(4) {
+            left: 75%;
+        }
+
+        &:nth-child(5) {
+            left: 99%;
+        }
+    }
+}
