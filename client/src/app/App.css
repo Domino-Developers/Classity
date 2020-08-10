@@ -83,8 +83,10 @@ h3 {
   font-weight: 400; }
 
 input,
-button {
-  font-size: inherit; }
+button,
+textarea {
+  font-size: inherit;
+  font-family: inherit; }
 
 .u-center-text {
   text-align: center !important; }
@@ -646,6 +648,95 @@ main {
   transition: color 0.2s; }
   .user-list__link:hover {
     color: #7619cc; }
+
+.footer {
+  background-color: #252227;
+  padding: 5rem 15rem;
+  color: #aaa;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  justify-items: center;
+  row-gap: 4rem; }
+  .footer__nav-link {
+    transition: color 0.2s;
+    margin-right: 2rem; }
+    .footer__nav-link:hover {
+      color: #eee; }
+
+.footer-form {
+  max-width: 75rem;
+  margin: 0 auto; }
+  .footer-form__component {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4rem;
+    justify-content: space-between; }
+  .footer-form__answer {
+    flex: 0 0 40rem; }
+    .footer-form__answer > * {
+      width: 100%; }
+  .footer-form__input {
+    border: 3px solid #aaa; }
+    .footer-form__input:focus, .footer-form__input:hover {
+      outline: none;
+      border: 3px solid #7619cc; }
+  .footer-form__slider {
+    position: relative;
+    display: flex; }
+    .footer-form__slider input {
+      position: relative;
+      z-index: 1; }
+    .footer-form__slider::before {
+      content: '';
+      position: absolute;
+      background-size: cover;
+      display: inline-block;
+      width: 4rem;
+      height: 4rem;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      z-index: 2; }
+    .footer-form__slider--1::before {
+      background: url("../img/emoji-very-sad.png");
+      background-size: cover;
+      left: 2%; }
+    .footer-form__slider--2::before {
+      background: url("../img/emoji-sad.png");
+      background-size: cover;
+      left: 25%; }
+    .footer-form__slider--3::before {
+      background: url("../img/emoji-neutral.png");
+      background-size: cover;
+      left: 50%; }
+    .footer-form__slider--4::before {
+      background: url("../img/emoji-happy.png");
+      background-size: cover;
+      left: 75%; }
+    .footer-form__slider--5::before {
+      background: url("../img/emoji-very-happy.png");
+      background-size: cover;
+      left: 98%; }
+  .footer-form__slider-dots {
+    position: absolute;
+    display: inline-block;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #c4c4c4; }
+    .footer-form__slider-dots:nth-child(1) {
+      left: 1%; }
+    .footer-form__slider-dots:nth-child(2) {
+      left: 25%; }
+    .footer-form__slider-dots:nth-child(3) {
+      left: 50%; }
+    .footer-form__slider-dots:nth-child(4) {
+      left: 75%; }
+    .footer-form__slider-dots:nth-child(5) {
+      left: 99%; }
 
 .search-bar {
   display: inline-block;
@@ -1210,8 +1301,8 @@ main {
   position: absolute;
   top: -135px;
   left: 0;
-  width: 100vw;
-  height: calc(100vh + 135px);
+  width: 100%;
+  height: calc(100vh + 135px + 21.6rem);
   background-color: #fcfcfc;
   overflow: scroll;
   padding-top: 5.6rem;

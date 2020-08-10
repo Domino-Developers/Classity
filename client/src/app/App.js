@@ -5,6 +5,7 @@ import loadable from '@loadable/component';
 
 import Navbar from '../features/Navbar';
 import Loading from '../components/Loading';
+import Footer from '../components/Footer';
 import store from './store';
 import './App.css';
 import Alerts from '../features/Alerts';
@@ -76,6 +77,7 @@ function App() {
                         <Route exact path='/email-verify' component={EmailVerify} />
                     </Switch>
                 </main>
+                <Footer />
             </Router>
         </Provider>
     );
