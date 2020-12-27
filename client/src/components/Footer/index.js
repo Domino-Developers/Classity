@@ -25,13 +25,13 @@ const Footer = () => {
                 </div>
                 <p>&copy; 2020 Domino Developers. All rights reserved.</p>
                 <div>
-                    <Link to='/#explore' className='footer__nav-link'>
+                    <Link to='/#explore' className='footer__nav-link footer__nav-link--text'>
                         Courses
                     </Link>
-                    <Link to='/leaderboard' className='footer__nav-link'>
+                    <Link to='/leaderboard' className='footer__nav-link footer__nav-link--text'>
                         Leaderboard
                     </Link>
-                    <Link to='/help' className='footer__nav-link'>
+                    <Link to='/help' className='footer__nav-link footer__nav-link--text'>
                         Help
                     </Link>
                     <a href='mailto: dominodevelopers@outlook.com' className='footer__nav-link'>

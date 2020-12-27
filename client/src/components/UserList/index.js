@@ -6,13 +6,15 @@ const UserList = ({ rank, users, sort, setSort }) => {
     const levels = [0, 10, 50, 100, 250, 500, 1000, 99999];
     const colors = ['gray', 'green', 'rgb(3,168,158)', 'blue', 'rgb(170,0,170)', 'rgb(255,140,0)'];
 
+    const trimText = (text, maxLen = 20) => text.length <= maxLen ? text : text.slice(0, maxLen - 3) + '...'
+
     return (
         <table className='user-list__table'>
             <thead>
                 <tr>
                     {rank && <th>Rank</th>}
                     <th>Name</th>
-                    <th>Email</th>
+                    <th className='user-list__email'>Email</th>
                     <th
                         className={
                             'user-list__type' + (sort === 'score' ? ' user-list__type--active' : '')
@@ -26,7 +28,7 @@ const UserList = ({ rank, users, sort, setSort }) => {
                             (sort === 'contribution' ? ' user-list__type--active' : '')
                         }
                         onClick={() => setSort('contribution')}>
-                        Contributions <span className='user-list__arrow'>&#9662;</span>
+                        Contrib.<span className='user-list__arrow'>&#9662;</span>
                     </th>
                 </tr>
             </thead>
@@ -43,10 +45,10 @@ const UserList = ({ rank, users, sort, setSort }) => {
                             {rank && <td>{i + 1}</td>}
                             <td style={{ color: colors[levelIndex] }}>
                                 <Link className='user-list__link' to={`/profile/${user._id}`}>
-                                    {user.name}
+                                    {trimText(user.name)}
                                 </Link>
                             </td>
-                            <td>{user.email}</td>
+                            <td className='user-list__email'>{trimText(user.email)}</td>
                             <td>{user.score}</td>
                             <td>{user.contribution}</td>
                         </tr>

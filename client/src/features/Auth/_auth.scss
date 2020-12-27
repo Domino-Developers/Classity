@@ -1,18 +1,25 @@
 .auth {
-    display: flex;
-    flex-direction: column;
-    min-width: 300px;
-    max-width: 400px;
+    display: grid;
+    height: 100vh;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    min-width: 30rem;
+    max-width: 40rem;
     margin: auto;
     color: $color-white;
+
+    &__heading {
+        margin-top: 2rem;
+    }
 
     &__card {
         background-color: $color-white;
         width: 100%;
         z-index: 110;
         padding: 2rem 2rem;
-        border-radius: 10px;
+        border-radius: 1rem;
         color: $color-black;
+        height: 49rem;
 
         &__info {
             border: 1px solid $color-grey-3;
@@ -21,20 +28,15 @@
             margin: 1rem;
             border-radius: 1rem;
             margin-left: 0;
+
             &--warning {
                 color: $color-danger;
             }
         }
     }
 
-    &__heading {
-        margin-top: 2rem;
-        margin-bottom: 8rem;
-    }
-
     &__nav {
-        margin: 2rem 0;
-        padding: 0 2rem;
+        margin-bottom: 2rem;
         display: flex;
         justify-content: space-around;
     }
@@ -43,6 +45,8 @@
         font-size: 2.4rem;
         text-transform: uppercase;
         font-weight: 900;
+        letter-spacing: 2px;
+        word-spacing: 0.5rem;
         cursor: pointer;
 
         &.active {
@@ -50,14 +54,45 @@
         }
     }
 
-    &__label {
-        margin: 2.4rem 0;
-        display: block;
+    &__field {
+        position: relative;
+        margin: 2rem 0;
     }
 
-    &__input--text {
-        width: 100%;
+    &__label {
+        position: absolute;
+        top: -1rem;
+        left: 0;
+        color: $color-grey-3;
+        transform: translate(1.5rem, 3rem);
+        transition: all 0.5s;
+        visibility: hidden;
         font-size: 2.4rem;
+    }
+
+    &__input:focus + &__label,
+    &__input:not(:placeholder-shown) + &__label {
+        transform: translate(0, 0);
+        color: inherit;
+        visibility: visible;
+        font-size: 2rem;
+    }
+
+    &__input {
+        &::placeholder {
+            color: $color-grey-3;
+            opacity: 1;
+        }
+
+        &:focus::placeholder {
+            opacity: 0;
+        }
+
+        &--text {
+            width: 100%;
+            font-size: 2.4rem;
+            margin-top: 1.5rem;
+        }
     }
 }
 
@@ -67,21 +102,17 @@
 }
 
 .google-btn {
-    width: 100%;
+    display: block;
     text-align: center;
     font-size: 2.3rem;
-    a {
-        display: block;
-        justify-content: center;
-        color: $color-white;
-        background-color: $color-primary;
-        padding: 1.5rem;
-        border-radius: 1rem;
-        margin: 2rem;
-        letter-spacing: 0.1rem;
-        transition: background-color 0.2s;
-        &:hover {
-            background-color: $color-primary-dark;
-        }
+    color: $color-white;
+    background-color: $color-primary;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    letter-spacing: 1px;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: $color-primary-dark;
     }
 }

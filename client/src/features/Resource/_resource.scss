@@ -3,11 +3,11 @@
         margin: 5rem 1rem;
         display: flex;
         justify-content: flex-end;
-        align-items: baseline;
 
         &-text {
             display: inline-flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: center;
             font-size: 2rem;
             align-items: center;
 
@@ -258,9 +258,11 @@
     &__header {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         &--right {
             margin-left: auto;
+            margin-top: 1rem;
         }
     }
 

@@ -1,13 +1,24 @@
 .course-header {
     padding: 8rem 20%;
     display: grid;
-    grid-template-rows: repeat(4, min-content);
     grid-template-columns: 1fr 1fr minmax(max-content, 1fr);
     justify-items: center;
     align-items: center;
-    grid-row-gap: 2rem;
+    gap: 2rem;
     background-color: $color-black;
     color: $color-white;
+
+    @media only screen and (max-width: 75em) {
+        padding: 8rem 5%;
+    }
+
+    @media only screen and (max-width: 50em) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media only screen and (max-width: 37.5em) {
+        grid-template-columns: 1fr;
+    }
 
     &__title,
     &__description {
@@ -19,11 +30,21 @@
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
+        grid-row: 3;
     }
 
     &__enroll {
         grid-row: 3/5;
         grid-column: 3/4;
+
+        @media only screen and (max-width: 50em) {
+            grid-row: 5;
+            grid-column: 1/-1;
+        }
+
+        @media only screen and (max-width: 37.5em) {
+            grid-row: 7;
+        }
     }
 
     &__delete {
@@ -114,8 +135,13 @@
     display: grid;
     grid-template-rows: repeat(5, min-content);
     grid-template-columns: 1fr 1.5fr 1fr;
-    grid-gap: 5px;
+    gap: 0.5rem;
     align-items: center;
+
+    @media only screen and (max-width: 28.125em) {
+        grid-template-columns: 1fr 0fr 1fr;
+        gap: 0;
+    }
 
     &__big-rating {
         grid-row: 1/-1;

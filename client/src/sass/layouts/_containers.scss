@@ -8,8 +8,9 @@ main {
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 130rem;
     margin: 14rem auto;
+    padding: 0 2rem;
 }
 
 .main-content-area {
@@ -22,4 +23,12 @@ main {
     overflow-y: scroll;
     padding: 0 15%;
     flex-grow: 1;
+
+    @media only screen and (max-width: 87.5em) {
+        padding: 0 5%;
+    }
+
+    @media only screen and (max-width: 50em) {
+        padding: 0 2%;
+    }
 }
