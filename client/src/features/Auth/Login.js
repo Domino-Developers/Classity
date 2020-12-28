@@ -42,41 +42,49 @@ const Login = () => {
     };
     return (
         <form onSubmit={onSubmit}>
-            <label className='auth__label'>
-                Email:
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='email'
                     name='email'
+                    id='email'
                     placeholder='Email'
                     onChange={onChange}
                     value={email}
                     required
                 />
-            </label>
-            <label className='auth__label'>
-                Password
+                <label for='email' className='auth__label'>
+                    Email
+                </label>
+            </div>
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='password'
                     name='password'
+                    id='password'
                     placeholder='Password'
                     onChange={onChange}
                     value={password}
                     minLength='6'
                     required
                 />
-            </label>
-            <label className='auth__label'>
-                <input
-                    className='auth__input'
-                    type='checkbox'
-                    name='remember'
-                    checked={remember}
-                    onChange={checkBoxChange}
-                />{' '}
-                Remember me
-            </label>
+                <label for='password' className='auth__label'>
+                    Password
+                </label>
+            </div>
+            <div className='auth__field'>
+                <label>
+                    <input
+                        className='auth__input'
+                        type='checkbox'
+                        name='remember'
+                        checked={remember}
+                        onChange={checkBoxChange}
+                    />{' '}
+                    Remember me
+                </label>
+            </div>
             <div className='auth__input'>
                 <Button full value='Submit' loading={loading && 'Loading'} />
             </div>

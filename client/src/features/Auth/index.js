@@ -24,34 +24,34 @@ const Auth = props => {
                 </Link>
                 <div className='overlay__container'>
                     <div className='auth'>
-                        <span className='project-name auth__heading'>Classity</span>
-                        <ul className='auth__nav'>
-                            <li>
-                                <Link
-                                    className={
-                                        mode === 'register' ? 'auth__link active' : 'auth__link'
-                                    }
-                                    to={`${path}?authMode=register`}>
-                                    Sign Up
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    className={
-                                        mode === 'login' ? 'auth__link active' : 'auth__link'
-                                    }
-                                    to={`${path}?authMode=login`}>
-                                    Log in
-                                </Link>
-                            </li>
-                        </ul>
-                        <div className='auth__card'>
-                            <div className='google-btn'>
-                                <a href='http://localhost:5000/auth/google'>
+                        <div className='project-name auth__heading'>Classity</div>
+                        <div>
+                            <ul className='auth__nav'>
+                                <li>
+                                    <Link
+                                        className={
+                                            mode === 'register' ? 'auth__link active' : 'auth__link'
+                                        }
+                                        to={`${path}?authMode=register`}>
+                                        Sign Up
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className={
+                                            mode === 'login' ? 'auth__link active' : 'auth__link'
+                                        }
+                                        to={`${path}?authMode=login`}>
+                                        Log in
+                                    </Link>
+                                </li>
+                            </ul>
+                            <div className='auth__card'>
+                                <a className='google-btn' href='http://localhost:5000/auth/google'>
                                     <i class='fab fa-google'></i> Continue with Google
                                 </a>
+                                {mode === 'login' ? <Login /> : <Register />}
                             </div>
-                            {mode === 'login' ? <Login /> : <Register />}
                         </div>
                     </div>
                 </div>

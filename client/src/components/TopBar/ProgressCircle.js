@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CircularProgress from '../CircularProgress';
 import { useResourceStatus } from '../../utils/hooks';
 
-const ProgressCircle = ({ course }) => {
+const ProgressCircle = ({ course, noText }) => {
     const resourcesDoneByTopic = useResourceStatus(true, course._id);
     const resourcesDone = [];
     Object.values(resourcesDoneByTopic).forEach(res => {
@@ -14,14 +14,15 @@ const ProgressCircle = ({ course }) => {
     const progress = (resourcesDone.length / totalResources) * 100;
     return (
         <div className='topbar__right'>
-            Your progress
+            {noText ? '' : 'Your progress'}
             <CircularProgress size='50' progress={progress || 0} />
         </div>
     );
 };
 
 ProgressCircle.propTypes = {
-    course: PropTypes.object.isRequired
+    course: PropTypes.object.isRequired,
+    noText: PropTypes.bool
 };
 
 export default ProgressCircle;

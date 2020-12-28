@@ -1,3 +1,5 @@
+// TODO Image uploader, auth, fadetext
+
 .nav {
     display: flex;
     justify-content: space-between;
@@ -11,9 +13,64 @@
     background-color: $color-white;
     box-shadow: 0px 1px 2px 1px rgba($color-black, 0.5);
 
+    @media only screen and (max-width: 100em) {
+        padding: 2rem 5%;
+    }
+
+    @media only screen and (max-width: 68.75em) {
+        padding: 2rem 2%;
+    }
+
+    &__logo {
+        width: 6rem;
+    }
+
+    &__toggle {
+        font-size: 3rem;
+        padding-left: 1rem;
+    }
+
+    &__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba($color-black, 0.7);
+        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.5s;
+    }
+
+    &--collapsed &__overlay {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    &--collapsed &__list {
+        transform: scaleX(0);
+    }
+
     &__list {
         display: flex;
         align-items: center;
+
+        @media only screen and (max-width: 43.75em) {
+            position: absolute;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            align-items: stretch;
+            background-color: $color-white;
+            text-align: center;
+            height: 100vh;
+            min-width: 30rem;
+            overflow-y: scroll;
+            transition: transform 0.5s cubic-bezier(0,1.64,.09,1.06);
+            transform-origin: left;
+            z-index: 2;
+        }
     }
 
     &__item {
@@ -21,6 +78,12 @@
 
         &--border {
             border-bottom: 1px solid $color-grey-1;
+        }
+
+        @media only screen and (max-width: 43.75em) {
+            border-bottom: 1px solid $color-grey-1;
+            width: 100%;
+            padding: 1.5rem;
         }
     }
 
@@ -33,6 +96,18 @@
         &:hover {
             color: $color-primary;
         }
+
+        &--main {
+            @media only screen and (max-width: 87.5em) {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        @media only screen and (max-width: 43.75em) {
+            border-bottom: 1px solid $color-grey-1;
+            width: 100%;
+            padding: 1.5rem;
+        }
     }
 
     &__auth-list-container {
@@ -42,6 +117,10 @@
     &__auth-list-container:hover &__auth-list {
         max-height: 50rem;
         box-shadow: 0px 1px 2px 1px rgba($color-black, 0.5);
+
+        @media only screen and (max-width: 43.75em) {
+            box-shadow: none;
+        }
     }
 
     &__auth-list {
@@ -55,6 +134,11 @@
         overflow: hidden;
         transition: all 0.37s linear;
         max-height: 0;
+
+        @media only screen and (max-width: 43.75em) {
+            position: static;
+            max-height: none;
+        }
     }
 
     &__auth-list &__link,
@@ -62,17 +146,30 @@
         padding: 1rem 2.4rem;
         width: 100%;
         white-space: nowrap;
+
+        @media only screen and (max-width: 43.75em) {
+            padding: 1.5rem;
+        }
     }
 
     &__user {
         &--name {
             font-weight: 700;
             font-size: 2.5rem;
+
+            @media only screen and (max-width: 43.75em) {
+                margin-left: 1rem;
+            }
         }
 
         &--email {
             font-size: 1.5rem;
             color: $color-grey-3;
+
+            @media only screen and (max-width: 43.75em) {
+                font-size: 1.8rem;
+                margin-top: 1rem;
+            }
         }
 
         &--img {
@@ -85,6 +182,12 @@
             font-weight: 600;
             border-radius: 50%;
             cursor: pointer;
+        }
+
+        &--img-name-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 }

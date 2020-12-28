@@ -9,12 +9,34 @@
     justify-items: center;
     row-gap: 4rem;
 
+    @media only screen and (max-width: 62.5em) {
+        padding: 10rem;
+    }
+
+    @media only screen and (max-width: 50em) {
+        padding: 5rem;
+    }
+
+    @media only screen and (max-width: 37.5em) {
+        grid-template-columns: 65% 35%;
+    }
+
     &__nav-link {
         transition: color 0.2s;
-        margin-right: 2rem;
+        margin-left: 2rem;
+
+        @media only screen and (max-width: 50em) {
+            margin-left: 1rem;
+        }
 
         &:hover {
             color: $color-grey-1;
+        }
+
+        &--text {
+            @media only screen and (max-width: 37.5em) {
+                display: block;
+            }
         }
     }
 }

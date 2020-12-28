@@ -72,58 +72,72 @@ const Register = () => {
     const { name, email, password, password2 } = formData;
     return (
         <form onSubmit={onSubmit}>
-            <label className='auth__label'>
-                Name
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='text'
                     name='name'
+                    id='name'
                     placeholder='Name'
                     onChange={onChange}
                     value={name}
                     required
                 />
-            </label>
-            <label className='auth__label'>
-                Email:
+                <label for='name' className='auth__label'>
+                    Name
+                </label>
+            </div>
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='email'
                     name='email'
+                    id='email'
                     placeholder='Email'
                     onChange={onChange}
                     value={email}
                     required
                 />
-            </label>
-            <label className='auth__label'>
-                Password
+                <label for='email' className='auth__label'>
+                    Email
+                </label>
+            </div>
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='password'
                     name='password'
+                    id='password'
                     placeholder='Password'
                     onChange={onChange}
                     value={password}
                     minLength='6'
                     required
                 />
-            </label>
-            <label className='auth__label'>
-                Confirm Password
+                <label for='password' className='auth__label'>
+                    Password
+                </label>
+            </div>
+            <div className='auth__field'>
                 <input
                     className='auth__input auth__input--text input'
                     type='password'
                     name='password2'
+                    id='password2'
                     placeholder='Confirm Password'
                     onChange={onChange}
                     value={password2}
                     minLength='6'
                     required
                 />
-            </label>
-            <div className='auth__input'>
-                <Button full value='Submit' loading={warning.loading && 'Loading'} />
+                <label for='password2' className='auth__label'>
+                    Confirm Password
+                </label>
+            </div>
+            <div className='auth__field'>
+                <div className='auth__input'>
+                    <Button full value='Submit' loading={warning.loading && 'Loading'} />
+                </div>
             </div>
             {warning.show && (
                 <div className='auth__card__info'>

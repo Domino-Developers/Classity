@@ -3,6 +3,18 @@
     position: relative;
     width: 40rem;
 
+    @media only screen and (max-width: 62.5em) {
+        width: 30rem;
+    }
+
+    @media only screen and (max-width: 50em) {
+        width: 20rem;
+    }
+
+    @media only screen and (max-width: 43.75em) {
+        width: calc(100% - 15rem);
+    }
+
     &__input {
         width: 100%;
         vertical-align: middle;
@@ -32,6 +44,11 @@
     &--small &__input {
         transform: scaleX(0.5) scaleY(0.8);
         padding-right: 1.5rem;
+
+        @media only screen and (max-width: 50em) and (min-width: 43.75rem),
+            only screen and (max-width: 28.125em) {
+            transform: scaleX(1) scaleY(1);
+        }
 
         &:focus {
             transform: scaleX(1) scaleY(1);

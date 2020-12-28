@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
@@ -17,6 +17,41 @@ const CoursesCreatedSelector = createSelector(
 );
 
 const TopBar = ({ params, setExist }) => {
+    const smallScreenQueries = [];
+    smallScreenQueries.push(window.matchMedia('(max-width: 68.75em)')); // Name Max Length = 20
+    smallScreenQueries.push(window.matchMedia('(max-width: 50em)')); // No "Your Progress"
+    smallScreenQueries.push(window.matchMedia('(max-width: 43.75em)')); // Max Breadcrumb size = 2
+    smallScreenQueries.push(window.matchMedia('(max-width: 31.25em)')); // Name Max Length = 15
+    smallScreenQueries.push(window.matchMedia('(max-width: 25em)')); // No BreadCrumb + "Your Progress"
+
+    const [compression, setCompression] = useState({
+        level0: smallScreenQueries[0].matches,
+        level1: smallScreenQueries[1].matches,
+        level2: smallScreenQueries[2].matches,
+        level3: smallScreenQueries[3].matches,
+        level4: smallScreenQueries[4].matches
+    });
+
+    const handleCompression = () => {
+        const newCompression = {};
+        smallScreenQueries.forEach((query, i) => (newCompression[`level${i}`] = query.matches));
+        setCompression(newCompression);
+    };
+
+    useEffect(() => {
+        smallScreenQueries.forEach(query => query.addListener(handleCompression));
+
+        return () => smallScreenQueries.forEach(query => query.removeListener(handleCompression));
+    });
+
+    const trimName = name => {
+        let maxLen = 30;
+        if (compression.level0) maxLen = 20;
+        if (compression.level3) maxLen = 15;
+        if (name.length <= maxLen) return name;
+        return name.slice(0, maxLen - 3) + '...';
+    };
+
     const { courseId, topicId } = params;
     const match = useRouteMatch('/course/:courseId/topic/:topicId/resource/:resourceId');
     const coursesCreated = useSelector(CoursesCreatedSelector);
@@ -39,9 +74,15 @@ const TopBar = ({ params, setExist }) => {
     if ((courseError || topicError) && navigator.onLine) exist = false;
     if (!course || !topic) return <Loading />;
 
-    const navList = [
-        { name: course.name, link: `/course/${courseId}` },
-        { name: topic.name, link: `/course/${courseId}/topic/${topicId}` }
+    let navList = [
+        {
+            name: trimName(course.name),
+            link: `/course/${courseId}`
+        },
+        {
+            name: trimName(topic.name),
+            link: `/course/${courseId}/topic/${topicId}`
+        }
     ];
 
     if (resourceId) {
@@ -50,8 +91,13 @@ const TopBar = ({ params, setExist }) => {
             exist = false;
             return <Loading />;
         }
-        navList.push({ name: resource.name });
+        navList.push({
+            name: trimName(resource.name)
+        });
     }
+
+    if (compression.level2) navList = navList.slice(-2);
+    if (compression.level4) navList = [];
 
     return (
         <Fragment>
@@ -65,7 +111,12 @@ const TopBar = ({ params, setExist }) => {
                         ))}
                     </Breadcrumb.Container>
                 </div>
-                {!instructor && <ProgressCircle course={course} />}
+                {!instructor && (
+                    <ProgressCircle
+                        course={course}
+                        noText={compression.level1 && !compression.level4}
+                    />
+                )}
             </div>
         </Fragment>
     );

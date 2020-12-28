@@ -34,17 +34,27 @@
 
 .landing-goals {
     display: flex;
-    width: 60%;
+    max-width: 115rem;
     margin: 0 auto;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 
     &__card {
         text-align: center;
-        flex: 0 0 15%;
+        flex: 0 0 17rem;
+
+        @media only screen and (max-width: 43.75em) {
+            flex: 0 0 34%;
+            margin-bottom: 2rem;
+        }
+
+        @media only screen and (max-width: 25em) {
+            flex: 0 0 80%;
+        }
     }
 
     &__img {
-        width: 100px;
+        width: 10rem;
     }
 
     &__text {

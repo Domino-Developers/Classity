@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import Collapse from '../Collapse';
 
 const Container = ({ children }) => {
-    let [toShow, show] = useState(true);
+    const smallScreenQuery = window.matchMedia('(max-width: 62.5em)');
+
+    const [toShow, show] = useState(smallScreenQuery.matches ? false : true);
 
     return (
         <div className='sidebar'>
