@@ -26,6 +26,8 @@ app.use('/api/topic', require('./routes/api/topic'));
 app.use('/api/comment', require('./routes/api/comment'));
 app.use('/api/test', require('./routes/api/test'));
 
-const PORT = process.env.PORT || 5000;
+app.use(express.static('build'));
+
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, '0.0.0.0', () => console.log(`Server started on port ${PORT}`));
