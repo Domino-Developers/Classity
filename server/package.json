@@ -17,7 +17,7 @@
         "form-data": "^3.0.0",
         "gravatar": "^1.8.1",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.9.20",
+        "mongoose": "^5.13.15",
         "node-fetch": "^2.6.1",
         "nodemailer": "^6.9.4",
         "passport": "^0.4.1",
